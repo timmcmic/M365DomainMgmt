@@ -291,10 +291,14 @@ Function Start-M365DomainManagement
     #Declare local variables.
 
     $global:logFile=$NULL
-    $logFileName = "GraphLicenseManager_"+(Get-Date -Format FileDateTime)
+    $logFileName = "M365DomainMgmt_"+(Get-Date -Format FileDateTime)
 
     #Start the log file.
 
-    new-logfile -logFileName $fixedLogFileName -logFolderPath $logFolderPath
+    new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
+
+    out-logfile -string "*****************************************************"
+    out-logfile -string "Starting M365 Domain Management"
+    out-logfile -string "*****************************************************"
 }
 
