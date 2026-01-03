@@ -283,111 +283,17 @@ Function Start-M365DomainManagement
 
     Param
     (
-        [Parameter(Mandatory = $true)]
-        [string]$groupSMTPAddress,
-        #Local Active Director Domain Controller Parameters
-        [Parameter(Mandatory = $true)]
-        [string]$globalCatalogServer,
-        [Parameter(Mandatory = $true)]
-        [pscredential]$activeDirectoryCredential,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Basic","Negotiate")]
-        $activeDirectoryAuthenticationMethod="Negotiate",
-        #Azure Active Directory Connect Parameters
-        [Parameter(Mandatory = $false)]
-        [string]$aadConnectServer=$NULL,
-        [Parameter(Mandatory = $false)]
-        [pscredential]$aadConnectCredential=$NULL,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Basic","Kerberos")]
-        $aadConnectAuthenticationMethod="Kerberos",
-        #Exchange On-Premises Parameters
-        [Parameter(Mandatory = $false)]
-        [string]$exchangeServer=$NULL,
-        [Parameter(Mandatory = $false)]
-        [pscredential]$exchangeCredential=$NULL,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Basic","Kerberos")]
-        [string]$exchangeAuthenticationMethod="Kerberos",
-        #Exchange Online Parameters
-        [Parameter(Mandatory = $false)]
-        [pscredential]$exchangeOnlineCredential=$NULL,
-        [Parameter(Mandatory = $false)]
-        [string]$exchangeOnlineCertificateThumbPrint="",
-        [Parameter(Mandatory = $false)]
-        [string]$exchangeOnlineOrganizationName="",
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("O365Default","O365GermanyCloud","O365China","O365USGovGCCHigh","O365USGovDoD")]
-        [string]$exchangeOnlineEnvironmentName="O365Default",
-        [Parameter(Mandatory = $false)]
-        [string]$exchangeOnlineAppID="",
-        #Define Microsoft Graph Parameters
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("China","Global","USGov","USGovDod")]
-        [string]$msGraphEnvironmentName="Global",
-        [Parameter(Mandatory=$true)]
-        [string]$msGraphTenantID="",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphCertificateThumbprint="",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphApplicationID="",
-        [Parameter(Mandatory=$false)]
-        [boolean]$removeGroupViaGraph = $false,
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        [string]$logFolderPath,
-        #Defining optional parameters for retention and upgrade
-        [Parameter(Mandatory = $false)]
-        [string]$dnNoSyncOU = "NotSet",
-        [Parameter(Mandatory = $false)]
-        [boolean]$retainOriginalGroup = $TRUE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$enableHybridMailflow = $FALSE,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Security","Distribution","None")]
-        [string]$groupTypeOverride="None",
-        [Parameter(Mandatory = $false)]
-        [boolean]$triggerUpgradeToOffice365Group=$FALSE,
-        [Parameter(Mandatory=$false)]
-        [boolean]$overrideCentralizedMailTransportEnabled=$FALSE,
-        [Parameter(Mandatory=$false)]
-        [boolean]$allowNonSyncedGroup=$FALSE,
-        [Parameter(Mandatory=$false)]
-        [string]$customRoutingDomain="",
-        [Parameter(Mandatory=$false)]
-        $skipNestedGroupCheck=$false,
-        #Definte parameters for pre-collected permissions
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedFullMailboxAccessOnPrem=$FALSE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedFullMailboxAccessOffice365=$FALSE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedSendAsOnPrem=$FALSE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedFolderPermissionsOnPrem=$FALSE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedFolderPermissionsOffice365=$FALSE,
-        [Parameter(Mandatory = $false)]
-        [boolean]$useCollectedSendAsOffice365=$FALSE,
-        #Define paramters for naming conventions.
-        [Parameter(Mandatory = $false)]
-        [string]$dlNamePrefix="",
-        [Parameter(Mandatory = $false)]
-        [string]$dlNameSuffix="",
-        #Define parameters for multi-threaded operations
-        [Parameter(Mandatory = $false)]
-        [int]$threadNumberAssigned=0,
-        [Parameter(Mandatory = $false)]
-        [int]$totalThreadCount=0,
-        [Parameter(Mandatory = $FALSE)]
-        [boolean]$isMultiMachine=$FALSE,
-        [Parameter(Mandatory = $FALSE)]
-        [string]$remoteDriveLetter=$NULL,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$allowTelemetryCollection=$TRUE,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$allowDetailedTelemetryCollection=$TRUE,
-        [Parameter(Mandatory =$FALSE)]
-        [boolean]$isHealthCheck=$FALSE
+        [string]$logFolderPath
     )
+
+    #Declare local variables.
+
+    $fixedLogFileName = "M365DomainMgmt"
+
+    #Start the log file.
+
+    new-logfile -directoryName $fixedLogFileName -logFolderPath $logFolderPath
+}
 
