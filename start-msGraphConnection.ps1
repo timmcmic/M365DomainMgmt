@@ -64,6 +64,7 @@
     #Define variables.
 
     $testString = "None"
+    $msGraphAuthenticationType = ""
 
     out-logfile -string "Entering Start-MSGraphConnection"
 
@@ -98,4 +99,16 @@
         out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
         out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
     }
+
+    if (($msGraphCertificateThumbprint -ne $testString) -and ($msGraphClientSecret -ne $testString))
+    {
+        out-logfile -string "A certificate thumbprint and client secret were provided at the same time."
+        out-logfile -string "Provide only one method of non-interactive authentication." -isError:$TRUE
+    }
+    else 
+    {
+        out-logfile -string "A client secret and certificate thumbprint were not provided together - proceed."
+    }
+
+    $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $testString
 }
