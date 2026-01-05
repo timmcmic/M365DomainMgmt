@@ -86,5 +86,5 @@
         out-logfile -string 'Graph Secret Authentication'
     }
 
-    out-logfile -string "Existing New-msGraphConnection"
+    out-logfile -string "Exiting New-msGraphConnection"
 }
