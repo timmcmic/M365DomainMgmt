@@ -89,4 +89,8 @@
     out-logfile -string "Create the graph connection."
 
     new-msGraphConnection -msGraphAuthenticationType $msGraphAuthenticationType -msGraphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphApplicationID $msGraphApplicationID -msGraphScopesRequired $msGraphScopesRequired
+
+    out-logfile -string "Validating graph connection properties."
+
+    validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
 }
