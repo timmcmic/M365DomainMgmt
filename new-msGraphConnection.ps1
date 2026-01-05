@@ -72,6 +72,8 @@
     $authenticationInteractive = "Interactive"
     $authenticationCertificate = "Certificate"
     $authenticationSecret = "Secret"
+    $securedPasswordPassword = ""
+    $clientSecretCredential = ""
 
     out-logfile -string "Entering New-msGraphConnection"
 
@@ -97,13 +99,26 @@
             out-logfile -string "Interactive graph connection established."
         }
         catch {
-            out-logfile -string "Unable to connect with interactive authentication."
+            out-logfile -string "Unable to connect with certificate authentication."
             out-logfile -string $_ -isError:$true
         }
     }
     elseif ($msGraphAuthenticationType -eq $authenticationSecret)
     {
         out-logfile -string 'Graph Secret Authentication'
+
+        $securedPasswordPassword = convertTo-SecureString -string $msGraphClientSecret -AsPlainText -Force
+
+        $clientSecretCredential = new-object -typeName System.Management.Automation.PSCredential -argumentList $msGraphApplicationID,$securedPasswordPassword
+
+        try {
+            connect-MGGraph -TenantId $msGraphTenantID -Environment $msGraphEnvironmentName -ClientSecretCredential $clientSecretCredential -errorAction Stop
+            out-logfile -string "Interactive graph connection established."
+        }
+        catch {
+            out-logfile -string "Unable to connect with secret authentication."
+            out-logfile -string $_ -isError:$true
+        }
     }
 
     out-logfile -string "Exiting New-msGraphConnection"

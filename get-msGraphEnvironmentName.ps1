@@ -61,6 +61,9 @@
                     out-logfile -string "Invalid environment selection made." -isError:$TRUE
                 }
             }
+
+            write-host "*********************************************"
+            write-host ""
         }
         else 
         {
@@ -73,9 +76,6 @@
                 out-logfile -string "ERROR:  Invalid environment passed at runtime." -isError:$TRUE
             }
         }
-
-        write-host "*********************************************"
-        write-host ""
 
         out-logfile -string "Exiting get-MSGraphEnvironmentName"
 
