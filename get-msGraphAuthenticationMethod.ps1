@@ -9,7 +9,11 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID 
+    get-msGraphAuthenticationMethod -msGraphApplicationID $msGraphApplicationID -msGRaphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -testString $testString
+
+    .OUTPUTS
+
+    Returns the authentication method.
 
     #>
     Function get-msGraphAuthenticationMethod

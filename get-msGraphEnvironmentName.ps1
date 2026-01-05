@@ -5,11 +5,11 @@
 
     .DESCRIPTION
 
-    This function obtains the msGraphTenantID if not previously defined.
+    This function obtains the msGraphEnvironmentName if not previously defined.
 
     .EXAMPLE
 
-    get-msGraphTenantID 
+    get-msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -testString $testString
 
     #>
     Function get-msGraphEnvironmentName
@@ -23,11 +23,6 @@
         )
 
         #Define variables.
-
-        $global = "Global"
-        $usGov = "USGov"
-        $usDOD = "usDOD"
-        $china = "China"
 
         out-logfile -string "Entering get-MSGraphEnvironmentName"
 
@@ -50,13 +45,13 @@
             switch($selection)
             {
                 '1' {
-                    $msGraphEnvironmentName = $global
+                    $msGraphEnvironmentName = $global:msGraphGlobal
                 } '2' {
-                    $msGraphEnvironmentName = $usGov
+                    $msGraphEnvironmentName = $global:msGraphUSGov
                 } '3' {
-                    $msGraphEnvironmentName = $usDOD
+                    $msGraphEnvironmentName = $global:msGraphUSDOD
                 } '4' {
-                    $msGraphEnvironmentName = $China
+                    $msGraphEnvironmentName = $global:msGraphChina
                 } default {
                     out-logfile -string "Invalid environment selection made." -isError:$TRUE
                 }
@@ -67,7 +62,7 @@
         }
         else 
         {
-            if (($msGraphEnvironmentName -eq $Global) -or ($msGraphEnvironmentName -eq $usGov) -or ($msGraphEnvironmentName -eq $usDOD) -or ($msGraphEnvironmentName -eq $China))
+            if (($msGraphEnvironmentName -eq $global:msGraphGlobal) -or ($msGraphEnvironmentName -eq $global:msGraphUSGov) -or ($msGraphEnvironmentName -eq $global:msGraphUSDOD) -or ($msGraphEnvironmentName -eq $global:msGraphChina))
             {
                 out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
             }

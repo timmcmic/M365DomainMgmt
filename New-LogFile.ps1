@@ -44,11 +44,11 @@
 
     $logFolderPath = $logFolderPath+"\"+$logFileName+"\"
 
-    $global:xmlPath = $logFolderPath
+    $global:msGraphGlobal:xmlPath = $logFolderPath
     
     #Since $logFile is defined in the calling function - this sets the log file name for the entire script
     
-    $global:LogFile = Join-path $logFolderPath $fileName
+    $global:msGraphGlobal:LogFile = Join-path $logFolderPath $fileName
 
     #Test the path to see if this exists if not create.
 

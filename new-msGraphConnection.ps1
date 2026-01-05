@@ -37,12 +37,11 @@
 
 	.OUTPUTS
 
-    Ensure the directory exists.
-    Establishes the logfile path/name for subsequent function calls.
+    None
 
     .EXAMPLE
 
-    new-logfile -groupSMTPAddress ADDRESS -logFolderPath LOGFOLDERPATH
+    new-msGraphConnection -msGraphTenantID $msGraphTenantID -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret -msGraphCertifcateThumbprint $msGraphCertificateThumbprint -msGraphEnvironmentName $msGraphEnvironmentName -msGraphAuthenticationType $msGraphAuthenticationType -msGraphScopesRequired $msGraphScopesRequired
 
     #>
     Function new-msGraphConnection

@@ -104,13 +104,20 @@ Function Start-M365DomainManagement
 
     #Variables for logging.
 
-    $global:logFile=$NULL
+    $global:msGraphGlobal:logFile=$NULL
     $logFileName = "M365DomainMgmt_"+(Get-Date -Format FileDateTime)
 
     #Variables for graph.
 
     $msGraphRequiredScopes = "Domain.ReadWrite.All"
     $msGraphURL = ""
+
+    #Define globals
+
+    $global:msGraphGlobal = "Global"
+    $global:msGraphUSGov = "USGov"
+    $global:msGraphUSDOD = "usDOD"
+    $global:msGraphChina = "China"
 
     #Start the log file.
 

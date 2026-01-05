@@ -9,7 +9,11 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID 
+    get-msGraphTenantID -msGraphTenantID $msGraphTenantID -testString $testString
+
+    .OUTPUTS
+
+    Returns the tenant ID
 
     #>
     Function get-msGraphTenantID

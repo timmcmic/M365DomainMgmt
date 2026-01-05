@@ -57,7 +57,7 @@
         
         # Write everything to our log file and the screen
 
-        $logstring | Out-File -FilePath $global:LogFile -Append
+        $logstring | Out-File -FilePath $global:msGraphGlobal:LogFile -Append
     
         #Write to the screen the information passed to the log.
 

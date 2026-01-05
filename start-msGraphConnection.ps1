@@ -65,6 +65,7 @@
 
     $testString = "None"
     $msGraphAuthenticationType = ""
+    $msGraphURL
 
     out-logfile -string "Entering Start-MSGraphConnection"
 
@@ -93,4 +94,8 @@
     out-logfile -string "Validating graph connection properties."
 
     validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
+
+    out-logfile -string "Calculating the graph URL based on the environment."
+
+    $msGraphURL = calculate-msGraphURL -msGraphEnvironmentName $msGraphEnvironmentName
 }

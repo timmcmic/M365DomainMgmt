@@ -7,42 +7,17 @@
 
     This function creates the msGraph connection to support additional functions.
 
-    .PARAMETER msGraphRequiredScopes
-
-    The scopes defined in the calling function required for ms graph work..
-
     .PARAMETER msGraphEnvironmentName
 
     The graph environment that the work will be performed in.
 
-    .PARAMETER msGraphTenantID
+    .OUTPUTS
 
-    The tenant ID where the work will be performed.
-
-    .PARAMETER msGraphCertificateThumbprint
-
-    The certificate utilized for authentication.
-
-    .PARAMETER msGraphClientSecret
-
-    The secret utilized for the authentication session.
-
-    .PARAMETER msGraphApplicationID
-
-    The application that has the required permissions, client secret association, or certificate thumbprint associate.
-
-    .PARAMETER msGraphAuthenticationType
-
-    The type of authentication that will be utilized with graph.
-
-	.OUTPUTS
-
-    Ensure the directory exists.
-    Establishes the logfile path/name for subsequent function calls.
+    None
 
     .EXAMPLE
 
-    new-logfile -groupSMTPAddress ADDRESS -logFolderPath LOGFOLDERPATH
+    validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
 
     #>
     Function validate-msGraphConnection
