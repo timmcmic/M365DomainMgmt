@@ -141,5 +141,7 @@ Function Start-M365DomainManagement
     start-msGraphConnection -msGraphScopesRequired $msGraphRequiredScopes -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
 
     out-logfile -string "Starting domain operations"
+
+    start-DomainOperation -domainName $domainName -domainOperation $domainOperation
 }
 
