@@ -107,7 +107,11 @@
     {
         out-logfile -string 'Graph Secret Authentication'
 
+        out-logfile -string "Converting secret to secure password"
+
         $securedPasswordPassword = convertTo-SecureString -string $msGraphClientSecret -AsPlainText -Force
+
+        out-logfile -string "Converting secure password and appID to client credential"
 
         $clientSecretCredential = new-object -typeName System.Management.Automation.PSCredential -argumentList $msGraphApplicationID,$securedPasswordPassword
 
