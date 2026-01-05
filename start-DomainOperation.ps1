@@ -29,7 +29,9 @@
         [Parameter(Mandatory = $true)]
         [string]$domainName,
         [Parameter(Mandatory = $true)]
-        [string]$domainOperation
+        [string]$domainOperation,
+        [Parameter(Mandatory = $true)]
+        [string]$msGraphEnvironmentName
     )
 
     #Define local variables.
@@ -75,20 +77,50 @@
         $selection = read-host "Please make an operation selection: "
 
         out-logfile -string ("Operation Selected = "+$selection)
+
+        switch($selection)
+        {
+            '1' {
+                out-logfile -string "Add"
+                $domainOperation = $domainAdd
+            } '2' {
+                out-logfile -string "Remove"
+                $domainOperation = $domainRemove
+            } '3' {
+                out-logfile -string "Confirm"
+                $domainOperation = $domainConfirm
+            } '4' {
+                out-logfile -string "ForceDomainTakeOver"
+                $domainOperation = $domainForceDomainTakeOver
+            } default {
+                out-logfile -string "Invalid operation selection made." -isError:$TRUE
+            }
+        }
+    }
+    else 
+    {
+        out-logfile -string "A valid domain operation was specified at runtime."
     }
 
-    switch($selection)
+    out-logfile -string ("Operation: "+$domainOperation)
+
+    switch ($domainOperation)
     {
         $domainAdd {
-            out-logfile -string 'Add'
+            try {
+                new-MGDomain -domainName $domainName -errorAction Stop
+                out-logfile -string "Domain added successfully."
+            }
+            catch {
+                out-logfile -string "Unable to add the specified domain."
+                out-logfile -string $_ -isError:$TRUE
+            }
         } $domainRemove {
-            out-logfile -string 'Remove'
+
         } $domainConfirm {
-            out-logfile -string 'Confirm'
-        } $domainForceDomainTakeover {
-            out-logfile -string 'ForceDomainTakeOver'
-        } default {
-            out-logfile -string "Invalid domain operation specified." -isError:$TRUE
+
+        } $domainForceDomainTakeOver {
+
         }
     }
 

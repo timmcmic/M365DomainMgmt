@@ -142,6 +142,6 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Starting domain operations"
 
-    start-DomainOperation -domainName $domainName -domainOperation $domainOperation
+    start-DomainOperation -domainName $domainName -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName
 }
 
