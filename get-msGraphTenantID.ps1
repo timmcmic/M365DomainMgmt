@@ -21,9 +21,7 @@
         Param
         (
             [Parameter(Mandatory = $true)]
-            [string]$msGraphTenantID,
-            [Parameter(Mandatory = $true)]
-            [string]$global:testString
+            [string]$msGraphTenantID
         )
 
         out-logfile -string "Entering get-msGraphTenantID"
