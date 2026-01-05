@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -testString $testString
+    get-msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -testString $global:testString
 
     #>
     Function get-msGraphEnvironmentName
@@ -17,16 +17,14 @@
         Param
         (
             [Parameter(Mandatory = $true)]
-            [string]$msGraphEnvironmentName,
-            [Parameter(Mandatory = $true)]
-            [string]$testString
+            [string]$msGraphEnvironmentName
         )
 
         #Define variables.
 
         out-logfile -string "Entering get-MSGraphEnvironmentName"
 
-        if ($msGraphEnvironmentName -eq $testString)
+        if ($msGraphEnvironmentName -eq $global:testString)
         {
             out-logfile -string "An MSGraphEnvironment name was not defined."
 

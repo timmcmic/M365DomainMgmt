@@ -34,8 +34,14 @@
     #Define local variables.
 
     $msGraphURL = ""
+    $msGraphURLGlobal = "https://graph.microsoft.com"
+    $msGraphURLUSGov = "https://graph.microsoft.us"
+    $msGraphURLUSDoD = "https://dod-graph.microsoft.us"
+    $msGraphURLChina = "https://microsoftgraph.chinacloudapi.cn"
 
     out-logfile -string "Entering Calculate-MSGraphURL"
+
+    
 
     out-logfile -string "Exiting Calculate-MSGraphURL"
 

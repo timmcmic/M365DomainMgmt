@@ -63,7 +63,6 @@
 
     #Define variables.
 
-    $testString = "None"
     $msGraphAuthenticationType = ""
     $msGraphURL
 
@@ -71,19 +70,19 @@
 
     out-logfile -string "Record or obtain an entra / graph tenant id."
 
-    $msGraphTenantID = get-msGraphTenantID -msGraphTEnantID $msGraphTenantID -testString $testString
+    $msGraphTenantID = get-msGraphTenantID -msGraphTEnantID $msGraphTenantID -testString $global:testString
 
     out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
 
     out-logfile -string "Record or obtain an MSGraphEnvironmentName"
 
-    $msGraphEnvironmentName = get-msGraphEnvironmentName -msGraphEnvironmentName $msGraphEnvironmentName -testString $testString
+    $msGraphEnvironmentName = get-msGraphEnvironmentName -msGraphEnvironmentName $msGraphEnvironmentName -testString $global:testString
 
     out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
 
     out-logfile -string "Obtain the graph authentication type"
 
-    $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $testString
+    $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $global:testString
 
     out-logfile -string ("MSGraphAuthenticationType: "+$msGraphAuthenticationType)
 
@@ -94,8 +93,4 @@
     out-logfile -string "Validating graph connection properties."
 
     validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
-
-    out-logfile -string "Calculating the graph URL based on the environment."
-
-    $msGraphURL = calculate-msGraphURL -msGraphEnvironmentName $msGraphEnvironmentName
 }

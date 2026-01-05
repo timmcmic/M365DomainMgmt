@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphAuthenticationMethod -msGraphApplicationID $msGraphApplicationID -msGRaphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -testString $testString
+    get-msGraphAuthenticationMethod -msGraphApplicationID $msGraphApplicationID -msGRaphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -testString $global:testString
 
     .OUTPUTS
 
@@ -25,9 +25,7 @@
             [Parameter(Mandatory = $true)]
             [string]$msGraphClientSecret,
             [Parameter(Mandatory = $true)]
-            [string]$msGraphCertificateThumbprint,
-            [Parameter(Mandatory = $true)]
-            [string]$testString
+            [string]$msGraphCertificateThumbprint
         )
 
         #Define variables.
@@ -36,7 +34,7 @@
         
         out-logfile -string "Entering get-msGraphAuthenticationMethod"
 
-        if (($msGraphCertificateThumbprint -ne $testString) -and ($msGraphClientSecret -ne $testString))
+        if (($msGraphCertificateThumbprint -ne $global:testString) -and ($msGraphClientSecret -ne $global:testString))
         {
             out-logfile -string "A certificate thumbprint and client secret were provided at the same time."
             out-logfile -string "Provide only one method of non-interactive authentication." -isError:$TRUE
@@ -46,9 +44,9 @@
             out-logfile -string "A client secret and certificate thumbprint were not provided together - proceed."
         }
 
-        if ($msGraphCertificateThumbprint -ne $testString)
+        if ($msGraphCertificateThumbprint -ne $global:testString)
         {
-            if ($msgraphApplicationID -ne $testString)
+            if ($msgraphApplicationID -ne $global:testString)
             {
                 $authenticationType = $global:authenticationCertificate
                 out-logfile -string "Authentication Method = CertificateAuthentication"
@@ -59,9 +57,9 @@
                 out-logfile -string "ERROR:  Missing application ID" -isError:$TRUE
             }
         }
-        elseif ($msGraphClientSecret -ne $testString)
+        elseif ($msGraphClientSecret -ne $global:testString)
         {
-            if ($msgraphApplicationID -ne $testString)
+            if ($msgraphApplicationID -ne $global:testString)
             {
                 $authenticationType = $global:authenticationSecret
                 out-logfile -string "Authentication Method = ClientSecret"
@@ -78,7 +76,7 @@
             out-logfile -string "Authentication Method = Interactive"
         }
 
-        if ($msgraphApplicationID -ne $testString -and ($msGraphClientSecret -eq $testString -and $msGraphCertificateThumbprint -eq $testString))
+        if ($msgraphApplicationID -ne $global:testString -and ($msGraphClientSecret -eq $global:testString -and $msGraphCertificateThumbprint -eq $global:testString))
         {
             out-logfile -string "A certificate thumbprint or client secret is required when specifying an application id."
             out-logfile -string "ERROR:  Missing certificate thumbprint or client secret" -isError:$TRUE

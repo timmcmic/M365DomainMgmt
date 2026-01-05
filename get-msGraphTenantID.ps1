@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID -msGraphTenantID $msGraphTenantID -testString $testString
+    get-msGraphTenantID -msGraphTenantID $msGraphTenantID -testString $global:testString
 
     .OUTPUTS
 
@@ -23,12 +23,12 @@
             [Parameter(Mandatory = $true)]
             [string]$msGraphTenantID,
             [Parameter(Mandatory = $true)]
-            [string]$testString
+            [string]$global:testString
         )
 
         out-logfile -string "Entering get-msGraphTenantID"
 
-        if ($msGraphTenantID -eq $testString)
+        if ($msGraphTenantID -eq $global:testString)
         {
             write-host ""
             write-host "*********************************"

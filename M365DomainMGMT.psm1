@@ -99,7 +99,9 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$msGraphApplicationID="None",
         [Parameter(Mandatory=$false)]
-        [string]$msGraphClientSecret="None"
+        [string]$msGraphClientSecret="None",
+        [Parameter(Mandatory=$false)]
+        [string]$domainName="None"
     )
 
     #Variables for logging.
@@ -121,6 +123,7 @@ Function Start-M365DomainManagement
     $global:authenticationInteractive = "Interactive"
     $global:authenticationCertificate = "Certificate"
     $global:authenticationSecret = "Secret"
+    $global:testString = "None"
 
     #Start the log file.
 
@@ -132,6 +135,8 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Obtain and prepare MS Graph Connection."
 
-    $msGraphURL = start-msGraphConnection -msGraphScopesRequired $msGraphRequiredScopes -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
+    start-msGraphConnection -msGraphScopesRequired $msGraphRequiredScopes -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
+
+    out-logfile -string "Starting domain operations"
 }
 
