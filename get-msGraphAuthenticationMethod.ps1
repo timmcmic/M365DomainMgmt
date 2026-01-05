@@ -33,10 +33,7 @@
         #Define variables.
 
         $authenticationType = ""
-        $authenticationInteractive = "Interactive"
-        $authenticationCertificate = "Certificate"
-        $authenticationSecret = "Secret"
-
+        
         out-logfile -string "Entering get-msGraphAuthenticationMethod"
 
         if (($msGraphCertificateThumbprint -ne $testString) -and ($msGraphClientSecret -ne $testString))
@@ -53,7 +50,7 @@
         {
             if ($msgraphApplicationID -ne $testString)
             {
-                $authenticationType = $authenticationCertificate
+                $authenticationType = $global:authenticationCertificate
                 out-logfile -string "Authentication Method = CertificateAuthentication"
             }
             else 
@@ -66,7 +63,7 @@
         {
             if ($msgraphApplicationID -ne $testString)
             {
-                $authenticationType = $authenticationSecret
+                $authenticationType = $global:authenticationSecret
                 out-logfile -string "Authentication Method = ClientSecret"
             }
             else 
@@ -77,7 +74,7 @@
         }
         else 
         {
-            $authenticationType = $authenticationInteractive
+            $authenticationType = $global:authenticationInteractive
             out-logfile -string "Authentication Method = Interactive"
         }
 

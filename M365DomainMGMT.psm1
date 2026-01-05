@@ -118,6 +118,9 @@ Function Start-M365DomainManagement
     $global:msGraphUSGov = "USGov"
     $global:msGraphUSDOD = "usDOD"
     $global:msGraphChina = "China"
+    $global:authenticationInteractive = "Interactive"
+    $global:authenticationCertificate = "Certificate"
+    $global:authenticationSecret = "Secret"
 
     #Start the log file.
 

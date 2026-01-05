@@ -68,15 +68,12 @@
 
     #Define variables.
 
-    $authenticationInteractive = "Interactive"
-    $authenticationCertificate = "Certificate"
-    $authenticationSecret = "Secret"
     $securedPasswordPassword = ""
     $clientSecretCredential = ""
 
     out-logfile -string "Entering New-msGraphConnection"
 
-    if ($msGraphAuthenticationType -eq $authenticationInteractive)
+    if ($msGraphAuthenticationType -eq $global:authenticationInteractive)
     {
         out-logfile -string 'Graph Interactive Authentication'
 
@@ -89,7 +86,7 @@
             out-logfile -string $_ -isError:$true
         }
     }
-    elseif ($msGraphAuthenticationType -eq $authenticationCertificate)
+    elseif ($msGraphAuthenticationType -eq $global:authenticationCertificate)
     {
         out-logfile -string 'Graph Certificate Authentication'
 
@@ -102,7 +99,7 @@
             out-logfile -string $_ -isError:$true
         }
     }
-    elseif ($msGraphAuthenticationType -eq $authenticationSecret)
+    elseif ($msGraphAuthenticationType -eq $global:authenticationSecret)
     {
         out-logfile -string 'Graph Secret Authentication'
 
