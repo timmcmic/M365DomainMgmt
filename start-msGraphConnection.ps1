@@ -64,9 +64,6 @@
     #Define variables.
 
     $testString = "None"
-    $authenticationInteractive = "Interactive"
-    $authenticationCertificate = "Certificate"
-    $authenticationSecret = "Secret"
     $msGraphAuthenticationType = ""
 
     out-logfile -string "Entering Start-MSGraphConnection"
@@ -88,4 +85,8 @@
     $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $testString
 
     out-logfile -string ("msGraphAuthenticationType: "+$msGraphAuthenticationType)
+
+    out-logfile -string "Create the graph connection."
+
+    new-msGraphConnection -msGraphAuthenticationType $msGraphAuthenticationType -msGraphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName
 }
