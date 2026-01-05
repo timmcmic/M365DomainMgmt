@@ -90,16 +90,16 @@ Function Start-M365DomainManagement
         #Define variables to allow administrator to provide grpah connectivity.
          #Define Microsoft Graph Parameters
         [Parameter(Mandatory = $false)]
-        [ValidateSet("","China","Global","USGov","USGovDod")]
-        [string]$msGraphEnvironmentName="",
+        [ValidateSet("None","China","Global","USGov","USGovDod")]
+        [string]$msGraphEnvironmentName="None",
         [Parameter(Mandatory=$false)]
-        [string]$msGraphTenantID="",
+        [string]$msGraphTenantID="None",
         [Parameter(Mandatory=$false)]
-        [string]$msGraphCertificateThumbprint="",
+        [string]$msGraphCertificateThumbprint="None",
         [Parameter(Mandatory=$false)]
-        [string]$msGraphApplicationID="",
+        [string]$msGraphApplicationID="None",
         [Parameter(Mandatory=$false)]
-        [string]$msGraphClientSecret=""
+        [string]$msGraphClientSecret="None"
     )
 
     #Variables for logging.
@@ -121,6 +121,6 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Obtain and prepare MS Graph Connection."
 
-    $msGraphTenantID = get-msGraphTenantID
+    start-msGraphConnection -msGraphScopesReqired $msGraphScopesRequired -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
 }
 
