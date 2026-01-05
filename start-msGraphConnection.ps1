@@ -56,7 +56,9 @@
         [Parameter(Mandatory = $true)]
         [string]$msGraphClientSecret,
         [Parameter(Mandatory = $true)]
-        [string]$msGraphCertificateThumbprint
+        [string]$msGraphCertificateThumbprint,
+        [Parameter(Mandatory = $true)]
+        [string]$msGraphEnvironmentName
     )
 
     #Define variables.
@@ -65,7 +67,7 @@
 
     out-logfile -string "Entering Start-MSGraphConnection"
 
-    out-logfile -string "Record or obaint an entra / graph tenant id."
+    out-logfile -string "Record or obtain an entra / graph tenant id."
 
     if ($msGraphTenantID -eq $testString)
     {
@@ -79,5 +81,21 @@
     {
         out-logfile -string "A graph tenant ID was provied at runtime."
         out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
+    }
+
+    out-logfile -string "Record or obtain an MSGraphEnvironmentName"
+
+    if ($msGraphEnvironmentName -eq $testString)
+    {
+        out-logfile -string "An MSGraphEnvironment name was not defined."
+
+        $msGraphEnvironmentName = get-msGraphEnvironmentName
+
+        out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
+    }
+    else 
+    {
+        out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
+        out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
     }
 }

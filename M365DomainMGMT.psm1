@@ -110,6 +110,7 @@ Function Start-M365DomainManagement
     #Variables for graph.
 
     $msGraphRequiredScopes = "Domain.ReadWrite.All"
+    $msGraphURL = ""
 
     #Start the log file.
 
@@ -121,6 +122,6 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Obtain and prepare MS Graph Connection."
 
-    start-msGraphConnection -msGraphScopesReqired $msGraphScopesRequired -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
+    $msGraphURL = start-msGraphConnection -msGraphScopesRequired $msGraphRequiredScopes -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
 }
 
