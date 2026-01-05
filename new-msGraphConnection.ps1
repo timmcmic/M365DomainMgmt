@@ -62,7 +62,9 @@
         [Parameter(Mandatory = $true)]
         [string]$msGraphEnvironmentName,
         [Parameter(Mandatory = $true)]
-        [string]$msGraphAuthenticationType
+        [string]$msGraphAuthenticationType,
+        [Parameter(Mandatory = $true)]
+        [string]$msGraphScopesRequired
     )
 
     #Define variables.
@@ -76,6 +78,15 @@
     if ($msGraphAuthenticationType -eq $authenticationInteractive)
     {
         out-logfile -string 'Graph Interactive Authentication'
+
+        try {
+            connect-MGGraph -scopes $msGraphScopesRequired -TenantId $msGraphTenantID -Environment $msGraphEnvironmentName -errorAction Stop
+            out-logfile -string "Interactive graph connection established."
+        }
+        catch {
+            out-logfile -string "Unable to connect with interactive authentication."
+            out-logfile -string $_ -isError:$true
+        }
     }
     elseif ($msGraphAuthenticationType -eq $authenticationCertificate)
     {

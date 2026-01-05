@@ -84,9 +84,9 @@
 
     $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $testString
 
-    out-logfile -string ("msGraphAuthenticationType: "+$msGraphAuthenticationType)
+    out-logfile -string ("MSGraphAuthenticationType: "+$msGraphAuthenticationType)
 
     out-logfile -string "Create the graph connection."
 
-    new-msGraphConnection -msGraphAuthenticationType $msGraphAuthenticationType -msGraphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName
+    new-msGraphConnection -msGraphAuthenticationType $msGraphAuthenticationType -msGraphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphTenantID $msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -msGraphApplicationID $msGraphApplicationID -msGraphScopesRequired $msGraphScopesRequired
 }

@@ -14,7 +14,6 @@
     #>
     Function disable-allPowerShellSessions
      {
-
         out-logfile -string "Entering disable-allPowershellSessions"
 
         try {
