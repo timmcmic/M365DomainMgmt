@@ -67,6 +67,12 @@
             out-logfile -string "Authentication Method = Interactive"
         }
 
+        if ($msgraphApplicationID -ne $testString -and ($msGraphClientSecret -eq $testString -or $msGraphCertificateThumbprint -eq $testString))
+        {
+            out-logfile -string "A certificate thumbprint or client secret is required when specifying an application id."
+            out-logfile -string "ERROR:  Missing certificate thumbprint or client secret" -isError:$TRUE
+        }
+
         out-logfile -string "Exiting get-msGraphAuthenticationMethod"
 
         return $authenticationType
