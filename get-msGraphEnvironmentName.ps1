@@ -45,27 +45,26 @@
 
             $selection = read-host "Please make a environment selection: "
 
+            out-logfile -string ("Graph environment selected = "+$selection)
+
+            switch($selection)
+            {
+                '1' {
+                    $msGraphEnvironmentName = $global
+                } '2' {
+                    $msGraphEnvironmentName = $usGov
+                } '3' {
+                    $msGraphEnvironmentName = $usDOD
+                } '4' {
+                    $msGraphEnvironmentName = $China
+                } default {
+                    out-logfile -string "Invalid environment selection made." -isError:$TRUE
+                }
+            }
         }
         else 
         {
             out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
-        }
-
-        out-logfile -string ("Graph environment selected = "+$selection)
-
-        switch($selection)
-        {
-            '1' {
-                $msGraphEnvironmentName = $global
-            } '2' {
-                $msGraphEnvironmentName = $usGov
-            } '3' {
-                $msGraphEnvironmentName = $usDOD
-            } '4' {
-                $msGraphEnvironmentName = $China
-            } default {
-                out-logfile -string "Invalid environment selection made." -isError:$TRUE
-            }
         }
 
         write-host "*********************************************"

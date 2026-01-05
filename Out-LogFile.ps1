@@ -86,7 +86,5 @@
             #Now if we're not in a do while we end up here -> go ahead and create the status file this was not a retryable operation and is a hard failure.
 
             disable-allPowerShellSessions
-
-            exit
         }
     }

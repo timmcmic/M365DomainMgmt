@@ -91,6 +91,15 @@
     elseif ($msGraphAuthenticationType -eq $authenticationCertificate)
     {
         out-logfile -string 'Graph Certificate Authentication'
+
+        try {
+            connect-MGGraph -TenantId $msGraphTenantID -CertificateThumbprint $msGraphCertificateThumbprint -AppId $msgraphApplicationID -Environment $msGraphEnvironmentName
+            out-logfile -string "Interactive graph connection established."
+        }
+        catch {
+            out-logfile -string "Unable to connect with interactive authentication."
+            out-logfile -string $_ -isError:$true
+        }
     }
     elseif ($msGraphAuthenticationType -eq $authenticationSecret)
     {
