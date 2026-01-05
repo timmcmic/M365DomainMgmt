@@ -64,7 +64,14 @@
         }
         else 
         {
-            out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
+            if (($msGraphEnvironmentName -eq $Global) -or ($msGraphEnvironmentName -eq $usGov) -or ($msGraphEnvironmentName -eq $usDOD) -or ($msGraphEnvironmentName -eq $China))
+            {
+                out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
+            }
+            else 
+            {
+                out-logfile -string "ERROR:  Invalid environment passed at runtime." -isError:$TRUE
+            }
         }
 
         write-host "*********************************************"
