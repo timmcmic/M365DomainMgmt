@@ -60,5 +60,37 @@
 
     out-logfile -string ("Domain specified: "+$localDomainName)
 
+    if ($domainOperation -eq $global:testString)
+    {
+        out-logfile -string "A domain operation was not provided.."
+
+        write-host ""
+        write-host "*********************************************"
+        write-host "Select the domain operation to perform:"
+        write-host "1:  Add"
+        write-host "2:  Remove"
+        write-host "3:  Confirm"
+        write-host "4:  ForceDomainTakeOver"
+
+        $selection = read-host "Please make an operation selection: "
+
+        out-logfile -string ("Operation Selected = "+$selection)
+    }
+
+    switch($selection)
+    {
+        $domainAdd {
+            out-logfile -string 'Add'
+        } $domainRemove {
+            out-logfile -string 'Remove'
+        } $domainConfirm {
+            out-logfile -string 'Confirm'
+        } $domainForceDomainTakeover {
+            out-logfile -string 'ForceDomainTakeOver'
+        } default {
+            out-logfile -string "Invalid domain operation specified." -isError:$TRUE
+        }
+    }
+
     out-logfile -string "Exiting Start-DomainOperation"
 }
