@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName -testString $global:testString
+    get-msGraphTenantID -msGraphEnvironmentName $msGraphEnvironmentName
 
     #>
     Function get-msGraphEnvironmentName

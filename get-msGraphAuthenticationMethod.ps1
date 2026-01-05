@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphAuthenticationMethod -msGraphApplicationID $msGraphApplicationID -msGRaphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint -testString $global:testString
+    get-msGraphAuthenticationMethod -msGraphApplicationID $msGraphApplicationID -msGRaphClientSecret $msGraphClientSecret -msGraphCertificateThumbprint $msGraphCertificateThumbprint
 
     .OUTPUTS
 

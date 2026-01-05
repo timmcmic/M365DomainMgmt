@@ -9,7 +9,7 @@
 
     .EXAMPLE
 
-    get-msGraphTenantID -msGraphTenantID $msGraphTenantID -testString $global:testString
+    get-msGraphTenantID -msGraphTenantID $msGraphTenantID
 
     .OUTPUTS
 

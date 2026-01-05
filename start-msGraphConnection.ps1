@@ -70,19 +70,19 @@
 
     out-logfile -string "Record or obtain an entra / graph tenant id."
 
-    $msGraphTenantID = get-msGraphTenantID -msGraphTEnantID $msGraphTenantID -testString $global:testString
+    $msGraphTenantID = get-msGraphTenantID -msGraphTEnantID $msGraphTenantID
 
     out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
 
     out-logfile -string "Record or obtain an MSGraphEnvironmentName"
 
-    $msGraphEnvironmentName = get-msGraphEnvironmentName -msGraphEnvironmentName $msGraphEnvironmentName -testString $global:testString
+    $msGraphEnvironmentName = get-msGraphEnvironmentName -msGraphEnvironmentName $msGraphEnvironmentName
 
     out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
 
     out-logfile -string "Obtain the graph authentication type"
 
-    $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $global:testString
+    $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret
 
     out-logfile -string ("MSGraphAuthenticationType: "+$msGraphAuthenticationType)
 
