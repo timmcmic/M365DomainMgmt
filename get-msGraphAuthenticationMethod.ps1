@@ -35,6 +35,16 @@
 
         out-logfile -string "Entering get-msGraphAuthenticationMethod"
 
+        if (($msGraphCertificateThumbprint -ne $testString) -and ($msGraphClientSecret -ne $testString))
+        {
+            out-logfile -string "A certificate thumbprint and client secret were provided at the same time."
+            out-logfile -string "Provide only one method of non-interactive authentication." -isError:$TRUE
+        }
+        else 
+        {
+            out-logfile -string "A client secret and certificate thumbprint were not provided together - proceed."
+        }
+
         if ($msGraphCertificateThumbprint -ne $testString)
         {
             if ($msgraphApplicationID -ne $testString)
@@ -53,7 +63,7 @@
             if ($msgraphApplicationID -ne $testString)
             {
                 $authenticationType = $authenticationSecret
-                out-logfile -string "Authentication Method = CertificateAuthentication"
+                out-logfile -string "Authentication Method = ClientSecret"
             }
             else 
             {
@@ -67,7 +77,7 @@
             out-logfile -string "Authentication Method = Interactive"
         }
 
-        if ($msgraphApplicationID -ne $testString -and ($msGraphClientSecret -eq $testString -or $msGraphCertificateThumbprint -eq $testString))
+        if ($msgraphApplicationID -ne $testString -and ($msGraphClientSecret -eq $testString -and $msGraphCertificateThumbprint -eq $testString))
         {
             out-logfile -string "A certificate thumbprint or client secret is required when specifying an application id."
             out-logfile -string "ERROR:  Missing certificate thumbprint or client secret" -isError:$TRUE

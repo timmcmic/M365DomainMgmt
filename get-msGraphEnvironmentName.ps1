@@ -14,22 +14,42 @@
     #>
     Function get-msGraphEnvironmentName
     {
-        out-logfile -string "Entering get-MSGraphEnvironmentName"
+        Param
+        (
+            [Parameter(Mandatory = $true)]
+            [string]$msGraphEnvironmentName,
+            [Parameter(Mandatory = $true)]
+            [string]$testString
+        )
+
+        #Define variables.
 
         $global = "Global"
         $usGov = "USGov"
         $usDOD = "usDOD"
         $china = "China"
 
-        write-host ""
-        write-host "*********************************************"
-        write-host "Select the grpah environment for your tenant:"
-        write-host "1:  Global"
-        write-host "2:  USGov"
-        write-host "3:  USDoD"
-        write-host "4:  China"
+        out-logfile -string "Entering get-MSGraphEnvironmentName"
 
-        $selection = read-host "Please make a environment selection: "
+        if ($msGraphEnvironmentName -eq $testString)
+        {
+            out-logfile -string "An MSGraphEnvironment name was not defined."
+
+            write-host ""
+            write-host "*********************************************"
+            write-host "Select the grpah environment for your tenant:"
+            write-host "1:  Global"
+            write-host "2:  USGov"
+            write-host "3:  USDoD"
+            write-host "4:  China"
+
+            $selection = read-host "Please make a environment selection: "
+
+        }
+        else 
+        {
+            out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
+        }
 
         out-logfile -string ("Graph environment selected = "+$selection)
 

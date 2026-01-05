@@ -64,51 +64,28 @@
     #Define variables.
 
     $testString = "None"
+    $authenticationInteractive = "Interactive"
+    $authenticationCertificate = "Certificate"
+    $authenticationSecret = "Secret"
     $msGraphAuthenticationType = ""
 
     out-logfile -string "Entering Start-MSGraphConnection"
 
     out-logfile -string "Record or obtain an entra / graph tenant id."
 
-    if ($msGraphTenantID -eq $testString)
-    {
-        out-logfile -string "A Entra / Graph TenantID was not defined."
+    $msGraphTenantID = get-msGraphTenantID -msGraphTEnantID $msGraphTenantID -testString $testString
 
-        $msGraphTenantID = get-msGraphTenantID
-
-        out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
-    }
-    else 
-    {
-        out-logfile -string "A graph tenant ID was provied at runtime."
-        out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
-    }
+    out-logfile -string ("MSGraphTenantID: "+$msGraphTenantID)
 
     out-logfile -string "Record or obtain an MSGraphEnvironmentName"
 
-    if ($msGraphEnvironmentName -eq $testString)
-    {
-        out-logfile -string "An MSGraphEnvironment name was not defined."
+    $msGraphEnvironmentName = get-msGraphEnvironmentName -msGraphEnvironmentName $msGraphEnvironmentName -testString $testString
 
-        $msGraphEnvironmentName = get-msGraphEnvironmentName
+    out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
 
-        out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
-    }
-    else 
-    {
-        out-logfile -string "A msGraphEnvironnmentName was provied at runtime."
-        out-logfile -string ("MSGraphEnvironmentName: "+$msGraphEnvironmentName)
-    }
-
-    if (($msGraphCertificateThumbprint -ne $testString) -and ($msGraphClientSecret -ne $testString))
-    {
-        out-logfile -string "A certificate thumbprint and client secret were provided at the same time."
-        out-logfile -string "Provide only one method of non-interactive authentication." -isError:$TRUE
-    }
-    else 
-    {
-        out-logfile -string "A client secret and certificate thumbprint were not provided together - proceed."
-    }
+    out-logfile -string "Obtain the graph authentication type"
 
     $msGraphAuthenticationType = get-msGraphAuthenticationMethod -msGraphApplicationID $msgraphApplicationID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphClientSecret $msGraphClientSecret -testString $testString
+
+    out-logfile -string ("msGraphAuthenticationType: "+$msGraphAuthenticationType)
 }
