@@ -101,7 +101,10 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$msGraphClientSecret="None",
         [Parameter(Mandatory=$false)]
-        [string]$domainName="None"
+        [string]$domainName="None",
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("None","New","Remove","Confirm","ForceTakeOver")]
+        [string]$domainOperation="None"
     )
 
     #Variables for logging.
