@@ -12,7 +12,7 @@ function add-mgGraphDomain
 
     out-logfile -string "Locating graph url for operations."
 
-    $mgGraphURL = get-msGraphURL -mgGrapEnvironmentName $mgGraphEnvironmentName
+    $mgGraphURL = get-mgGraphURL -mgGraphEnvironmentName $mgGraphEnvironmentName
 
     out-logfile -string ("Graph URL: "+$mgGraphURL)
 }

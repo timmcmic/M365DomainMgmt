@@ -5,7 +5,7 @@ function get-DomainOperation
     write-host ""
     write-host "*********************************************"
     write-host "Select the domain operation to perform:"
-    write-host "1:  Add"
+    write-host "1:  New"
     write-host "2:  Remove"
     write-host "3:  Confirm"
     write-host "4:  ForceDomainTakeOver"
@@ -18,8 +18,8 @@ function get-DomainOperation
     switch($selection)
     {
         '1' {
-            out-logfile -string "Add"
-            $domainOperation = "Add"
+            out-logfile -string "New"
+            $domainOperation = "New"
         } '2' {
             out-logfile -string "Remove"
             $domainOperation = "Remove"

@@ -65,7 +65,7 @@ Function start-DomainOperation
 
     switch($domainOperation)
     {
-        'Add' {
+        'New' {
             add-MGGraphDomain -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName
         } '2' {
             out-logfile -string "Remove"
