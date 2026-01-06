@@ -20,16 +20,16 @@ None
 validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
 
 #>
-Function start-DomainOperation
-{
-    function domainAction
+
+function domainAction
     {
         switch ($domainOperation) {
             $domainAdd { out-logfile -string "Add" }
             Default {}
         }
     }
-
+Function start-DomainOperation
+{
     [cmdletbinding()]
 
     Param
@@ -94,6 +94,7 @@ Function start-DomainOperation
                 '1' {
                     out-logfile -string "Add"
                     $domainOperation = $domainAdd
+                    domainAction
                 } '2' {
                     out-logfile -string "Remove"
                     $domainOperation = $domainRemove
