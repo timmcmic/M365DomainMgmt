@@ -1,4 +1,4 @@
-function get-domainName:
+function get-domainName
 {   
     out-logfile -string "Enter Get-DomainName"
 
