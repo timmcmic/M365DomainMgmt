@@ -20,14 +20,6 @@ None
 validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
 
 #>
-
-function domainAction
-    {
-        switch ($domainOperation) {
-            $domainAdd { out-logfile -string "Add" }
-            Default {}
-        }
-    }
 Function start-DomainOperation
 {
     [cmdletbinding()]
@@ -41,6 +33,14 @@ Function start-DomainOperation
         [Parameter(Mandatory = $true)]
         [string]$msGraphEnvironmentName
     )
+
+    function domainAction
+    {
+        switch ($domainOperation) {
+            $domainAdd { out-logfile -string "Add" }
+            Default {}
+        }
+    }
 
     #Define local variables.
 
