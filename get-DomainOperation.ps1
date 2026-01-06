@@ -37,6 +37,7 @@ function get-DomainOperation
         }
     }
 
+    out-logfile -string $domainOperation
     out-logfile -string "Exiting Get-DomainOperation"
 
     return $domainOperation

@@ -61,7 +61,28 @@ Function start-DomainOperation
     }
 
     out-logfile -string ("Domain Name: "+$domainName)
-    out-logfile -string ("Domain Operation: "+$domaionOperation)
+    out-logfile -string ("Domain Operation: "+$domainOperation)
+
+    switch($domainOperation)
+    {
+        'Add' {
+            add-MGGraphDomain -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName
+        } '2' {
+            out-logfile -string "Remove"
+            $domainOperation = "Remove"
+        } '3' {
+            out-logfile -string "Confirm"
+            $domainOperation = "Confirm"
+        } '4' {
+            out-logfile -string "ForceDomainTakeOver"
+            $domainOperation = "ForceDomainTakeOver"
+        } '5' {
+            out-logfile -string "Exit"
+            $domainOperation = "Exit"
+        } default {
+            out-logfile -string "Invalid operation selection made." -isError:$TRUE
+        }
+    }
 
     out-logfile -string "Exiting Start-DomainOperation"
 }
