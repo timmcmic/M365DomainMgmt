@@ -88,5 +88,7 @@
             disable-allPowerShellSessions
 
             Read-Host -Prompt "Press Enter to exit"
+
+            exit
         }
     }
