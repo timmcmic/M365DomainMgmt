@@ -1,27 +1,35 @@
 <#
-    .SYNOPSIS
+.SYNOPSIS
 
-    This function creates the msGraph connection to support additional functions.
+This function creates the msGraph connection to support additional functions.
 
-    .DESCRIPTION
+.DESCRIPTION
 
-    This function creates the msGraph connection to support additional functions.
+This function creates the msGraph connection to support additional functions.
 
-    .PARAMETER msGraphEnvironmentName
+.PARAMETER msGraphEnvironmentName
 
-    The graph environment that the work will be performed in.
+The graph environment that the work will be performed in.
 
-    .OUTPUTS
+.OUTPUTS
 
-    None
+None
 
-    .EXAMPLE
+.EXAMPLE
 
-    validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
+validate-msGraphConnection -msGraphScopesRequired $msGraphScopesRequired
 
-    #>
-    Function start-DomainOperation
+#>
+Function start-DomainOperation
 {
+    function domainAction
+    {
+        switch ($domainOperation) {
+            $domainAdd { out-logfile -string "Add" }
+            Default {}
+        }
+    }
+
     [cmdletbinding()]
 
     Param
@@ -36,6 +44,7 @@
 
     #Define local variables.
 
+    $domainOperation=""
     $domainAdd = "Add"
     $domainRemove = "Remove"
     $domainConfirm = "Confirm"
@@ -109,8 +118,6 @@
     } until (
         $selection = 5
     )
-
-    
 
     out-logfile -string "Exiting Start-DomainOperation"
 }
