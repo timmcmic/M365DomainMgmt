@@ -93,17 +93,17 @@ Function start-DomainOperation
             {
                 '1' {
                     out-logfile -string "Add"
-                    $domainOperation = $domainAdd
+                    $selection = $domainAdd
                     domainAction
                 } '2' {
                     out-logfile -string "Remove"
-                    $domainOperation = $domainRemove
+                    $selection = $domainRemove
                 } '3' {
                     out-logfile -string "Confirm"
-                    $domainOperation = $domainConfirm
+                    $selection = $domainConfirm
                 } '4' {
                     out-logfile -string "ForceDomainTakeOver"
-                    $domainOperation = $domainForceDomainTakeOver
+                    $selection = $domainForceDomainTakeOver
                 } '5' {
                     out-logfile -string "Exit"
                 } default {
