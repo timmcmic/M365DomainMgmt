@@ -34,22 +34,19 @@ Function start-DomainOperation
         [string]$msGraphEnvironmentName
     )
 
-    function domainAction
+    function domainOperation
     {
-        switch ($selection) {
-            $domainAdd { out-logfile -string "Add" }
-            Default {}
-        }
+        out-logfile -string "HERE"
     }
 
     #Define local variables.
 
-    $domainOperation=""
     $domainAdd = "Add"
     $domainRemove = "Remove"
     $domainConfirm = "Confirm"
     $domainForceDomainTakeOver = "ForceDomainTakeOver"
     $localDomainName = ""
+    $isSingleOperation = $false
 
     out-logfile -string "Entering Start-DomainOperation"
 
@@ -67,12 +64,13 @@ Function start-DomainOperation
     {
         out-logfile -string "Domain specified at runtime."
         $localDomainName = $domainName
+        $isSingleOperation = $TRUE
     }
 
     out-logfile -string ("Domain specified: "+$localDomainName)
 
     do {
-        if ($domainOperation -eq $global:testString)
+        if ($isSingleOperation -eq $false)
         {
             out-logfile -string "A domain operation was not provided.."
 
@@ -93,17 +91,13 @@ Function start-DomainOperation
             {
                 '1' {
                     out-logfile -string "Add"
-                    $selection = $domainAdd
-                    domainAction
+                    domainOperation
                 } '2' {
                     out-logfile -string "Remove"
-                    $selection = $domainRemove
                 } '3' {
                     out-logfile -string "Confirm"
-                    $selection = $domainConfirm
                 } '4' {
                     out-logfile -string "ForceDomainTakeOver"
-                    $selection = $domainForceDomainTakeOver
                 } '5' {
                     out-logfile -string "Exit"
                 } default {
