@@ -36,7 +36,7 @@ Function start-DomainOperation
 
     function domainAction
     {
-        switch ($domainOperation) {
+        switch ($selection) {
             $domainAdd { out-logfile -string "Add" }
             Default {}
         }
