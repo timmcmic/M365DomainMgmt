@@ -15,21 +15,7 @@ function get-DomainOperation
         {  
             out-logfile -string "No operation specified."
         }
-        $domainOperations.New 
-        {  
-            out-logfile -string "New operation specified."
-        }
-        $domainOperations.Confirm 
-        {  
-            out-logfile -string "Confirm operation specified."
-        }
-        $domainOperations.Remove 
-        {  
-            out-logfile -string "Remove operation specified."
-        }
-        $domainOperations.ForceTakeOver 
-        {  
-            out-logfile -string "ForceTakeOver operation specified."
-        }
     }
+
+    out-logfile -string "Exiting get-DomainOperation"
 }
