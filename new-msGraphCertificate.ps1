@@ -12,7 +12,7 @@ function new-msGraphCertificate
     out-logfile -string "Creating certificate authentication to MS Graph."
 
     try {
-        connect-mgGraph -tenantID $msGraphHashTable.msGraphTenantID -Environment $msGraphHashTable.msGraphEnvironmentName -Scopes $msGraphHashTable.msGraphScopes -errorAction Stop
+        connect-mgGraph -tenantID $msGraphHashTable.msGraphTenantID -Environment $msGraphHashTable.msGraphEnvironmentName -CertificateThumbprint $msGraphHashTable.msGraphCertificateThumbprint -ClientId $msGraphHashTable.msGraphApplicationID -errorAction Stop
         out-logfile -string "Certificate authentication to MS Graph successful."
     }
     catch {
