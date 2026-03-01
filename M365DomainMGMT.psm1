@@ -161,6 +161,15 @@ Function Start-M365DomainManagement
     $msGraphValues['msGraphScopes']=$msGraphScopesRequired
     $msGraphValues['msGraphAuthenticationType']=$PSCmdlet.ParameterSetName
 
+    #Domain operations
+
+    $domainOperations=@{}
+    $domainOperations['None'] = "None"
+    $domainOperations['New'] = "New"
+    $domainOperations['Confirm'] = "Confirm"
+    $domainOperations['Remove'] = "Remove"
+    $domainOperations['ForceTakeOver'] = "ForceTakeOver"
+
     #Create export table
 
     $exportNames = @{}
@@ -177,5 +186,11 @@ Function Start-M365DomainManagement
     out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
+    out-logfile -string "Graph"
+
     new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
+
+    out-logfile -string "Operation"
+
+    $domainOperation = get-DomainOperation -domainOperation $domainOperation -domainOperations $domainOperations
 }
