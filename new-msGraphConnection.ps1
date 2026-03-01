@@ -26,6 +26,7 @@ function new-msGraphConnection
         $msGraphClientSecret 
         {  
             out-logfile -string "Graph client secret authentication specified."
+            new-msGraphClientSecret -msGraphHashTable $msGraphHashTable
         }
     }
 
