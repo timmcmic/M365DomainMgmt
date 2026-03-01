@@ -14,6 +14,7 @@ function new-msGraphConnection
     $msGraphInteractive = "Interactive"
     $msGraphCertificate = "Certificate"
     $msGraphClientSecret = "ClientSecret"
+    $msGraphContext = $null
 
     switch ($msGraphhashTable.msGraphAuthenticationType) {
         $msGraphInteractive 
@@ -35,7 +36,11 @@ function new-msGraphConnection
 
     out-logfile -string "Record MGContext"
 
-    output-MGContext -exportFile $exportFile
+    $msGraphContext = output-MGContext -exportFile $exportFile
+
+    out-logfile -string "Validate MSGraph Scopes"
+
+    verify-msGraphScopes -context $msGraphContext -scope $msGraphHashTable.msGraphScopes
 
     out-logfile -string "Exiting new-msGraphConnection"
 }

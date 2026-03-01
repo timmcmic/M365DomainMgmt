@@ -20,4 +20,8 @@ function output-MGContext
     }
 
     out-xmlFile -itemToExport $context -itemNameToExport $exportFile
+
+    out-logfile -string "Exiting output-MGContext"
+
+    return $context
 }
