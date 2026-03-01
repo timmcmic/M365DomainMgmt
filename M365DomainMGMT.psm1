@@ -52,6 +52,18 @@ Function Start-M365DomainManagement
 
     This is the client secret associated with the graph application.
 
+    .PARAMETER domainName
+
+    The domain name to perform the operation on.
+
+    .PARAMETER domainOperation
+
+    The operation to perform on the domain.
+
+    .PARAMETER allowTelemetryCollection
+
+    Specifies if telemetry collection is allowed.
+
     .OUTPUTS
 
     Logs all activities and backs up all original data to the log folder directory.
@@ -87,61 +99,86 @@ Function Start-M365DomainManagement
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
-        #Define variables to allow administrator to provide grpah connectivity.
-         #Define Microsoft Graph Parameters
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("None","China","Global","USGov","USGovDod")]
-        [string]$msGraphEnvironmentName="None",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphTenantID="None",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphCertificateThumbprint="None",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphApplicationID="None",
-        [Parameter(Mandatory=$false)]
-        [string]$msGraphClientSecret="None",
+        #Define Microsoft Graph Parameters
+        [Parameter(Mandatory = $true, ParameterSetName = "Interactive")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Certificate")]
+        [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]
+        [ValidateSet("China","Global","USGov","USGovDod")]
+        [string]$msGraphEnvironmentName,
+        [Parameter(Mandatory = $true, ParameterSetName = "Interactive")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Certificate")]
+        [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]
+        [string]$msGraphTenantID,
+        [Parameter(Mandatory = $true, ParameterSetName = "Certificate")]
+        [string]$msGraphCertificateThumbprint,
+        [Parameter(Mandatory = $true, ParameterSetName = "Certificate")]
+        [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]
+        [string]$msGraphApplicationID,
+        [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]        
+        [string]$msGraphClientSecret,
+        #Define operation parameters
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
         [ValidateSet("None","New","Remove","Confirm","ForceTakeOver")]
-        [string]$domainOperation="None"
+        [string]$domainOperation="None",
+        [Parameter(Mandatory =$FALSE)]
+        [boolean]$allowTelemetryCollection=$TRUE
     )
 
-    #Variables for logging.
+    #Set the window title.
 
-    $global:msGraphGlobal:logFile=$NULL
+    $windowTitle = ("Start-M365DomainManagement")
+    $host.ui.RawUI.WindowTitle = $windowTitle
+
+    #Initialize telemetry collection.
+
+    $appInsightAPIKey = "63d673af-33f4-401c-931e-f0b64a218d89"
+    $traceModuleName = "M365DomainMgmt"
+
+    if ($allowTelemetryCollection -eq $TRUE)
+    {
+        start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
+    }
+
+    #Create telemetry values.
+
+    $telemetryValues = @{}
+    $telemetryValues['telemetryM365DomainMgmtVersion']="None"
+    $telemetryValues['telemetryMSGraphAuthenticationVersion']="None"
+    $telemetryValues['telemetryMSGraphDirectoryVersion']="None"
+    $telemetryValues['telemetryMSGraphBetaDirectoryVersion']="None"
+
+    #Create MSGraphHashTable
+
+    $msGraphScopesRequired = "Domain.ReadWrite.All"
+    $msGraphValues = @{}
+    $msGraphValues['msGraphEnvironmentName']=$msGraphEnvironmentName
+    $msGraphValues['msGraphTenantID']=$msGraphTenantID
+    $msGraphValues['msGraphApplicationID']=$msGraphApplicationID
+    $msGraphValues['msGraphCertificateThumbprint']=$msGraphCertificateThumbprint
+    $msGraphValues['msGraphClientSecret']=$msGraphClientSecret
+    $msGraphValues['msGraphScopes']=$msGraphScopesRequired
+    $msGraphValues['msGraphAuthenticationType']=$PSCmdlet.ParameterSetName
+
+    #Create export table
+
+    $exportNames = @{}
+    $exportNames['usersXML']="-UsersXML"
+    $exportNames['domainsCSV']="-DomainsCSV"
+    $exportNames['addressesToTextXML']="-AddressToTestXML"
+    $exportNames['consumerAccountsXML']="-ConsumerAccounts"
+
+    #Variables for logging and start log file.
+
+    $global:logFile=$NULL
     $logFileName = "M365DomainMgmt_"+(Get-Date -Format FileDateTime)
-
-    #Variables for graph.
-
-    $msGraphRequiredScopes = "Domain.ReadWrite.All"
-    $msGraphURL = ""
-
-    #Define globals
-
-    $global:msGraphGlobal = "Global"
-    $global:msGraphUSGov = "USGov"
-    $global:msGraphUSDOD = "usDOD"
-    $global:msGraphChina = "China"
-    $global:authenticationInteractive = "Interactive"
-    $global:authenticationCertificate = "Certificate"
-    $global:authenticationSecret = "Secret"
-    $global:testString = "None"
-
-    #Start the log file.
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
     out-logfile -string "*****************************************************"
-    out-logfile -string "Starting M365 Domain Management"
+    out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
-    out-logfile -string "Obtain and prepare MS Graph Connection."
-
-    start-msGraphConnection -msGraphScopesRequired $msGraphRequiredScopes -msGraphEnvironmentName $msGraphEnvironmentName -msGraphTenantID $msGraphTenantID -msGraphCertificateThumbprint $msGraphCertificateThumbprint -msGraphApplicationID $msGraphApplicationID -msGraphClientSecret $msGraphClientSecret
-
-    out-logfile -string "Starting domain operations"
-
-    start-DomainOperation -domainName $domainName -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName
+    new-msGraphConnection -msGraphHashTable $msGraphValues
 }
-
