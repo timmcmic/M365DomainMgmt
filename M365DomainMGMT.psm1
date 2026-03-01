@@ -164,10 +164,7 @@ Function Start-M365DomainManagement
     #Create export table
 
     $exportNames = @{}
-    $exportNames['usersXML']="-UsersXML"
-    $exportNames['domainsCSV']="-DomainsCSV"
-    $exportNames['addressesToTextXML']="-AddressToTestXML"
-    $exportNames['consumerAccountsXML']="-ConsumerAccounts"
+    $exportNames['msGraphContext']="-MSGraphContext"
 
     #Variables for logging and start log file.
 
@@ -180,5 +177,5 @@ Function Start-M365DomainManagement
     out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
-    new-msGraphConnection -msGraphHashTable $msGraphValues
+    new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
 }

@@ -4,7 +4,9 @@ function new-msGraphConnection
     (
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        $msGraphHashTable
+        $msGraphHashTable,
+        [Parameter(Mandatory = $true)]
+        $exportFile
     )
 
     out-logfile -string "Entering new-msGraphConnection"
@@ -30,6 +32,10 @@ function new-msGraphConnection
             new-msGraphClientSecret -msGraphHashTable $msGraphHashTable
         }
     }
+
+    out-logfile -string "Record MGContext"
+
+    output-MGContext -exportFile $exportFile
 
     out-logfile -string "Exiting new-msGraphConnection"
 }
