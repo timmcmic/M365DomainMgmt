@@ -10,6 +10,11 @@ function verify-msGraphScopes
 
     out-logfile -string "Entering verify-msGraphScopes"
 
+    foreach ($scope in $context.scopes)
+    {
+        out-logfile -string $scope
+    }
+
     if ($context.scopes.contains($scope))
     {
         out-logfile -string "Required scopes are present."
