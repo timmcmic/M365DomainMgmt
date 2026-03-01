@@ -9,23 +9,22 @@ function new-msGraphConnection
 
     out-logfile -string "Entering new-msGraphConnection"
 
-    $msGraphStatic=@{}
-    $msGraphStatic['msGraphInteractive']="Interactive"
-    $msGraphStatic['msGraphCertificate']="Certificate"
-    $msGraphStatic['msGraphClientSecret']="ClientSecret"
+    $msGraphInteractive = "Interactive"
+    $msGraphCertificate = "Certificate"
+    $msGraphClientSecret = "ClientSecret"
 
     switch ($msGraphhashTable.msGraphAuthenticationType) {
-        $msGraphStatic.msGraphInteractive 
+        $msGraphInteractive 
         {
             out-logfile -string "Graph interactive authentication specified." 
             new-msGraphInteractive -msGraphHashTable $msGraphHashTable
         }
-        $msGraphStatic.msGraphCertificate
+        $msGraphCertificate 
         {  
             out-logfile -string "Graph certificate authentication specified."
             new-msGraphCertificate -msGraphHashTable $msGraphHashTable
         }
-        $msGraphStatic.msGraphClientSecret  
+        $msGraphClientSecret 
         {  
             out-logfile -string "Graph client secret authentication specified."
             new-msGraphClientSecret -msGraphHashTable $msGraphHashTable
