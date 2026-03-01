@@ -5,12 +5,12 @@ function verify-msGraphScopes
         [Parameter(Mandatory = $true)]
         $context,
         [Parameter(Mandatory = $true)]
-        $msGraphScopesRequired
+        $scope
     )
 
     out-logfile -string "Entering verify-msGraphScopes"
 
-    if ($context.scopes.contains($msGraphScopesRequired))
+    if ($context.scopes.contains($scope))
     {
         out-logfile -string "Required scopes are present."
     }
