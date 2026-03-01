@@ -164,7 +164,7 @@ Function Start-M365DomainManagement
     #Create export table
 
     $exportNames = @{}
-    $exportNames['msGraphContext']="-MSGraphContext"
+    $exportNames['msGraphContext']="MSGraphContext"
 
     #Variables for logging and start log file.
 
