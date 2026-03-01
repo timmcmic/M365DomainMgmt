@@ -22,6 +22,7 @@ function new-msGraphConnection
         $msGraphCertificate 
         {  
             out-logfile -string "Graph certificate authentication specified."
+            new-msGraphCertificate -msGraphHashTable $msGraphHashTable
         }
         $msGraphClientSecret 
         {  
