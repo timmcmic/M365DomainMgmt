@@ -25,7 +25,7 @@ function get-DomainOperation
 
             switch ($selection) {
                 1 { $domainOperation = $domainOperations.New  }
-                2  {$domainOperation = $domainOperations.Confirm }
+                2 { $domainOperation = $domainOperations.Confirm }
                 3 { $domainOperation = $domainOperations.remove }
                 4 { $domainOperation = $domainOperations.ForceTakeOver }
             }
