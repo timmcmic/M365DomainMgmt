@@ -122,6 +122,8 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory = $false)]
         [ValidateSet("None","New","Remove","Confirm","ForceTakeOver")]
         [string]$domainOperation="None",
+        [Parameter(Mandatory = $false)]
+        [string]$customDNSServer="None",
         [Parameter(Mandatory =$FALSE)]
         [boolean]$allowTelemetryCollection=$TRUE
     )
@@ -176,6 +178,9 @@ Function Start-M365DomainManagement
     $exportNames['msGraphContext']="MSGraphContext"
     $exportNames['domainInfo']="DomainInfo"
     $exportNames['viralInfo']="ViralInfo"
+    $exportNames['M365DNSRecords']="M365DNSRecords"
+    $exportNames['PublicDNSTextRecords']="PublicDNSTextRecords"
+    $exportNames['PublicDNSMXRecords']="PublicDNSMXRecords"
 
     #Variables for logging and start log file.
 
@@ -187,6 +192,11 @@ Function Start-M365DomainManagement
     $domainIsViral = $false
     $msGraphGlobalEnvironment = "Global"
     $domainInfo = $null
+    $m365DNSRecords = $NULL
+    $publicTextRecords = $null
+    $publicMXRecords = $null
+    $mxRecordType = "MX"
+    $txtRecordType = "TXT"
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
@@ -228,6 +238,14 @@ Function Start-M365DomainManagement
             out-logfile -string "Test the domain for viral or other tenant registrations."
 
             $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
+
+            out-logfile -string "Gather DNS records required for domain verification."
+
+            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+            $publicTextRecords = get-publicDNSRecords -domainName $domainName -dnsType $txtRecordType -exportFile $exportNames.PublicDNSTextRecords -customDNSServer $customDNSServer
+
+            $publicMXRecords = = get-publicDNSRecords -domainName $domainName -dnsType $mxRecordType -exportFile $exportNames.PublicDNSMXRecords -customDNSServer $customDNSServer
         }
         $domainOperations.Remove 
         {  
