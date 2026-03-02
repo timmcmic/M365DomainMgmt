@@ -221,7 +221,7 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Test the domain for viral or other tenant registrations."
 
-            test-viralDomain -domainName $domainName -exportFile $exportNames
+            $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
         }
         $domainOperations.Confirm 
         {  

@@ -41,27 +41,27 @@ function test-viralDomain
 
     out-logfile -string $jsonInfo
 
-    Out-logfile -string "Test to see if domain is already registered, tied to GoDaddy, or virla."
+    Out-logfile -string "Test to see if domain is already registered, tied to GoDaddy, or viral."
 
     if ($jsonInfo.isViral -eq $TRUE)
     {
-        out-logfile -string $jsonInfo.isViral
         out-logfile -string "The domain is reporting as viral - a force takeover may successfully confirm the domain."
+        out-logfile -string $jsonInfo.isViral
         $domainIsViral = $true
     }
     elseif ($jsonInfo.authURL.contains("https://sso.godaddy.com"))
     {
-        out-logfile -string $jsonInfo.authURL
         out-logfile -string "The domain is currently registered to another tenant through an Office 365 subscription purchased through GoDaddy."
         out-logfile -string "This implies that either the tenant was never removed or the domain currently has active Office 365 suscriptions through GoDaddy"
         out-logfile -string "Contact GoDaddy support and request information on the release of this domain."
+        out-logfile -string $jsonInfo.authURL
         out-logfile -string "ERROR:  Godaddy support is required to assist with using this domain." -isError:$true
     }
-    elseif ($jsonInfo.namespace -ne $unknownNamespace)
+    elseif ($jsonInfo.namespacetype -ne $unknownNamespace)
     {
-        out-logfile -string $jsonInfo.namespace
         out-logfile -string "The domain provided cannot be verified in this tenant."
         out-logfile -string "The domain is showing as currently verified on another tenant."
+        out-logfile -string $jsonInfo.namespacetype
     }
 
     out-logfile -string "Exiting test-virualInfo"
