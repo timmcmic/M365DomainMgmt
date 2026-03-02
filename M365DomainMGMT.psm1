@@ -181,6 +181,7 @@ Function Start-M365DomainManagement
     $exportNames['M365DNSRecords']="M365DNSRecords"
     $exportNames['PublicDNSTextRecords']="PublicDNSTextRecords"
     $exportNames['PublicDNSMXRecords']="PublicDNSMXRecords"
+    $exportNames['CalculatedPublicRecords']="CalculatedPublicRecords"
 
     #Variables for logging and start log file.
 
@@ -195,8 +196,10 @@ Function Start-M365DomainManagement
     $m365DNSRecords = $NULL
     $publicTextRecords = $null
     $publicMXRecords = $null
+    $publicDNSRecords = $null
     $mxRecordType = "MX"
     $txtRecordType = "TXT"
+    $soaRecordType = "SOA"
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
@@ -242,10 +245,6 @@ Function Start-M365DomainManagement
             out-logfile -string "Gather DNS records required for domain verification."
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
-
-            $publicTextRecords = get-publicDNSRecords -domainName $domainName -dnsType $txtRecordType -exportFile $exportNames.PublicDNSTextRecords -customDNSServer $customDNSServer
-
-            $publicMXRecords = get-publicDNSRecords -domainName $domainName -dnsType $mxRecordType -exportFile $exportNames.PublicDNSMXRecords -customDNSServer $customDNSServer
         }
         $domainOperations.Remove 
         {  
