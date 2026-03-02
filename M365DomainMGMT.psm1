@@ -174,6 +174,7 @@ Function Start-M365DomainManagement
 
     $exportNames = @{}
     $exportNames['msGraphContext']="MSGraphContext"
+    $exportNames['domainInfo']="DomainInfo"
 
     #Variables for logging and start log file.
 
@@ -205,4 +206,23 @@ Function Start-M365DomainManagement
     $domainName = get-domainName -domainName $domainName
 
     out-logfile -string ("The domain name ending: "+$domainName)
+
+    switch ($domainOperation) {
+        $domainOperations.New 
+        {  
+            add-domainOperation -domainName $domainName -exportFile $exportNames
+        }
+        $domainOperations.Confirm 
+        {  
+            
+        }
+        $domainOperations.Remove 
+        {  
+            
+        }
+        $domainOperations.ForceTakeOver 
+        {  
+            
+        }
+    }
 }
