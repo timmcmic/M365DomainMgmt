@@ -194,8 +194,6 @@ Function Start-M365DomainManagement
     $msGraphGlobalEnvironment = "Global"
     $domainInfo = $null
     $m365DNSRecords = $NULL
-    $publicTextRecords = $null
-    $publicMXRecords = $null
     $publicDNSRecords = $null
     $mxRecordType = "MX"
     $txtRecordType = "TXT"
@@ -245,6 +243,8 @@ Function Start-M365DomainManagement
             out-logfile -string "Gather DNS records required for domain verification."
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+            $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
         }
         $domainOperations.Remove 
         {  
