@@ -24,10 +24,10 @@ function get-DomainOperation
             $selection = Read-Host
 
             switch ($selection) {
-                $domainOperations.New { $domainOperation = $domainOperations.New  }
-                $domainOperations.Confirm  {$domainOperation = $domainOperations.Confirm }
-                $domainOperations.remove { $domainOperation = $domainOperations.remove }
-                $domainOperations.ForceTakeOver { $domainOperation = $domainOperations.ForceTakeOver }
+                1 { $domainOperation = $domainOperations.New  }
+                2  {$domainOperation = $domainOperations.Confirm }
+                3 { $domainOperation = $domainOperations.remove }
+                4 { $domainOperation = $domainOperations.ForceTakeOver }
             }
         }
         $domainOperations.New 
