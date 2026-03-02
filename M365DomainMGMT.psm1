@@ -175,11 +175,16 @@ Function Start-M365DomainManagement
     $exportNames = @{}
     $exportNames['msGraphContext']="MSGraphContext"
     $exportNames['domainInfo']="DomainInfo"
+    $exportNames['viralInfo']="ViralInfo"
 
     #Variables for logging and start log file.
 
     $global:logFile=$NULL
     $logFileName = "M365DomainMgmt_"+(Get-Date -Format FileDateTime)
+
+    #Misc variables.
+
+    $domainIsViral = $false
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
@@ -210,7 +215,13 @@ Function Start-M365DomainManagement
     switch ($domainOperation) {
         $domainOperations.New 
         {  
+            out-logfile -string "Add the domain if required."
+
             add-domainOperation -domainName $domainName -exportFile $exportNames
+
+            out-logfile -string "Test the domain for viral or other tenant registrations."
+
+            test-viralDomain -domainName $domainName -exportFile $exportNames
         }
         $domainOperations.Confirm 
         {  
