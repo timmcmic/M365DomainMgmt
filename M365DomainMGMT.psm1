@@ -225,7 +225,7 @@ Function Start-M365DomainManagement
     out-logfile -string ("The domain name ending: "+$domainName)
 
     switch ($domainOperation) {
-        {$_ -eq $domainOperations.New -or $_ -eq $domainOperations.Confirm} 
+        {($_ -eq $domainOperations.New) -or ($_ -eq $domainOperations.Confirm) -or ($_ -eq $domainOperations.ForceTakeOver)}  
         {  
             out-logfile -string "Add the domain if required."
 
@@ -245,13 +245,9 @@ Function Start-M365DomainManagement
 
             $publicTextRecords = get-publicDNSRecords -domainName $domainName -dnsType $txtRecordType -exportFile $exportNames.PublicDNSTextRecords -customDNSServer $customDNSServer
 
-            $publicMXRecords = = get-publicDNSRecords -domainName $domainName -dnsType $mxRecordType -exportFile $exportNames.PublicDNSMXRecords -customDNSServer $customDNSServer
+            $publicMXRecords = get-publicDNSRecords -domainName $domainName -dnsType $mxRecordType -exportFile $exportNames.PublicDNSMXRecords -customDNSServer $customDNSServer
         }
         $domainOperations.Remove 
-        {  
-            
-        }
-        $domainOperations.ForceTakeOver 
         {  
             
         }
