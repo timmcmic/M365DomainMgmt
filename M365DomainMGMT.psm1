@@ -202,5 +202,7 @@ Function Start-M365DomainManagement
 
     out-logfile -string ("The domain name starting: " +$domainName)
 
-    get-domainName -domainName $domainName
+    $domainName = get-domainName -domainName $domainName
+
+    out-logfile -string ("The domain name ending: "+$domainName)
 }
