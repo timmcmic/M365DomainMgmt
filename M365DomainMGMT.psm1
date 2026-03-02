@@ -197,4 +197,10 @@ Function Start-M365DomainManagement
     $domainOperation = get-DomainOperation -domainOperation $domainOperation -domainOperations $domainOperations
 
     out-logfile -string ("The domain operation returned: "+$domainOperation)
+
+    out-logfile -string "DomainName"
+
+    out-logfile -string ("The domain name starting: " +$domainName)
+
+    get-domainName -domainName $domainName
 }
