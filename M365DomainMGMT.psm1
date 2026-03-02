@@ -185,6 +185,8 @@ Function Start-M365DomainManagement
     #Misc variables.
 
     $domainIsViral = $false
+    $msGraphGlobalEnvironment = "Global"
+    $domainInfo = $null
 
     new-logfile -logFileName $logFileName -logFolderPath $logFolderPath
 
@@ -213,19 +215,19 @@ Function Start-M365DomainManagement
     out-logfile -string ("The domain name ending: "+$domainName)
 
     switch ($domainOperation) {
-        $domainOperations.New 
+        {$_ -eq $domainOperations.New -or $_ -eq $domainOperations.Confirm} 
         {  
             out-logfile -string "Add the domain if required."
 
-            add-domainOperation -domainName $domainName -exportFile $exportNames
+            $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
+
+            out-logfile -string "Ensure that the domain is not currently registered in the tenant."
+
+            test-domainInfo -domainInfo $domainInfo
 
             out-logfile -string "Test the domain for viral or other tenant registrations."
 
             $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
-        }
-        $domainOperations.Confirm 
-        {  
-            
         }
         $domainOperations.Remove 
         {  

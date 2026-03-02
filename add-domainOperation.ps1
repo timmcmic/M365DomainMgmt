@@ -42,4 +42,6 @@ function add-domainOperation
     out-xmlfile -itemToExport $domainInfo -itemNameToExport $exportFile.domainInfo
 
     out-logfile -string "Exiting add-domainOperation"
+
+    return $domainInfo
 }
