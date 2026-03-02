@@ -192,5 +192,9 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Operation"
 
+    out-logfile -string ("The domain operation starting: "+$domainOperation)
+
     $domainOperation = get-DomainOperation -domainOperation $domainOperation -domainOperations $domainOperations
+
+    out-logfile -string ("The domain operation returned: "+$domainOperation)
 }

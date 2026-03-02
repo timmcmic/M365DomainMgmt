@@ -14,7 +14,21 @@ function get-DomainOperation
         $domainOperations.None 
         {  
             out-logfile -string "No operation specified."
-            $domainOperation = $domainOperations.None 
+            
+            write-host "Select a domain operation from the list below:"
+            write-host "1:  New / Add a Domain"
+            write-host "2:  Confirm a Domain"
+            write-host "3:  Remove a Domain"
+            write-host "4:  Force Domain Takeover (External Takeover Method)"
+
+            $selection = Read-Host
+
+            switch ($selection) {
+                $domainOperations.New { $domainOperation = $domainOperations.New  }
+                $domainOperations.Confirm  {$domainOperation = $domainOperations.Confirm }
+                $domainOperations.remove { $domainOperation = $domainOperations.remove }
+                $domainOperations.ForceTakeOver { $domainOperation = $domainOperations.ForceTakeOver }
+            }
         }
         $domainOperations.New 
         {  
