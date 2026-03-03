@@ -120,7 +120,7 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
-        [ValidateSet("None","New","Remove","Confirm","ForceTakeOver")]
+        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver")]
         [string]$domainOperation="None",
         [Parameter(Mandatory = $false)]
         [string]$customDNSServer="None",
@@ -168,6 +168,7 @@ Function Start-M365DomainManagement
     $domainOperations=@{}
     $domainOperations['None'] = "None"
     $domainOperations['New'] = "New"
+    $domainOperations['NewWOConfirm'] = "NewWOConfirm"
     $domainOperations['Confirm'] = "Confirm"
     $domainOperations['Remove'] = "Remove"
     $domainOperations['ForceTakeOver'] = "ForceTakeOver"
@@ -179,9 +180,9 @@ Function Start-M365DomainManagement
     $exportNames['domainInfo']="DomainInfo"
     $exportNames['viralInfo']="ViralInfo"
     $exportNames['M365DNSRecords']="M365DNSRecords"
-    $exportNames['PublicDNSTextRecords']="PublicDNSTextRecords"
-    $exportNames['PublicDNSMXRecords']="PublicDNSMXRecords"
+    $exportNames['PublicDNSRecords']="PublicDNSRecords"
     $exportNames['CalculatedPublicRecords']="CalculatedPublicRecords"
+    $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
 
     #Variables for logging and start log file.
 
@@ -245,10 +246,24 @@ Function Start-M365DomainManagement
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
             $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+
+            test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
+
+            $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
+        }
+        {$_ -eq $domainOperation.NewWOConfirm}
+        {
+            out-logfile -string "Add the domain if required."
+
+            $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
         }
         $domainOperations.Remove 
         {  
-            
+            out-logfile -string "Add the domain if required."
+
+            $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
         }
     }
+
+    out-logfile -string "Completed domain operations using M365DomainMGMT"
 }

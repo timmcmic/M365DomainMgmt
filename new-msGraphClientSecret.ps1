@@ -34,7 +34,7 @@ function new-msGraphClientSecret
     out-logfile -string "Creating client secret authentication to MS Graph."
 
     try {
-        connect-mgGraph -tenantID $msGraphHashTable.msGraphTenantID -Environment $msGraphHashTable.msGraphEnvironmentName -Scopes $msGraphHashTable.msGraphScopes -errorAction Stop
+        connect-mgGraph -tenantID $msGraphHashTable.msGraphTenantID -Environment $msGraphHashTable.msGraphEnvironmentName -clientSecretCredential $clientSecretCredential -errorAction Stop
         out-logfile -string "Client secret authentication to MS Graph successful."
     }
     catch {

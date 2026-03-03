@@ -16,18 +16,20 @@ function get-DomainOperation
             out-logfile -string "No operation specified."
             
             write-host "Select a domain operation from the list below:"
-            write-host "1:  New / Add a Domain"
-            write-host "2:  Confirm a Domain"
-            write-host "3:  Remove a Domain"
-            write-host "4:  Force Domain Takeover (External Takeover Method)"
+            write-host "1:  New / Add a Domain (Triggers Domain Confirmation)"
+            write-host "2:  New / Add a Domain (Without Domain Confirmation)"
+            write-host "3:  Confirm a Domain"
+            write-host "4:  Remove a Domain"
+            write-host "5:  Force Domain Takeover (External Takeover Method)"
 
             $selection = Read-Host
 
             switch ($selection) {
                 1 { $domainOperation = $domainOperations.New  }
-                2 { $domainOperation = $domainOperations.Confirm }
-                3 { $domainOperation = $domainOperations.remove }
-                4 { $domainOperation = $domainOperations.ForceTakeOver }
+                2 { $domainOperation - $domainOperation.NewWOConfirm}
+                3 { $domainOperation = $domainOperations.Confirm }
+                4 { $domainOperation = $domainOperations.remove }
+                5 { $domainOperation = $domainOperations.ForceTakeOver }
             }
         }
         $domainOperations.New 
@@ -49,6 +51,11 @@ function get-DomainOperation
         {  
             out-logfile -string "ForceTakeOver operation specified."
             $domainOperation = $domainOperations.ForceTakeOver 
+        }
+        $domainOperations.NewWOConfirm
+        {
+            out-logfile -string "NewWOConfirm operation specified."
+            $domainOperation = $domainOperations.NewWOConfirm 
         }
     }
 

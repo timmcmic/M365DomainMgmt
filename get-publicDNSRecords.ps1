@@ -75,5 +75,55 @@ function get-publicDNSRecords
 
     out-logfile -string "Public DNS records obtained successfully for both TXT and MX."
 
+    out-xmlfile -itemNameToExport $exportFile.PublicDNSRecords -itemToExport $dnsRecords
+
+    out-logfile -string "Creating custom objects for DNS evaluation."
+
+    foreach ($entry in $dnsRecords)
+    {
+        if ($entry.type -eq $soaRecordType)
+        {
+            out-logfile -string "Entry is type SOA."
+
+            $functionObject = New-Object PSObject -Property @{
+                RecordType = $soaRecordType
+                Value = "NotApplicable"
+            }
+        }
+        elseif ($entry.type -eq $txtRecordType)
+        {
+            out-logfile -string "Entry type is TXT."
+
+            foreach ($value in $entry.strings)
+            {
+                $functionObject = New-Object PSObject -Property @{
+                RecordType = $txtRecordType
+                Value = $value
+                }
+            }
+        }
+        elseif ($entry.type -eq $mxRecordType)
+        {
+            out-logfile -string "Entry type is MX."
+            
+            $functionObject = New-Object PSObject -Property @{
+                RecordType = $mxRecordType
+                Value = $entry.NameExchange  
+            }
+        }
+
+        $dnsRecordsReturn += $functionObject
+    }
+
+    foreach ($entry in $dnsRecordsReturn)
+    {
+        out-logfile -string ("Record Type: "+$entry.recordType)
+        out-logfile -string ("Value : "+$entry.value)
+    }
+
+    out-xmlFile -itemToExport $dnsRecordsReturn -itemNameToExport $exportFile.CalculatedPublicRecords
+
     out-logfile -string "Exiting get-publicDNSRecords"
+
+    return $dnsRecordsReturn
 }
