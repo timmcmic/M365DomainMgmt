@@ -231,6 +231,8 @@ Function Start-M365DomainManagement
     switch ($domainOperation) {
         {($_ -eq $domainOperations.New) -or ($_ -eq $domainOperations.Confirm) -or ($_ -eq $domainOperations.ForceTakeOver)}  
         {  
+            out-logfile -string "New/Confirm/ForceTakeOver"
+
             out-logfile -string "Add the domain if required."
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
@@ -255,6 +257,8 @@ Function Start-M365DomainManagement
         }
         $domainOperations.NewWOConfirm
         {
+            out-logfile -string "NewNoConfirm"
+
             out-logfile -string "Add the domain if required."
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
@@ -264,6 +268,8 @@ Function Start-M365DomainManagement
         }
         $domainOperations.GetVerificationRecords
         {
+            out-logfile -string "GetVerficiationRecords"
+
             out-logfile -string "Test to ensure that the domain is present."
 
             try {
@@ -296,6 +302,8 @@ Function Start-M365DomainManagement
         }
         $domainOperations.TestDNS
         {
+            out-logfile -string "TestDNS"
+            
             out-logfile -string "Test to ensure that the domain is present."
 
             try {
