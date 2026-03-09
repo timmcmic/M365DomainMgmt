@@ -21,6 +21,7 @@ function get-DomainOperation
             write-host "3:  Confirm a Domain"
             write-host "4:  Remove a Domain"
             write-host "5:  Force Domain Takeover (External Takeover Method)"
+            write-host "6:  Get Verification Records"
 
             $selection = Read-Host
 
@@ -30,6 +31,7 @@ function get-DomainOperation
                 3 { $domainOperation = $domainOperations.Confirm }
                 4 { $domainOperation = $domainOperations.remove }
                 5 { $domainOperation = $domainOperations.ForceTakeOver }
+                6 { $domainOperation = $domainOperations.GetVerificationRecords }
             }
         }
         $domainOperations.New 
@@ -56,6 +58,11 @@ function get-DomainOperation
         {
             out-logfile -string "NewWOConfirm operation specified."
             $domainOperation = $domainOperations.NewWOConfirm 
+        }
+        $domainOperations.GetVerificationRecords
+        {
+            out-logfile -string "NewWOConfirm operation specified."
+            $domainOperation = $domainOperations.GetVerificationRecords 
         }
     }
 

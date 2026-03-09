@@ -120,7 +120,7 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
-        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver")]
+        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords")]
         [string]$domainOperation="None",
         [Parameter(Mandatory = $false)]
         [string]$customDNSServer="None",
@@ -172,6 +172,7 @@ Function Start-M365DomainManagement
     $domainOperations['Confirm'] = "Confirm"
     $domainOperations['Remove'] = "Remove"
     $domainOperations['ForceTakeOver'] = "ForceTakeOver"
+    $domainOperations['GetVerificationRecords'] = "GetVerificationRecords"
 
     #Create export table
 
@@ -251,7 +252,7 @@ Function Start-M365DomainManagement
 
             $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
         }
-        {$_ -eq $domainOperation.NewWOConfirm}
+        $domainOperations.NewWOConfirm
         {
             out-logfile -string "Add the domain if required."
 
@@ -262,6 +263,24 @@ Function Start-M365DomainManagement
             out-logfile -string "Add the domain if required."
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
+        }
+        $domainOperations.GetVerificationRecords
+        {
+            out-logfile -string "Get the domain verification records."
+
+            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+            foreach ($record in $m365DNSRecords)
+            {
+                write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+            }
+
+            Read-Host "Press any key to continue:"
+
+            foreach ($record in $m365DNSRecords)
+            {
+                out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+            }
         }
     }
 
