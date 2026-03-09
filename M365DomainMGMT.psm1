@@ -303,7 +303,7 @@ Function Start-M365DomainManagement
         $domainOperations.TestDNS
         {
             out-logfile -string "TestDNS"
-            
+
             out-logfile -string "Test to ensure that the domain is present."
 
             try {
@@ -329,6 +329,8 @@ Function Start-M365DomainManagement
             out-logfile -string "The DNS verification records were successfully located in public DNS."
         }
     }
+
+    Disconnect-MgGraph
 
     out-logfile -string "Completed domain operations using M365DomainMGMT"
 }
