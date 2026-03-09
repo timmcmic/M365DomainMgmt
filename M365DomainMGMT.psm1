@@ -264,6 +264,20 @@ Function Start-M365DomainManagement
         }
         $domainOperations.GetVerificationRecords
         {
+            out-logfile -string "Test to ensure that the domain is present."
+
+            try {
+                $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+            }
+            catch {
+                out-logfile -string $_ 
+                out-logfile -string "Domain is not present in tenant - unable to get verification records." -isError:$true
+            }
+
+            out-logfile -string "Ensure that the domain is not currently registered in the tenant."
+
+            test-domainInfo -domainInfo $domainInfo
+
             out-logfile -string "Get the domain verification records."
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
@@ -282,10 +296,20 @@ Function Start-M365DomainManagement
         }
         $domainOperations.TestDNS
         {
+            out-logfile -string "Test to ensure that the domain is present."
+
+            try {
+                $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+            }
+            catch {
+                out-logfile -string $_ 
+                out-logfile -string "Domain is not present in tenant - unable to test verification records." -isError:$true
+            }
+
             out-logfile -string "Ensure that the domain is not currently registered in the tenant."
 
             test-domainInfo -domainInfo $domainInfo
-            
+
             out-logfile -string "Test Verification and PublicDNS Records"
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
@@ -293,6 +317,8 @@ Function Start-M365DomainManagement
             $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
 
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
+
+            out-logfile -string "The DNS verification records were successfully located in public DNS."
         }
     }
 
