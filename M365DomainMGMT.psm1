@@ -120,7 +120,7 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
-        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords")]
+        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords","TestDNS")]
         [string]$domainOperation="None",
         [Parameter(Mandatory = $false)]
         [string]$customDNSServer="None",

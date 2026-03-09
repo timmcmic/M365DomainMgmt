@@ -27,11 +27,12 @@ function get-DomainOperation
 
             switch ($selection) {
                 1 { $domainOperation = $domainOperations.New  }
-                2 { $domainOperation - $domainOperation.NewWOConfirm}
+                2 { $domainOperation - $domainOperations.NewWOConfirm}
                 3 { $domainOperation = $domainOperations.Confirm }
                 4 { $domainOperation = $domainOperations.remove }
                 5 { $domainOperation = $domainOperations.ForceTakeOver }
                 6 { $domainOperation = $domainOperations.GetVerificationRecords }
+                7 { $domainOperation = $domainOperations.TestDNS}
             }
         }
         $domainOperations.New 
@@ -63,6 +64,11 @@ function get-DomainOperation
         {
             out-logfile -string "NewWOConfirm operation specified."
             $domainOperation = $domainOperations.GetVerificationRecords 
+        }
+        $domainOperations.TestDNS
+        {
+            out-logfile -string "TestDNS operation specified"
+            $domainOperation = $domainOperations.TestDNS
         }
     }
 
