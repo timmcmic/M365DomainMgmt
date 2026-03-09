@@ -22,6 +22,7 @@ function get-DomainOperation
             write-host "4:  Remove a Domain"
             write-host "5:  Force Domain Takeover (External Takeover Method)"
             write-host "6:  Get Verification Records"
+            write-host "7:  Test M365 Verification Records to Public DNS"
 
             $selection = Read-Host
 
