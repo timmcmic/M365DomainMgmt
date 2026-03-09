@@ -282,6 +282,10 @@ Function Start-M365DomainManagement
         }
         $domainOperations.TestDNS
         {
+            out-logfile -string "Ensure that the domain is not currently registered in the tenant."
+
+            test-domainInfo -domainInfo $domainInfo
+            
             out-logfile -string "Test Verification and PublicDNS Records"
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
