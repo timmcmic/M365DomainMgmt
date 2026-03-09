@@ -173,6 +173,7 @@ Function Start-M365DomainManagement
     $domainOperations['Remove'] = "Remove"
     $domainOperations['ForceTakeOver'] = "ForceTakeOver"
     $domainOperations['GetVerificationRecords'] = "GetVerificationRecords"
+    $domainOperations['TestDNS'] = "TestDNS"
 
     #Create export table
 
@@ -260,9 +261,6 @@ Function Start-M365DomainManagement
         }
         $domainOperations.Remove 
         {  
-            out-logfile -string "Add the domain if required."
-
-            $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
         }
         $domainOperations.GetVerificationRecords
         {
@@ -281,6 +279,16 @@ Function Start-M365DomainManagement
             {
                 out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
             }
+        }
+        $domainOperations.TestDNS
+        {
+            out-logfile -string "Test Verification and PublicDNS Records"
+
+            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+            $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+
+            test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
         }
     }
 
