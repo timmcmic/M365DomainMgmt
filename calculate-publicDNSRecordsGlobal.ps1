@@ -207,6 +207,53 @@ function calculate-publicDNSRecordsGlobal
         }
     }
 
+    <#
+
+    out-logfile -string "Sample DMARC"
+    $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = "TXT"
+        RecordName = "@"
+        TTL = "3600"
+        Value = "v=DMARC1; p=reject; pct=100; rua=mailto:rua@$domainName; ruf=mailto:ruf@$domainName"
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    $domainNameDashes = $domainname.replace(".","-")
+    $domainSplit = $domainName.split(".")
+    for ($i = 0 ; $i -lt $domainSplit.count - 1 ; $i ++)
+    {
+        $domainNameNoSpaces = $domainNameNoSpaces + $domainSplit[$i]
+    }
+    
+    out-logfile -string "Sample DKIM"
+    $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = "CNAME"
+        RecordName = "selector1._domainkey"
+        TTL = "3600"
+        Value = "selector1-$domainNameDashes._domainKey.$domainNameNoSpaces.n-v1.dkim.mail.microsoft"
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    out-logfile -string "Sample DKIM"
+    $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = "CNAME"
+        RecordName = "selector2._domainkey"
+        TTL = "3600"
+        Value = "selector2-$domainNameDashes._domainKey.$domainNameNoSpaces.n-v1.dkim.mail.microsoft"
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    #>
+
     try {
         generate-DNSHtml -output $output -domainName $domainName -errorAction STOP
     }
