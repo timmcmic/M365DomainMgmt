@@ -120,7 +120,7 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
-        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords","TestDNS")]
+        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords","TestDNS","DisplayDNSRecords")]
         [string]$domainOperation="None",
         [Parameter(Mandatory = $false)]
         [string]$customDNSServer="None",
@@ -162,6 +162,14 @@ Function Start-M365DomainManagement
     $msGraphValues['msGraphClientSecret']=$msGraphClientSecret
     $msGraphValues['msGraphScopes']=$msGraphScopesRequired
     $msGraphValues['msGraphAuthenticationType']=$PSCmdlet.ParameterSetName
+
+    #Define the msGraphEnvironments.
+
+    $msGraphEnvironments = @{}
+    $msGraphEnvironments['msGraphGlobal']="Global"
+    $msGraphEnvironments['msGraphUSGov']="USGov"
+    $msGraphEnvironments['msGraphUSGovDOD']="USGovDOD"
+    $msGraphEnvironments['msGraphChina']="China"
 
     #Domain operations
 
@@ -333,9 +341,21 @@ Function Start-M365DomainManagement
         {
             out-logfile -string "DisplayDNSRecords"
 
+            out-logfile -string "Test to ensure that the domain is present."
+
+            try {
+                $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+            }
+            catch {
+                out-logfile -string $_ 
+                out-logfile -string "Domain is not present in tenant - unable to provide DNS records for this domain." -isError:$true
+            }
+
             out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
 
-            
+            calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
+
+            read-host "Press"
         }
     }
 
