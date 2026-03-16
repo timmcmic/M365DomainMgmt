@@ -20,7 +20,7 @@ function test-DomainName
     catch {
         out-logfile -string "Determine if this is a domain not found error - if so proceed."
 
-        if ($error[0].exception.toString().contains($errorString))
+        if ($error[0].exception.message.contains($errorString))
         {
             out-logfile -string "Domain is not found error."
         }
