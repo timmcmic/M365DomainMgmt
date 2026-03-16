@@ -23,6 +23,7 @@ function get-DomainOperation
             write-host "5:  Force Domain Takeover (External Takeover Method)"
             write-host "6:  Get Verification Records"
             write-host "7:  Test M365 Verification Records to Public DNS"
+            write-host "8:  Display the public DNS records necessary for Microsoft 365 Usage"
 
             $selection = Read-Host
 
@@ -34,6 +35,7 @@ function get-DomainOperation
                 5 { $domainOperation = $domainOperations.ForceTakeOver }
                 6 { $domainOperation = $domainOperations.GetVerificationRecords }
                 7 { $domainOperation = $domainOperations.TestDNS}
+                8 { $domainOperation = $domainOperations.DisplayDNSRecords}
             }
         }
         $domainOperations.New 

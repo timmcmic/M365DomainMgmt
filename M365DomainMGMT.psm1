@@ -174,6 +174,7 @@ Function Start-M365DomainManagement
     $domainOperations['ForceTakeOver'] = "ForceTakeOver"
     $domainOperations['GetVerificationRecords'] = "GetVerificationRecords"
     $domainOperations['TestDNS'] = "TestDNS"
+    $domainOperations['DisplayDNSRecords'] = "DisplayDNSRecords"
 
     #Create export table
 
@@ -327,6 +328,14 @@ Function Start-M365DomainManagement
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
 
             out-logfile -string "The DNS verification records were successfully located in public DNS."
+        }
+        $domainOperations.DisplayDNSRecords
+        {
+            out-logfile -string "DisplayDNSRecords"
+
+            out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
+
+            
         }
     }
 
