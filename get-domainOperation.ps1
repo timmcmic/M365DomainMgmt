@@ -73,6 +73,11 @@ function get-DomainOperation
             out-logfile -string "TestDNS operation specified"
             $domainOperation = $domainOperations.TestDNS
         }
+        $domainOperations.DisplayDNSRecords
+        {
+            out-logfile -string "Display DNS Records operations specified"
+            $domainOperation = $domainOperations.DisplayDNSRecords
+        }
     }
 
     out-logfile -string "Exiting get-DomainOperation"
