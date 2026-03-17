@@ -4,36 +4,21 @@ function calculate-publicDNSRecordsUSGov
     (
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        $domainName,
-        [Parameter(Mandatory = $true)]
-        $msGraphEnvironmentName,
-        [Parameter(Mandatory = $true)]
-        $msGraphEnvironments
+        $domainName
     )
 
     $output = @()
-
-    switch ($x) {
-        condition {  }
-        Default {}
-    }
-
-    $recordIDs = @{}
-    $recordIDs['m365MX']="2b672ab0-0bee-476f-b334-be436f2449bd"
-    $recordIDs['m365SPF']="62bea837-a0d7-4466-b6d9-ff6bd1db8671"
-    $recordIDs['m365AutoDiscover']="eea5ce9e-8deb-4ab7-a114-13ed6215774f"
-    $recordIDs['m365SIPSrv']="2f9deed0-42e3-4f6d-ae82-495a7fde4da5"
-    $recordIDs['m365SIPCname']="e9046b54-7d0d-422f-9e50-c731b2a8cbd5"
-    $recordIDs['m365LyncCNAME']="a2a182ac-0b69-44c3-96c6-5d6bbbe9ee99"
-    $recordIDs['m365SipFed']="b457cd8d-e1bb-4ea9-ae65-cb31c551e27a"
-    $recordIDs['m365Sharepoint']="d9113a42-7876-4ff7-8bd6-e2596119517d"
-    $recordIDs['m365MSOID']="16f3816b-1105-4764-a195-c249aae14401"
-    $recordIDs['m365EntReg']="db0cde09-f798-4bd7-bbb2-1d19926ca807"
-    $recordIDs['m365EntEnroll']="ef4f8e4c-f124-446d-8301-2586447cff67"
+    $onMicrosoft = $null
 
     out-logfile -string "Entering calculate-publicDNSRecordsUSGov"
 
-    out-logfile -string "Capturing dns records for the domain."
+    out-logfile -string "Government records are based on the onmicrosoft.us domain within the tenant."
+
+    $onMicrosoft = get-OnMicrosoft
+
+    out-logfile -string $onMicrosoft
+
+    Read-Host "Test"
 
     try {
         $records = Get-MgDomainServiceConfigurationRecord -DomainId $domainName -errorAction STOP
