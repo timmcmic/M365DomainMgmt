@@ -263,6 +263,10 @@ Function Start-M365DomainManagement
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
 
             $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
+
+            out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
+
+            calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
         }
         $domainOperations.NewWOConfirm
         {
@@ -354,8 +358,6 @@ Function Start-M365DomainManagement
             out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
 
             calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
-
-            read-host "Press"
         }
     }
 
