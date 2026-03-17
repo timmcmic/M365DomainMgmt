@@ -9,8 +9,27 @@ function calculate-publicDNSRecordsUSGov
 
     $output = @()
     $onMicrosoft = $null
+    $onMicrosoftSplit = $null
+    $domainSplit = $domainName.split(".")
+    $domainAutodiscover = "autodiscover"
+    $domainNameAutoDiscover = $domainname.replace($domainSplit[0],$domainAutodiscover)
+    $functionMX = "MX"
+    $functionRecordName = "@"
+    $functionTTL = "3600"
+    $functionMXEnd = "mail.protection.office365.us"
+    $functionPriority = "0"
+    $functionTXT = "TXT"
+    $functionSPF = "v=spf1 include:spf.protection.office365.us -all"
+    $functionCNAME = "CNAME"
+    $functionAutoDiscover = "autodiscover.office365.us"
 
     out-logfile -string "Entering calculate-publicDNSRecordsUSGov"
+
+    foreach ($entry in $domainSplit)
+    {
+        out-logfile -string $entry
+    }
+    out-logfile -string $domainNameAutoDiscover
 
     out-logfile -string "Government records are based on the onmicrosoft.us domain within the tenant."
 
@@ -18,235 +37,52 @@ function calculate-publicDNSRecordsUSGov
 
     out-logfile -string $onMicrosoft
 
-    Read-Host "Test"
+    $onMicrosoftSplit = $onMicrosoft.split(".")
 
-    try {
-        $records = Get-MgDomainServiceConfigurationRecord -DomainId $domainName -errorAction STOP
-    }
-    catch {
-        out-logfile -string $_
-        out-logfile -string "Unable to obtain the DNS records for the domain." -isError:$true
-    }
-
-    foreach ($record in $records)
+    foreach ($entry in $onMicrosoftSplit)
     {
-        switch ($record.id) {
-            $recordIDs.m365MX 
-            {  
-                out-logfile -string "MX"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = "@"
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.mailExchange
-                    Preference = $record.additionalproperties.preference
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-            }
-            $recordIDs.m365SPF
-            {  
-                out-logfile -string "SPF"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = "@"
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.text
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-            }
-            $recordIDs.m365AutoDiscover 
-            {  
-                out-logfile -string "Autodiscover"
-
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-            }
-            $recordIDs.m365SIPSrv 
-            {  
-                out-logfile -string "SIP SRV"
-                <#
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.nameTarget
-                    Port = $record.additionalProperties.port
-                    Priority = $record.additionalProperties.priority
-                    Protocol = $record.additionalProperties.protocol
-                    Service = $record.additionalProperties.service
-                    Weight = $record.additionalProperties.weight
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-                #>
-            }
-            $recordIDs.m365SIPCname 
-            {  
-                out-logfile -string "SIP Cname"
-                <#
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-                #>
-            }
-            $recordIDs.m365LyncCNAME 
-            {  
-                <#
-                out-logfile -string "Lync CNAME"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-                #>
-            }
-            $recordIDs.m365SipFed 
-            {  
-                out-logfile -string "Sip Fed"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.nameTarget
-                    Port = $record.additionalProperties.port
-                    Priority = $record.additionalProperties.priority
-                    Protocol = $record.additionalProperties.protocol
-                    Service = $record.additionalProperties.service
-                    Weight = $record.additionalProperties.weight
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-            }
-            $recordIDs.m365Sharepoint 
-            {  
-                out-logfile -string "Sharepoint - NOT USED"
-                <#
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-                #>
-            }
-            $recordIDs.m365MSOID 
-            {  
-                out-logfile -string "NOT USED"
-
-            }
-            $recordIDs.m365EntReg 
-            {  
-                out-logfile -string "Enterprise Registration"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-
-
-            }
-            $recordIDs.m365EntEnroll 
-            {  
-                out-logfile -string "Enterprise Enrollment"
-                $functionObject = New-Object PSObject -Property ([ordered]@{
-                    RecordType = $record.RecordType
-                    RecordName = $record.Label
-                    TTL = $record.TTL
-                    Value = $record.additionalProperties.canonicalName
-                })
-
-                out-logfile -string $functionObject
-
-                $output += $functionObject
-            }
-            Default {out-logfile -string "Unknown ID - contact author - failure" -isError:$true} 
-        }
+        out-logfile -string $entry
     }
 
-    <#
+    out-logfile -string "Calculate the MX record."
 
-    out-logfile -string "Sample DMARC"
     $functionObject = New-Object PSObject -Property ([ordered]@{
-        RecordType = "TXT"
-        RecordName = "@"
-        TTL = "3600"
-        Value = "v=DMARC1; p=reject; pct=100; rua=mailto:rua@$domainName; ruf=mailto:ruf@$domainName"
+        RecordType = $functionMX
+        RecordName = $functionRecordName
+        TTL = $functionTTL
+        Value = $onMicrosoftSplit[0]+"."+$functionMXEnd
+        Priority = $functionPriority
     })
 
     out-logfile -string $functionObject
 
     $output += $functionObject
 
-    $domainNameDashes = $domainname.replace(".","-")
-    $domainSplit = $domainName.split(".")
-    for ($i = 0 ; $i -lt $domainSplit.count - 1 ; $i ++)
-    {
-        $domainNameNoSpaces = $domainNameNoSpaces + $domainSplit[$i]
-    }
-    
-    out-logfile -string "Sample DKIM"
+    out-logfile -string "Calculate TXT Record"
+
     $functionObject = New-Object PSObject -Property ([ordered]@{
-        RecordType = "CNAME"
-        RecordName = "selector1._domainkey"
-        TTL = "3600"
-        Value = "selector1-$domainNameDashes._domainKey.$domainNameNoSpaces.n-v1.dkim.mail.microsoft"
+        RecordType = $functionTXT
+        RecordName = $functionRecordName
+        TTL = $functionTTL
+        Value = $functionSPF
     })
 
     out-logfile -string $functionObject
 
     $output += $functionObject
 
-    out-logfile -string "Sample DKIM"
+    out-logfile -string "Calculate autodiscover record"
+
     $functionObject = New-Object PSObject -Property ([ordered]@{
-        RecordType = "CNAME"
-        RecordName = "selector2._domainkey"
-        TTL = "3600"
-        Value = "selector2-$domainNameDashes._domainKey.$domainNameNoSpaces.n-v1.dkim.mail.microsoft"
+        RecordType = $functionCNAME
+        RecordName = $domainNameAutoDiscover
+        TTL = $functionTTL
+        Value = $functionAutoDiscover
     })
 
     out-logfile -string $functionObject
 
     $output += $functionObject
-
-    #>
 
     try {
         generate-DNSHtml -output $output -domainName $domainName -errorAction STOP

@@ -13,6 +13,8 @@ function calculate-publicDNSRecords
 
     out-logfile -string "Entering calculate-publicDNSRecords"
 
+    $msGraphEnvironmentName = "USGov"
+
     switch ($msGraphEnvironmentName) {
         $msGraphEnvironments.msGraphGlobal 
         {  
@@ -23,7 +25,7 @@ function calculate-publicDNSRecords
         $msGraphEnvironments.msGraphUSGov 
         {  
             out-logfile -string "USGovDOD environment selected."
-            calculate-publicDNSRecordsOther -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
+            calculate-publicDNSRecordsUSGov -domainName $domainName
         }
         $msGraphEnvironments.msGraphUSGovDOD
         {  
