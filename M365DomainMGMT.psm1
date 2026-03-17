@@ -128,6 +128,8 @@ Function Start-M365DomainManagement
         [boolean]$allowTelemetryCollection=$TRUE
     )
 
+    $telemetryStartTime = get-universalDateTime
+
     #Set the window title.
 
     $windowTitle = ("Start-M365DomainManagement")
@@ -150,6 +152,7 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphAuthenticationVersion']="None"
     $telemetryValues['telemetryMSGraphDirectoryVersion']="None"
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']="None"
+    $telemetryValues['telemetryEventName']="Start-M365DomainManagement"
 
     #Create MSGraphHashTable
 
@@ -195,6 +198,12 @@ Function Start-M365DomainManagement
     $exportNames['CalculatedPublicRecords']="CalculatedPublicRecords"
     $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
 
+    $moduleNames = @{}
+    $moduleNames['M365DomainManagement']="M365DomainMGMT"
+    $moduleNames['MsGraphAuthentication']="Microsoft.Graph.Authentication"
+    $moduleNames['MSGraphDirectory']="Microsoft.Graph.Identity.DirectoryManagement"
+    $moduleNames['MSGraphBetaDirectory']="Microsoft.Graph.Beta.Identity.DirectoryManagement"
+
     #Variables for logging and start log file.
 
     $global:logFile=$NULL
@@ -217,6 +226,15 @@ Function Start-M365DomainManagement
     out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
+    out-logfile -string "Versions"
+
+    $telemetryValues['telemetryM365DomainMgmtVersion']=test-PowerShellModule -powershellModuleName $moduleNames.M365DomainManagement -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphAuthenticationVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MsGraphAuthentication -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphDirectory -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphBetaDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphBetaDirectory -powershellVersionTest:$TRUE
+
+    Read-Host "Press"
+    
     out-logfile -string "Graph"
 
     new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
@@ -360,6 +378,25 @@ Function Start-M365DomainManagement
             calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
         }
     }
+
+    $telemetryEndTime = get-universalDateTime
+
+    [double]$telemetryElapsedSeconds = get-elapsedTime -startTime $telemetryStartTime -endTime $telemetryEndTime
+
+    $telemetryEventProperties = @{
+        M365DomainMGMT = "Start-M365DomainManagement"
+        M365DomainMGMTVersion = $telemetryValues.telemetryM365DomainMgmtVersion
+        MSGraphAuthentication = $telemetryValues.telemetryMSGraphAuthenticationVersion
+        MSGraphDirectory = $telemetryValues.telemetryMSGraphDirectoryVersion
+        MSGraphBetaDirectory = $telemetryValues.telemetryMSGraphBetaDirectoryVersion
+        OperationSelected = $domainOperation
+    }
+
+    $telemetryEventMetrics = @{
+         TotalTime = $telemetryElapsedSeconds  
+    }
+
+    send-TelemetryEvent -traceModuleName $traceModuleName -eventName $telemetryValues.telemetryEventName -eventMetrics $telemetryEventMetrics -eventProperties $telemetryEventProperties
 
     Disconnect-MgGraph
 
