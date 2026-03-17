@@ -4,15 +4,35 @@ function calculate-publicDNSRecordsUSGov
     (
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        $domainName
+        $domainName,
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironmentName,
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironments
     )
+
+    switch ($msGraphEnvironmentName) {
+        $msGraphEnvironments.msGraphUSGov
+        {  
+            $functionAutoDiscover = "autodiscover.office365.us"
+            $functionSIPTarget = "sipfed.online.gov.skypeforbusiness.us"
+        }
+        $msGraphEnvironments.msGraphUSGovDOD 
+        {  
+            $functionAutoDiscover = "autodiscover-dod.office365.us"
+            $functionSIPTarget = "sipfed.online.dod.skypeforbusiness.us"
+        }
+    }
 
     $output = @()
     $onMicrosoft = $null
     $onMicrosoftSplit = $null
-    $domainSplit = $domainName.split(".")
     $domainAutodiscover = "autodiscover"
-    $domainNameAutoDiscover = $domainname.replace($domainSplit[0],$domainAutodiscover)
+    $domainNameAutoDiscover = $domainAutodiscover+"."+$domainName
+    $enterpriseEnrollment = "EnterpriseEnrollment"
+    $enterpriseEnrollmentDomainName = $enterpriseEnrollment+"."+$domainName
+    $enterpriseRegistration = "EnterpriseRegistration"
+    $enterpriseRegistrationDomainName = $enterpriseRegistration+"."+$domainName
     $functionMX = "MX"
     $functionRecordName = "@"
     $functionTTL = "3600"
@@ -21,14 +41,17 @@ function calculate-publicDNSRecordsUSGov
     $functionTXT = "TXT"
     $functionSPF = "v=spf1 include:spf.protection.office365.us -all"
     $functionCNAME = "CNAME"
-    $functionAutoDiscover = "autodiscover.office365.us"
+    $functionSRV = "SRV"
+    $functionSIPService = "_sipfederationtls"
+    $functionSIPPort = "5061"
+    $functionSIPPriority = "100"
+    $functionSIPProtocol = "_tcp"
+    $functionSIPWeight = "1"
+    $functionEnterpriseEnrollment = "EnterpriseEnrollment-s.manage.microsoft.us"
+    $functionEnterpriseRegistration = "EnterpriseRegistration.windows.net"
 
     out-logfile -string "Entering calculate-publicDNSRecordsUSGov"
 
-    foreach ($entry in $domainSplit)
-    {
-        out-logfile -string $entry
-    }
     out-logfile -string $domainNameAutoDiscover
 
     out-logfile -string "Government records are based on the onmicrosoft.us domain within the tenant."
@@ -78,6 +101,48 @@ function calculate-publicDNSRecordsUSGov
         RecordName = $domainNameAutoDiscover
         TTL = $functionTTL
         Value = $functionAutoDiscover
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = $functionSRV
+        RecordName = $functionRecordName
+        TTL = $functionTTL
+        Value = $functionSIPTarget
+        Port = $functionSIPPort
+        Priority = $functionSIPPriority
+        Protocol = $functionSIPProtocol
+        Service = $functionSIPService
+        Weight = $functionSIPWeight
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    out-logfile -string "Calculate enterprise enrollment value."
+
+     $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = $functionCNAME
+        RecordName = $enterpriseEnrollmentDomainName
+        TTL = $functionTTL
+        Value = $functionEnterpriseEnrollment
+    })
+
+    out-logfile -string $functionObject
+
+    $output += $functionObject
+
+    out-logfile -string "Calculate enterprise registration value."
+
+     $functionObject = New-Object PSObject -Property ([ordered]@{
+        RecordType = $functionCNAME
+        RecordName = $enterpriseRegistrationDomainName
+        TTL = $functionTTL
+        Value = $functionEnterpriseRegistration
     })
 
     out-logfile -string $functionObject

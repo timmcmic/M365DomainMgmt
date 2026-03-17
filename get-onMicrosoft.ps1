@@ -1,6 +1,6 @@
 function get-onMicrosoft
 {
-    $onMicrosoft = "onmicrosoft.com"
+    $onMicrosoft = "onmicrosoft.us"
     $mailFilter = "mail"
     $domains = @()
 
