@@ -45,11 +45,12 @@ function generate-DNSHtml
             }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
 
             New-HTMLSection -HeaderText "NOTES:  PLEASE REVIEW" {
-                        New-HTMLList{
-                                new-htmlListItem -text "DMARC records should be added ->  Please review https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure for DMARC options and set appropriate options." -FontSize 14
-                                New-HTMLListItem -text "DKIM records should be added -> to ensure you have the appropriate records utilize Get-DKIMSigningConfig in the Exchange Online Powershell https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/get-dkimsigningconfig?view=exchange-ps" -FontSize 14
-                            }
-                    }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Red" -BorderRadius 10px -collapsed
+                New-HTMLList{
+                        new-htmlListItem -text "DMARC records should be added ->  Please review https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure for DMARC options and set appropriate options." -FontSize 14
+                        New-HTMLListItem -text "DKIM records should be added -> to ensure you have the appropriate records utilize Get-DKIMSigningConfig in the Exchange Online Powershell https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/get-dkimsigningconfig?view=exchange-ps" -FontSize 14
+                    }
+            }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Red" -BorderRadius 10px -collapsed
         }
     } -online -ShowHTML
+    out-logfile -string "Exiting generate-DNSHtml"
 }

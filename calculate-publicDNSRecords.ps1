@@ -22,11 +22,13 @@ function calculate-publicDNSRecords
         }
         $msGraphEnvironments.msGraphUSGov 
         {  
-            out-logfile -string "USGov envronment selected."
+            out-logfile -string "USGovDOD environment selected."
+            calculate-publicDNSRecordsOther -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
         }
         $msGraphEnvironments.msGraphUSGovDOD
         {  
             out-logfile -string "USGovDOD envronment selected."
+            calculate-publicDNSRecordsOther -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
         }
         $msGraphEnvironments.msGraphChina
         {  

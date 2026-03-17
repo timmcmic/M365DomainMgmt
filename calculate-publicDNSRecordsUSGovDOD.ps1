@@ -1,13 +1,22 @@
-function calculate-publicDNSRecordsGlobal
+function calculate-publicDNSRecordsUSGovDOD
 {
     Param
     (
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        $domainName
+        $domainName,
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironmentName,
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironments
     )
 
     $output = @()
+
+    switch ($x) {
+        condition {  }
+        Default {}
+    }
 
     $recordIDs = @{}
     $recordIDs['m365MX']="2b672ab0-0bee-476f-b334-be436f2449bd"
@@ -22,7 +31,7 @@ function calculate-publicDNSRecordsGlobal
     $recordIDs['m365EntReg']="db0cde09-f798-4bd7-bbb2-1d19926ca807"
     $recordIDs['m365EntEnroll']="ef4f8e4c-f124-446d-8301-2586447cff67"
 
-    out-logfile -string "Entering calculate-publicDNSRecordsGlobal"
+    out-logfile -string "Entering calculate-publicDNSRecordsUSGovDOD"
 
     out-logfile -string "Capturing dns records for the domain."
 
@@ -262,5 +271,5 @@ function calculate-publicDNSRecordsGlobal
         out-logfile -string "Unable to generate the DNS HTML record." -isError:$true
     }
 
-    out-logfile -string "Exiting calculate-publicDNSRecordsGlobal"
+    out-logfile -string "Exiting calculate-publicDNSRecordsUSGovDOD"
 }
