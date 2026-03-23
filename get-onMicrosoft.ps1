@@ -1,7 +1,7 @@
 function get-onMicrosoft
 {
     $onMicrosoft = "onmicrosoft.us"
-    $mailFilter = "mail"
+    $mailFilter = "mail.onmicrosoft.us"
     $domains = @()
 
     out-logfile -string "Entering get-onMicrosoft"
@@ -23,7 +23,7 @@ function get-onMicrosoft
 
     out-logfile -string "Filter the domains to obtain only those that are domain.onmicrosoft.us"
 
-    $domains = $domains | where {$_.id -notmatch $mailFilter}
+    $domains = @($domains | where {$_.id -notmatch $mailFilter})
 
     foreach ($domain in $domains)
     {
