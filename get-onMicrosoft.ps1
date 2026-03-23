@@ -9,7 +9,7 @@ function get-onMicrosoft
     out-logfile -string "Getting all domains that contain onmicrosoft.us"
 
     try {
-        $domains += get-mgDomain -all -errorAction STOP | where {$_.id.EndsWith($onMicrosoft)}
+        $domains = @(get-mgDomain -all -errorAction STOP | where {$_.id.EndsWith($onMicrosoft)})
     }
     catch {
         out-logfile $_

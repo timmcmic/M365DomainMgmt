@@ -232,8 +232,6 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphAuthenticationVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MsGraphAuthentication -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphDirectory -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphBetaDirectory -powershellVersionTest:$TRUE
-
-    Read-Host "Press"
     
     out-logfile -string "Graph"
 
