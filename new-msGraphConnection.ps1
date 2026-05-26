@@ -40,7 +40,7 @@ function new-msGraphConnection
 
     out-logfile -string "Validate MSGraph Scopes"
 
-    verify-msGraphScopes -context $msGraphContext -scope $msGraphHashTable.msGraphScopes
+    verify-msGraphScopes -context $msGraphContext -scopes $msGraphHashTable.msGraphScopes
 
     out-logfile -string "Exiting new-msGraphConnection"
 }

@@ -1,7 +1,25 @@
 function get-onMicrosoft
 {
-    $onMicrosoft = "onmicrosoft.us"
-    $mailFilter = "mail.onmicrosoft.us"
+    param 
+    (
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironmentName
+    )
+
+    $USGov="USGov"
+    $Global = "Global"
+
+    if ($msGraphEnvironmentName -eq $USGov)
+    {
+        $onMicrosoft = "onmicrosoft.us"
+        $mailFilter = "mail.onmicrosoft.us"
+    }
+    elseif ($msGraphEnvironmentName -eq $Global)
+    {
+        $onMicrosoft = "onmicrosoft.com"
+        $mailFilter = "mail.onmicrosoft.com"
+    }
+   
     $domains = @()
 
     out-logfile -string "Entering get-onMicrosoft"
@@ -13,7 +31,7 @@ function get-onMicrosoft
     }
     catch {
         out-logfile $_
-        out-logfile -string "Unable to obtain onmicrosoft.us domains." -isError:$true
+        out-logfile -string "Unable to obtain onmicrosoft domains." -isError:$true
     }
 
     foreach ($domain in $domains)

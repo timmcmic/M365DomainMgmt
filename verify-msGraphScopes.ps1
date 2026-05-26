@@ -5,28 +5,39 @@ function verify-msGraphScopes
         [Parameter(Mandatory = $true)]
         $context,
         [Parameter(Mandatory = $true)]
-        $scope
+        $scopes
     )
 
     $missingScopes = @()
 
     out-logfile -string "Entering verify-msGraphScopes"
 
-    foreach ($scope in $context.scopes)
+    out-logfile -string "Log all scopes found in the graph context."
+
+    foreach ($test in $context.scopes)
     {
-        out-logfile -string $scope
+        out-logfile -string $test
     }
 
-    foreach ($test in $scope)
+    out-logfile -string "Log all scopes required for the specified domain operation."
+
+    foreach ($test in $scopes)
     {
-        if ($context.scopes.contains($scope))
-    {
-        out-logfile -string "Required scopes are present."
+        out-logfile -string $test
     }
-    else 
+
+    foreach ($test in $scopes)
     {
-        out-logfile -string "Scope missing..."
-        $missingScopes += $test
+        if ($context.scopes.contains($test))
+        {
+            out-logfile -string "Required scopes are present."
+            out-logfile -string $test
+        }
+        else 
+        {
+            out-logfile -string "Scope missing..."
+            $missingScopes += $test
+        }
     }
 
     if ($missingScopes.count -gt 0)

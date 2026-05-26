@@ -56,7 +56,7 @@ function calculate-publicDNSRecordsUSGov
 
     out-logfile -string "Government records are based on the onmicrosoft.us domain within the tenant."
 
-    $onMicrosoft = get-OnMicrosoft
+    $onMicrosoft = get-OnMicrosoft -msGraphEnvironmentName $msGraphEnvironmentName
 
     out-logfile -string $onMicrosoft
 

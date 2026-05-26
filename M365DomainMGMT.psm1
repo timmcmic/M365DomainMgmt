@@ -117,8 +117,11 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]        
         [string]$msGraphClientSecret,
         [Parameter(Mandatory=$false)]
-        [ValidateSet("Directory.ReadWrite.All","User.ReadWrite.All","User.EnableDisableAccount.All","User.ManageIdentities.All","User.ReadWrite")]
+        [ValidateSet("Directory.ReadWrite.All","User.ReadWrite.All","User.EnableDisableAccount.All","User.ManageIdentities.All","User.ReadWrite","Group.Read.All","Group.ReadWrite.All","GroupMember.Read.All","Group-NestingSupport.ReadWrite.All")]
         [string]$msGraphUserPermissions="Directory.ReadWrite.All",
+        [Parameter(Mandatory=$false)]
+        [ValidateSet("Directory.ReadWrite.All","Directory.Read.All","Group-XTenantIdentitySync.Read.All","Group.ManageProtection.All")]
+        [string]$msGraphGroupPermissions="Directory.ReadWrite.All",
         #Define operation parameters
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
@@ -155,11 +158,17 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphAuthenticationVersion']="None"
     $telemetryValues['telemetryMSGraphDirectoryVersion']="None"
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']="None"
+    $telemetryValues['telemetryMSGraphUsersVersion']="None"
+    $telemetryValues['telemetryMSGraphGroupsVersion']="None"
+    $telemetryValues['telemetryExchangeOnlineVersion']="None"
     $telemetryValues['telemetryEventName']="Start-M365DomainManagement"
 
     #Create MSGraphHashTable
 
     $msGraphScopesRequired = @()
+    $msGraphScopeDomain = "Domain.ReadWrite.All"
+    $msGraphGroupSync = "Group-OnPremisesSyncBehavior.ReadWrite.All"
+    $msGraphUserSync = "User-OnPremisesSyncBehavior.ReadWrite.All"
     $msGraphValues = @{}
     $msGraphValues['msGraphEnvironmentName']=$msGraphEnvironmentName
     $msGraphValues['msGraphTenantID']=$msGraphTenantID
@@ -200,12 +209,16 @@ Function Start-M365DomainManagement
     $exportNames['PublicDNSRecords']="PublicDNSRecords"
     $exportNames['CalculatedPublicRecords']="CalculatedPublicRecords"
     $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
+    $exportNames['PostManagedChange']="PostManagedChange"
 
     $moduleNames = @{}
     $moduleNames['M365DomainManagement']="M365DomainMGMT"
     $moduleNames['MsGraphAuthentication']="Microsoft.Graph.Authentication"
     $moduleNames['MSGraphDirectory']="Microsoft.Graph.Identity.DirectoryManagement"
     $moduleNames['MSGraphBetaDirectory']="Microsoft.Graph.Beta.Identity.DirectoryManagement"
+    $moduleNames['MSGraphUsers']="Microsoft.Graph.Users"
+    $moduleNames['MSGraphGroups']="Microsoft.Graph.Groups"
+    $moduleNames['ExchangeOnline']="ExchangeOnlineManagement"
 
     #Variables for logging and start log file.
 
@@ -234,6 +247,9 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphAuthenticationVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MsGraphAuthentication -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphDirectory -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphBetaDirectory -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphUsersVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphUsers -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphGroupsVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphGroups -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryExchangeOnlineVersion']=test-PowerShellModule -powershellModuleName $moduleNames.ExchangeOnline -powershellVersionTest:$TRUE
     
     out-logfile -string "Operation"
 
@@ -241,27 +257,28 @@ Function Start-M365DomainManagement
 
     $domainOperation = get-DomainOperation -domainOperation $domainOperation -domainOperations $domainOperations
 
+    out-logfile -string ("The domain operation returned: "+$domainOperation)
+
     out-logfile -string "Graph"
 
     if ($domainOperation -eq "Remove")
     {
         out-logfile -string "Domian operation is remove - adding enhanced graph scopes."
 
-        $msGraphScopesRequired += "Domain.ReadWrite.All"
-        $msGraphScopesRequired += "Group-OnPremisesSyncBehavior.ReadWrite.All"
-        $msGraphScopesRequired += "User-OnPremisesSyncBehavior.ReadWrite.All"
-        $msGraphScopesRequired += $msGraphUserPermissions
+        $msGraphValues.msGraphScopes += $msGraphScopeDomain
+        $msGraphValues.msGraphScopes += $msGraphGroupSync
+        $msGraphValues.msGraphScopes += $msGraphUserSync
+        $msGraphValues.msGraphScopes += $msGraphUserPermissions
+        $msGraphValues.msGraphScopes += $msGraphGroupPermissions
     }
     else 
     {
         out-logfile -string "Domain operation is not remove, specifying minimum graph scopes required for domain operations."
 
-        $msGraphScopesRequired += "Domain.ReadWrite.All"
+        $msGraphValues.msGraphScopes += "Domain.ReadWrite.All"
     }
 
     new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
-
-    out-logfile -string ("The domain operation returned: "+$domainOperation)
 
     out-logfile -string "DomainName"
 
@@ -319,6 +336,10 @@ Function Start-M365DomainManagement
             $domainInfo = test-DomainName -domainName $domainName
 
             out-xmlFile -itemToExport $domainInfo -itemNameToExport $exportNames.domainInfo
+
+            $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
+
+            
         }
         $domainOperations.GetVerificationRecords
         {
@@ -412,6 +433,9 @@ Function Start-M365DomainManagement
         MSGraphAuthentication = $telemetryValues.telemetryMSGraphAuthenticationVersion
         MSGraphDirectory = $telemetryValues.telemetryMSGraphDirectoryVersion
         MSGraphBetaDirectory = $telemetryValues.telemetryMSGraphBetaDirectoryVersion
+        MSGraphUsers = $telemetryValues.telemetryMSGraphUsersVersion
+        MSGraphGroups = $telemetryValues.telemetryMSGraphGroupsVersion
+        ExchangeOnline = $telemetryValues.telemetryExchangeOnlineVersion
         OperationSelected = $domainOperation
     }
 
