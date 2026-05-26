@@ -8,6 +8,8 @@ function verify-msGraphScopes
         $scope
     )
 
+    $missingScopes = @()
+
     out-logfile -string "Entering verify-msGraphScopes"
 
     foreach ($scope in $context.scopes)
@@ -15,15 +17,26 @@ function verify-msGraphScopes
         out-logfile -string $scope
     }
 
-    if ($context.scopes.contains($scope))
+    foreach ($test in $scope)
+    {
+        if ($context.scopes.contains($scope))
     {
         out-logfile -string "Required scopes are present."
     }
     else 
     {
-        out-logfile -string "Directory.ReadWrite.All graph scope is required to proceed and not present."
-        out-logfile -string "EXCEPTION:  Required graph scope not present." -isError:$true
+        out-logfile -string "Scope missing..."
+        $missingScopes += $test
     }
 
+    if ($missingScopes.count -gt 0)
+    {
+        foreach ($test in $missingScopes)
+        {
+            out-logfile -string ("Mandatory graph scope missing: "+$test)
+        }
+
+        out-logfile -string "Mandatory graph scopes missing to proceed - review errors above for missing scopes." -isError:$TRUE
+    }
     out-logfile -string "Exiting verify-msGraphScopes"
 }

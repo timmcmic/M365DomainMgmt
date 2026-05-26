@@ -116,6 +116,9 @@ Function Start-M365DomainManagement
         [string]$msGraphApplicationID,
         [Parameter(Mandatory = $true, ParameterSetName = "ClientSecret")]        
         [string]$msGraphClientSecret,
+        [Parameter(Mandatory=$false)]
+        [ValidateSet("Directory.ReadWrite.All","User.ReadWrite.All","User.EnableDisableAccount.All","User.ManageIdentities.All","User.ReadWrite")]
+        [string]$msGraphUserPermissions="Directory.ReadWrite.All",
         #Define operation parameters
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
@@ -156,7 +159,7 @@ Function Start-M365DomainManagement
 
     #Create MSGraphHashTable
 
-    $msGraphScopesRequired = "Domain.ReadWrite.All"
+    $msGraphScopesRequired = @()
     $msGraphValues = @{}
     $msGraphValues['msGraphEnvironmentName']=$msGraphEnvironmentName
     $msGraphValues['msGraphTenantID']=$msGraphTenantID
@@ -212,7 +215,6 @@ Function Start-M365DomainManagement
     #Misc variables.
 
     $domainIsViral = $false
-    $msGraphGlobalEnvironment = "Global"
     $domainInfo = $null
     $m365DNSRecords = $NULL
     $publicDNSRecords = $null
@@ -233,15 +235,31 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphDirectory -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphBetaDirectory -powershellVersionTest:$TRUE
     
-    out-logfile -string "Graph"
-
-    new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
-
     out-logfile -string "Operation"
 
     out-logfile -string ("The domain operation starting: "+$domainOperation)
 
     $domainOperation = get-DomainOperation -domainOperation $domainOperation -domainOperations $domainOperations
+
+    out-logfile -string "Graph"
+
+    if ($domainOperation -eq "Remove")
+    {
+        out-logfile -string "Domian operation is remove - adding enhanced graph scopes."
+
+        $msGraphScopesRequired += "Domain.ReadWrite.All"
+        $msGraphScopesRequired += "Group-OnPremisesSyncBehavior.ReadWrite.All"
+        $msGraphScopesRequired += "User-OnPremisesSyncBehavior.ReadWrite.All"
+        $msGraphScopesRequired += $msGraphUserPermissions
+    }
+    else 
+    {
+        out-logfile -string "Domain operation is not remove, specifying minimum graph scopes required for domain operations."
+
+        $msGraphScopesRequired += "Domain.ReadWrite.All"
+    }
+
+    new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
 
     out-logfile -string ("The domain operation returned: "+$domainOperation)
 
@@ -293,7 +311,14 @@ Function Start-M365DomainManagement
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
         }
         $domainOperations.Remove 
-        {  
+        {
+            out-logfile -string "Remove"
+            
+            get-removalApproval
+
+            $domainInfo = test-DomainName -domainName $domainName
+
+            out-xmlFile -itemToExport $domainInfo -itemNameToExport $exportNames.domainInfo
         }
         $domainOperations.GetVerificationRecords
         {
