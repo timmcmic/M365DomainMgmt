@@ -3,23 +3,24 @@ function get-onMicrosoft
     param 
     (
         [Parameter(Mandatory = $true)]
-        $msGraphEnvironmentName
+        $msGraphEnvironmentName,
+        [Parameter(Mandatory = $true)]
+        $msGraphEnvironments
     )
 
-    $USGov="USGov"
-    $Global = "Global"
+    switch ($msGraphEnvironmentName) {
+        $msGraphEnvironments.msGraphUSGov
+        {  
+            $onMicrosoft = "onmicrosoft.us"
+            $mailFilter = "mail.onmicrosoft.us"
+        }
+        $msGraphEnvironments.msGraphUSGovDOD 
+        {  
+            $onMicrosoft = "onmicrosoft.com"
+            $mailFilter = "mail.onmicrosoft.com"
+        }
+    }
 
-    if ($msGraphEnvironmentName -eq $USGov)
-    {
-        $onMicrosoft = "onmicrosoft.us"
-        $mailFilter = "mail.onmicrosoft.us"
-    }
-    elseif ($msGraphEnvironmentName -eq $Global)
-    {
-        $onMicrosoft = "onmicrosoft.com"
-        $mailFilter = "mail.onmicrosoft.com"
-    }
-   
     $domains = @()
 
     out-logfile -string "Entering get-onMicrosoft"
