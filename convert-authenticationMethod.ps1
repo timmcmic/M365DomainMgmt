@@ -29,7 +29,7 @@ function convert-authenticationMethod
 
     out-logfile -string ("Updated domain authentication method: "+$domainInfo.AuthenticationType)
 
-    out-xmlfile -itemNameToExport $domainInfo -itemToExport $exportFile
+    out-xmlfile -itemNameToExport $exportFile -itemToExport $domainInfo
 
     out-logfile -string "Exiting Convert-AuthenticationMethod"
 

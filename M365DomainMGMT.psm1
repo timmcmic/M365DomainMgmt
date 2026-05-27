@@ -210,6 +210,9 @@ Function Start-M365DomainManagement
     $exportNames['CalculatedPublicRecords']="CalculatedPublicRecords"
     $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
     $exportNames['PostManagedChange']="PostManagedChange"
+    $exportNames['UsersUPN']="UsersUPN"
+
+
 
     $moduleNames = @{}
     $moduleNames['M365DomainManagement']="M365DomainMGMT"
@@ -339,7 +342,7 @@ Function Start-M365DomainManagement
 
             $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
 
-            
+            remove-objectDependencies -exportFiles $exportNames -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -domainName $domainName
         }
         $domainOperations.GetVerificationRecords
         {
