@@ -40,6 +40,12 @@ function remove-objectDependencies
 
             update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
         }
+        else 
+        {
+            out-logfile -string "All users were cloud only - proceed."
+        }
+
+        out-logfile -string "Proceed "
     }
     else 
     {

@@ -52,7 +52,7 @@ function get-GraphURL
 
     if ($userOrGroup -eq "User")
     {
-        $returnURL = "https://"+$baseURL+"/beta/user/"+$id+"/onPremisesSyncBehavior"
+        $returnURL = "https://"+$baseURL+"/beta/users/"+$id+"/onPremisesSyncBehavior"
     }
 
     out-logfile -string $returnURL

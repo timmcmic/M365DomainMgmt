@@ -33,5 +33,24 @@ function update-DirSyncStatus
         }
     }
 
+    if ($errorArray.count -gt 0)
+    {
+        out-logfile -string "************************"
+        out-logfile -string "ERRORS ENCOUTERED - THE FOLLOWING USERS COULD NOT HAVE DIRSYNC DISABLED"
+
+        foreach ($errorUser in $errorArray)
+        {
+            out-logfile -string $errorUser
+        }
+
+        out-logfile -string "************************"
+
+        out-logfile -string "Dirsync users could not be disabled - unable to proceed" -isError:$TRUE
+    }
+    else 
+    {
+        out-logfile -string "No errors encoutered."
+    }
+
     out-logfile -string "Exiting Update-UserDirSyncStatus"
 }
