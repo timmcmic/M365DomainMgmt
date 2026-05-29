@@ -151,6 +151,15 @@ Function Start-M365DomainManagement
         start-telemetryConfiguration -allowTelemetryCollection $allowTelemetryCollection -appInsightAPIKey $appInsightAPIKey -traceModuleName $traceModuleName
     }
 
+    #Create globals for reporting.
+
+    $global:HTMLDisableDirSyncSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDisableDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLEnabledDirSyncSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLEnabledDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLUPNRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLUPNRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
+
     #Create telemetry values.
 
     $telemetryValues = @{}
@@ -343,6 +352,8 @@ Function Start-M365DomainManagement
             $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
 
             remove-objectDependencies -exportFiles $exportNames -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -domainName $domainName
+
+            generate-removeHTML
         }
         $domainOperations.GetVerificationRecords
         {

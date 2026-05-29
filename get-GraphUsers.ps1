@@ -22,7 +22,7 @@ function get-graphUsers
         out-logfile -string "Obtain users via UPN..."
 
         try {
-            $returnUsers = @(get-mgUser -all -filter "endsWith(userprincipalName,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,OnPremisesSyncEnabled -errorAction Stop)
+            $returnUsers = @(get-mgUser -all -filter "endsWith(userprincipalName,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
         }
         catch {
             out-logfile -string "Error obtaining graph users."

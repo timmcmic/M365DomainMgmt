@@ -16,8 +16,18 @@ function get-onMicrosoft
         }
         $msGraphEnvironments.msGraphUSGovDOD 
         {  
+            $onMicrosoft = "onmicrosoft.us"
+            $mailFilter = "mail.onmicrosoft.us"
+        }
+        $msGraphEnvironments.msGraphGlobal
+        {
             $onMicrosoft = "onmicrosoft.com"
             $mailFilter = "mail.onmicrosoft.com"
+        }
+        $msGraphEnvironments.msGraphChina
+        {
+            $onMicrosoft = "partner.onmschina.cn"
+            $mailFilter = "mail.partner.onmschina.cn"
         }
     }
 
@@ -25,7 +35,7 @@ function get-onMicrosoft
 
     out-logfile -string "Entering get-onMicrosoft"
 
-    out-logfile -string "Getting all domains that contain onmicrosoft.us"
+    out-logfile -string "Getting all domains that contain onmicrosoft"
 
     try {
         $domains = @(get-mgDomain -all -errorAction STOP | where {$_.id.EndsWith($onMicrosoft)})
