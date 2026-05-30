@@ -13,24 +13,24 @@ function remove-objectDependencies
         $msGraphEnvironments
     )
 
-    $dirSyncUsers
-    $cloudUsers
+    $dirSyncTracking = @()
 
     out-logfile -string "Entering Remove-ObjectDependencies"
 
     out-logfile -string "Obtaining all users that have this domain as a UPN."
 
-    $users = get-GraphUsers -domainName $domainName -getUPN:$TRUE
+    $usersUPN = @(get-GraphUsers -domainName $domainName -getUPN:$TRUE)
 
-    if ($users.count -gt 0)
+    if ($usersUPN.count -gt 0)
     {
         out-logfile -string "Users were returned - split into dir sync and non dir synced users."
 
-        $dirSyncUsers = @(split-GraphObjects -objectArray $users -isDirSync:$true)
+        $dirSyncUsers = @(split-GraphObjects -objectArray $usersUPN -isDirSync:$true)
+        $dirSyncTracking += $dirSyncUsers
 
         #$cloudUsers = @(split-GraphObjects -objectArray $users -isDirSync:$false)
 
-        out-xmlFile -itemToExport $users -itemNameToExport $exportFiles.UsersUPN
+        out-xmlFile -itemToExport $usersUPN -itemNameToExport $exportFiles.UsersUPN
 
         out-logfile -string "If users are directory sync - change SOA to cloud."
 
@@ -47,27 +47,49 @@ function remove-objectDependencies
 
         out-logfile -string "Proceed with UPN adjustments"
 
-        #update-userUPN -userObjects $users -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
-
-        out-logfile -string "If users are directory sync - change SOA to on premises."
-
-        if ($dirSyncUsers.count -gt 0)
-        {
-            out-logfile -string "Directory sync users present - change SOA."
-
-            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User" -enableOrDisable "Enable"
-        }
-        else 
-        {
-            out-logfile -string "All users were cloud only - proceed."
-        }
+        update-userUPN -userObjects $usersUPN -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
     }
     else 
     {
         out-logfile -string "No users with an associated UPN found."
     }
 
+    out-logfile -string "Obtain all users who have a primary SMTP address at the domain to be removed."
 
+    $usersPrimary = @(get-GraphUsers -domainName $domainName -getPrimarySMTP:$true)
+
+    if ($usersPrimary.count -gt 0)
+    {
+        out-logfile -string "Users were returned - split into dir sync and non dir synced users."
+
+        $dirSyncUsers = @(split-GraphObjects -objectArray $usersPrimary -isDirSync:$true)
+        $dirSyncTracking += $dirSyncUsers
+
+        #$cloudUsers = @(split-GraphObjects -objectArray $users -isDirSync:$false)
+
+        out-xmlFile -itemToExport $usersPrimary -itemNameToExport $exportFiles.UsersPrimarySMTP
+
+        out-logfile -string "If users are directory sync - change SOA to cloud."
+
+        if ($dirSyncUsers.count -gt 0)
+        {
+            out-logfile -string "Directory sync users present - change SOA."
+
+            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
+        }
+        else 
+        {
+            out-logfile -string "All users were cloud only - proceed."
+        }
+
+        out-logfile -string "Proceed with UPN adjustments"
+
+        update-userPrimarySMTP -userObjects $usersPrimary
+    }
+    else 
+    {
+        out-logfile -string "No users with an associated UPN found."
+    }
     
     out-logfile -string "Exiting Remove-ObjectDependencies"
 

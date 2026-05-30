@@ -122,6 +122,13 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [ValidateSet("Directory.ReadWrite.All","Directory.Read.All","Group-XTenantIdentitySync.Read.All","Group.ManageProtection.All")]
         [string]$msGraphGroupPermissions="Directory.ReadWrite.All",
+        #Define Exchange Online connection information
+        [Parameter(Mandatory = $false)]
+        [string]$exchangeOnlineCertificateThumbPrint="",
+        [Parameter(Mandatory = $false)]
+        [string]$exchangeOnlineOrganizationName="",
+         [Parameter(Mandatory = $false)]
+        [string]$exchangeOnlineAppID="",
         #Define operation parameters
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
@@ -159,6 +166,8 @@ Function Start-M365DomainManagement
     $global:HTMLEnabledDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLUPNRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLUPNRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLPrimarySMTPRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLPrimarySMTPRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
 
     #Create telemetry values.
 
@@ -220,6 +229,8 @@ Function Start-M365DomainManagement
     $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
     $exportNames['PostManagedChange']="PostManagedChange"
     $exportNames['UsersUPN']="UsersUPN"
+    $exportNames['UsersPrimarySMTP']="UsersPrimarySMTP"
+
 
 
 
@@ -282,6 +293,8 @@ Function Start-M365DomainManagement
         $msGraphValues.msGraphScopes += $msGraphUserSync
         $msGraphValues.msGraphScopes += $msGraphUserPermissions
         $msGraphValues.msGraphScopes += $msGraphGroupPermissions
+
+        new-ExchangeOnlineConnection -msGraphEnvironmentName $msGraphEnvironmentName -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName
     }
     else 
     {

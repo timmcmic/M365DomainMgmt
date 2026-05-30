@@ -30,6 +30,32 @@ function get-graphUsers
         }
     }
 
+    if ($getPrimarySMTP -eq $TRUE)
+    {
+        out-logfile -string "Obtain users via primary SMTP Address..."
+
+        try {
+            $returnUsers = @(get-mgUser -all -filter "endsWith(mail,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
+        }
+        catch {
+            out-logfile -string "Error obtaining graph users."
+            out-logfile -string $_ -isError:$true
+        }
+    }
+
+    if ($getSecondaySMTP -eq $TRUE)
+    {
+        out-logfile -string "Obtain users via primary SMTP Address..."
+
+        try {
+            $returnUsers = @(get-mgUser -all -filter "proxyaddresses/any(p:endswith(p,$functionDomainName))" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
+        }
+        catch {
+            out-logfile -string "Error obtaining graph users."
+            out-logfile -string $_ -isError:$true
+        }
+    }
+
     out-logfile -string ("Count of objects found: "+$returnUsers.count)
 
     out-logfile -string "Exiting Get-GraphUsers"

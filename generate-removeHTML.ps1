@@ -25,7 +25,7 @@ function generate-removeHTML
 
             if ($global:HTMLDisableDirSyncErrors.count -gt 0)
             {
-                new-htmlSection -headerText ("Disable Dir Sync Success") {
+                new-htmlSection -headerText ("Disable Dir Sync ERRORS") {
                     new-htmlTable -DataTable ($global:HTMLDisableDirSyncErrors | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus,ErrorMessage) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
@@ -33,7 +33,7 @@ function generate-removeHTML
 
             if ($global:HTMLUPNRenameSuccess.count -gt 0)
             {
-                new-htmlSection -headerText ("Disable Dir Sync Success") {
+                new-htmlSection -headerText ("Rename UPN Success") {
                     new-htmlTable -DataTable ($global:HTMLUPNRenameSuccess | Select-Object ID,UPN,NewUPN,Name,ObjectType) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
@@ -41,7 +41,7 @@ function generate-removeHTML
 
             if ($global:HTMLUPNRenameErrors.count -gt 0)
             {
-                new-htmlSection -headerText ("Disable Dir Sync Success") {
+                new-htmlSection -headerText ("Rename UPN Failures") {
                     new-htmlTable -DataTable ($global:HTMLUPNRenameErrors | Select-Object ID,UPN,NewUPN,Name,ObjectType,ErrorMessage) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
@@ -49,7 +49,7 @@ function generate-removeHTML
 
              if ($global:HTMLEnabledDirSyncSuccess.count -gt 0)
             {
-                new-htmlSection -headerText ("Disable Dir Sync Success") {
+                new-htmlSection -headerText ("Enable Dir Sync Success") {
                     new-htmlTable -DataTable ($global:HTMLDisableDirSyncSuccess | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
@@ -57,7 +57,7 @@ function generate-removeHTML
 
             if ($global:HTMLEnabledDirSyncErrors.count -gt 0)
             {
-                new-htmlSection -headerText ("Disable Dir Sync Success") {
+                new-htmlSection -headerText ("Enable Dir Sync Failures") {
                     new-htmlTable -DataTable ($global:HTMLDisableDirSyncErrors | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus,ErrorMessage) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
