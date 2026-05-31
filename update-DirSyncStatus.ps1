@@ -17,8 +17,16 @@ function update-DirSyncStatus
 
     if ($userOrGroup = "User")
     {
+        $ProgressDelta = 100/($objects.count); $PercentComplete = 0; $MbxNumber = 0
+
         foreach ($user in $objects)
         {
+            $MbxNumber++
+
+            write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete
+
+            $PercentComplete += $ProgressDelta
+
             $functionObject = New-Object PSObject -Property @{
                     ID = $user.id
                     UPN = $user.userPrincipalName
@@ -88,6 +96,8 @@ function update-DirSyncStatus
             }
         }
     }
+
+    write-progress -activity "Processing Recipient" -completed
 
     out-logfile -string "Exiting Update-UserDirSyncStatus"
 }

@@ -24,8 +24,16 @@ function update-userUPN
 
     $errorArray=@()
 
+    $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
+
     foreach ($user in $userObjects)
     {
+        $MbxNumber++
+
+        write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete
+
+        $PercentComplete += $ProgressDelta
+
         out-logfile -string ("Processing ID: "+$user.id)
 
         $tempUPN = $user.userPrincipalName.replace($functionDomainName,$onMicrosoft)
@@ -39,7 +47,7 @@ function update-userUPN
 
             $functionObject = New-Object PSObject -Property @{
                 ID = $user.id
-                UPN = $user.UPN
+                UPN = $user.userPrincipalName
                 NewUPN = $tempUPN
                 Name = $user.displayName    
                 ObjectType = "User"
@@ -65,7 +73,7 @@ function update-userUPN
 
                 $functionObject = New-Object PSObject -Property @{
                     ID = $user.id
-                    UPN = $user.UPN
+                    UPN = $user.userPrincipalName
                     NewUPN = $tempUPN
                     Name = $user.displayName    
                     ObjectType = "User"
@@ -76,6 +84,8 @@ function update-userUPN
             }
         }
     }
+
+    write-progress -activity "Processing Recipient" -completed
 
     out-logfile -string "Existing Update-UserUPN"
 }

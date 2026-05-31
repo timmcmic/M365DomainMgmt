@@ -21,76 +21,90 @@ function remove-objectDependencies
 
     $usersUPN = @(get-GraphUsers -domainName $domainName -getUPN:$TRUE)
 
-    if ($usersUPN.count -gt 0)
+    out-logfile -string ("Count of users with UPN: "+$usersUPN.Count)
+
+    out-logfile -string "Obtaining all users that have a proxy address with the domain."
+
+    $usersProxy = @(get-GraphUsers -domainName $domainName -getSecondarySMTP:$TRUE)
+
+    out-logfile -string ("Count of users with proxy address: "+$usersProxy.Count)
+
+    out-logfile -string "Combine the two types of users to determine disable dir sync steps."
+
+    $usersCombined = $usersUPN + $usersProxy
+
+    out-logfile -string ("Count of users combined: "+$usersCombined.Count)
+
+    out-logfile -string "Filter the users to unique IDs..."
+
+    $usersCombined = $usersCombined | Sort-Object -Unique -Property Id
+
+    out-logfile -string "Determine all objects that require directory sync disabled."
+
+    if ($usersCombined.count -gt 0)
     {
         out-logfile -string "Users were returned - split into dir sync and non dir synced users."
 
-        $dirSyncUsers = @(split-GraphObjects -objectArray $usersUPN -isDirSync:$true)
-        $dirSyncTracking += $dirSyncUsers
+        $dirSyncUsers = @(split-GraphObjects -objectArray $usersCombined -isDirSync:$true)
 
-        #$cloudUsers = @(split-GraphObjects -objectArray $users -isDirSync:$false)
+        if ($dirSyncUsers.count -gt 0)
+        {
+            out-xmlFile -itemToExport $dirSyncUsers -itemNameToExport $exportFiles.UsersDirectorySync
+
+            out-logfile -string "Directory sync users present - change SOA."
+
+            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
+
+            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
+        }
+        else 
+        {
+            out-logfile -string "All users were cloud only - proceed."
+        }
+    }
+    else 
+    {
+       out-logfile -string "No objects meeting the domain criteria were discovered."
+    }
+
+    $usersCombined = @()
+
+    if ($usersUPN.count -gt 0)
+    {
+        out-logfile -string "Proceed with UPN adjustments"
 
         out-xmlFile -itemToExport $usersUPN -itemNameToExport $exportFiles.UsersUPN
 
-        out-logfile -string "If users are directory sync - change SOA to cloud."
+        update-userUPN -userObjects $usersUPN -domainNam $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
 
-        if ($dirSyncUsers.count -gt 0)
-        {
-            out-logfile -string "Directory sync users present - change SOA."
-
-            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
-        }
-        else 
-        {
-            out-logfile -string "All users were cloud only - proceed."
-        }
-
-        out-logfile -string "Proceed with UPN adjustments"
-
-        update-userUPN -userObjects $usersUPN -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
+        start-sleepProgress -sleepString "Sleeping to allow UPN changes to propogate" -sleepSeconds 300
     }
     else 
     {
         out-logfile -string "No users with an associated UPN found."
     }
 
-    out-logfile -string "Obtain all users who have a primary SMTP address at the domain to be removed."
-
-    $usersPrimary = @(get-GraphUsers -domainName $domainName -getPrimarySMTP:$true)
-
-    if ($usersPrimary.count -gt 0)
+    if ($usersProxy.count -gt 0)
     {
-        out-logfile -string "Users were returned - split into dir sync and non dir synced users."
+        out-logfile -string "Proceed with SMTP proxy address adjustments"
 
-        $dirSyncUsers = @(split-GraphObjects -objectArray $usersPrimary -isDirSync:$true)
-        $dirSyncTracking += $dirSyncUsers
+        out-xmlFile -itemToExport $usersProxy -itemNameToExport $exportFiles.UsersSMTP
 
-        #$cloudUsers = @(split-GraphObjects -objectArray $users -isDirSync:$false)
+        update-usersPrimarySMTP -userObjects $usersProxy -domainName $domainName
+    }
 
-        out-xmlFile -itemToExport $usersPrimary -itemNameToExport $exportFiles.UsersPrimarySMTP
+    if ($dirSyncUsers.count -gt 0)
+    {
+        out-logfile -string "Directory sync users present - change SOA back."
 
-        out-logfile -string "If users are directory sync - change SOA to cloud."
+        update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User" -enableOrDisable "Enable"
 
-        if ($dirSyncUsers.count -gt 0)
-        {
-            out-logfile -string "Directory sync users present - change SOA."
-
-            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
-        }
-        else 
-        {
-            out-logfile -string "All users were cloud only - proceed."
-        }
-
-        out-logfile -string "Proceed with UPN adjustments"
-
-        update-userPrimarySMTP -userObjects $usersPrimary
+        start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
     }
     else 
     {
-        out-logfile -string "No users with an associated UPN found."
+        out-logfile -string "All users were cloud only - proceed."
     }
     
     out-logfile -string "Exiting Remove-ObjectDependencies"
-
 }

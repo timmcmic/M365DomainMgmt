@@ -168,6 +168,9 @@ Function Start-M365DomainManagement
     $global:HTMLUPNRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLPrimarySMTPRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLPrimarySMTPRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLSecondarySMTPRemoveSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLSecondarySMTPRemoveErrors=[System.Collections.Generic.List[PSObject]]::new()
+
 
     #Create telemetry values.
 
@@ -229,7 +232,9 @@ Function Start-M365DomainManagement
     $exportNames['DomainInfoPostValidation']="DomainInfoPostValidation"
     $exportNames['PostManagedChange']="PostManagedChange"
     $exportNames['UsersUPN']="UsersUPN"
-    $exportNames['UsersPrimarySMTP']="UsersPrimarySMTP"
+    $exportNames['UsersSMTP']="UsersSMTP"
+    $exportNames['UsersDirectorySync']="UsersDirectorySync"
+
 
 
 

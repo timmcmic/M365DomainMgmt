@@ -4,6 +4,8 @@ function update-UsersPrimarySMTP
     (
         [Parameter(Mandatory = $true)]
         $userObjects,
+        [Parameter(Mandatory = $true)]
+        $domainName
     )
 
     $functionDomainName = "@"+$domainName
@@ -18,58 +20,160 @@ function update-UsersPrimarySMTP
 
     $errorArray=@()
 
+    $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
+
     foreach ($user in $userObjects)
     {
-        out-logfile -string ("Processing ID: "+$user.id)
+        $MbxNumber++
 
-        $tempUPN = $user.userPrincipalName.replace($functionDomainName,$onMicrosoft)
+        write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete -id 1
 
-        out-logfile -string $tempUPN
+        $PercentComplete += $ProgressDelta
+
+        out-logfile -string "Testing for recipient type."
 
         try {
-            update-mgUser -userID $user.id -UserPrincipalName $tempUPN -errorAction Stop
-
-            out-logfile -string "UPN updated successfully."
-
-            $functionObject = New-Object PSObject -Property @{
-                ID = $user.id
-                UPN = $user.UPN
-                NewUPN = $tempUPN
-                Name = $user.displayName    
-                ObjectType = "User"
-                ErrorMessage = "None"
-            }
-
-            $global:HTMLPrimarySMTPRenameSuccess.add($functionObject)
+            $recipientType = (Get-Recipient -identity $user.id).recipientType
+            out-logfile -string ("Recipient Type: "+$recipientType)
         }
         catch {
-            out-logfile -string "Assuming the current UPN is in use."
+            out-logfile -string "Unable to obtain the recipient type - unable to proceed." -isError:$TRUE
+        }
 
-            $tempUser = $user.mail.split("@")
+        out-logfile -string "Test to determine if users primary proxy requires adjustment."
 
-            $tempPrefix = $tempUser[0]+"-"+(Get-Random -Minimum 100 -Maximum 5000).tostring()
+        out-logfile -string ("User mail address for evaluation: "+$user.Mail)
 
-            $tempSMTP.replace($tempUser[0],$tempPrefix)
+        if ($user.mail.contains($functionDomainName))
+        {
+            out-logfile -string "Users primary SMTP address must be changed."
+
+            $tempSMTPAddress = $user.mail.replace($functionDomainName,$onMicrosoft)
+
+            out-logfile -string ("Calculated Primary SMTP Address: "+$tempSMTPAddress)
 
             try {
-                update-mgUser -userID $user.id -UserPrincipalName $tempUPN -errorAction Stop
-            }
-            catch {
-                out-logfile -string "Error must be something other than duplicate upn"
+
+                if ($recipientType -eq "UserMailbox")
+                {
+                    set-mailbox -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                }
+                else 
+                {
+                    set-mailUser -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                }
 
                 $functionObject = New-Object PSObject -Property @{
                     ID = $user.id
-                    UPN = $user.UPN
-                    NewUPN = $tempUPN
+                    Mail = $user.mail
+                    NewMail = $tempSMTPAddres
                     Name = $user.displayName    
                     ObjectType = "User"
-                    ErrorMessage = $_
+                    ErrorMessage = "None"
                 }
 
-                $global:HTMLUPNRenameErrors.add($functionObject)
+                $global:HTMLPrimarySMTPRenameSuccess.add($functionObject)
+            }
+            catch {
+                out-logfile -string "Assume that the SMTP set action failed becuase it matches another object."
+
+                $tempSMTPAddress = $tempSMTPAddress.split("@")
+
+                $tempSMTPAddress[0] = $tempSMTPAddress[0]+((Get-Random -Minimum 100 -Maximum 5000).tostring())
+
+                $tempSMTPAddress = $tempSMTPAddress[0]+"@"+$tempSMTPAddress[1]
+
+                try {
+                    if ($recipientType -eq "UserMailbox")
+                    {
+                        set-mailbox -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                    }
+                    else 
+                    {
+                        set-mailUser -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                    }
+                }
+                catch {
+                    out-logfile -string "Second error attempting to update primary SMTP address - fail user."
+
+                    $functionObject = New-Object PSObject -Property @{
+                        ID = $user.id
+                        Mail = $user.mail
+                        NewMail = $tempSMTPAddres
+                        Name = $user.displayName    
+                        ObjectType = "User"
+                        ErrorMessage = $_
+                    }
+
+                    $global:HTMLPrimarySMTPRenameErrors.add($functionObject)
+                }
             }
         }
+        else 
+        {
+            out-logfile -string "Users primary SMTP address does not require changing."
+        }
+
+        $ProgressDeltaAddresses = 100/($user.proxyaddresses.count); $PercentAddressesComplete = 0; $AddressNumber = 0
+
+        foreach ($address in $user.proxyaddresses)
+        {
+            $addressNumber++
+
+            write-progress -Activity "Processing Address" -Status $address -PercentComplete $PercentAddressesComplete -id 2 -ParentId 1
+
+            $PercentAddressesComplete += $ProgressDeltaAddresses
+
+            out-logfile -string ("Evaluation proxy address: "+$address)
+
+            if ($address.contains($functionDomainName))
+            {
+                out-logfile -string "Remove secondary proxy address"
+
+                try {
+                    if ($recipientType -eq "UserMailbox")
+                    {
+                        set-mailbox -identity $user.id -emailAddresses @{remove=$address} -errorAction STOP
+                    }
+                    else 
+                    {
+                        set-MailUser -identity $user.id -emailAddresses @{remove=$address} -errorAction STOP
+                    }
+
+                    $functionObject = New-Object PSObject -Property @{
+                        ID = $user.id
+                        AddressRemoved = $address
+                        Name = $user.displayName    
+                        ObjectType = "User"
+                        ErrorMessage = "None"
+                    }
+
+                    $global:HTMLSecondarySMTPRemoveSuccess.add($functionObject)
+                }
+                catch {
+                    out-logfile -string "Unable to remove the secondary proxy address."
+
+                    $functionObject = New-Object PSObject -Property @{
+                        ID = $user.id
+                        AddressRemoved = $address
+                        Name = $user.displayName    
+                        ObjectType = "User"
+                        ErrorMessage = $_
+                    }
+
+                    $global:HTMLSecondarySMTPRemoveErrors.add($functionObject)
+                }
+            }
+            else 
+            {
+                out-logfile -string "Address removal not required."
+            }
+        }
+
+        write-progress -activity "Processing Address" -completed -id 2 -ParentId 1
     }
+    
+    write-progress -activity "Processing Recipient" -completed -id 1
 
     out-logfile -string "Existing Update-UsersPrimarySMTP"
 }

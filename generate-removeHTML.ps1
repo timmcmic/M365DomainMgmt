@@ -47,18 +47,50 @@ function generate-removeHTML
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
-             if ($global:HTMLEnabledDirSyncSuccess.count -gt 0)
+            if ($global:HTMLPrimarySMTPRenameSuccess.count -gt 0)
             {
-                new-htmlSection -headerText ("Enable Dir Sync Success") {
-                    new-htmlTable -DataTable ($global:HTMLDisableDirSyncSuccess | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus) -Filtering {
+                new-htmlSection -headerText ("Primary SMTP Rename Success") {
+                    new-htmlTable -DataTable ($global:HTMLPrimarySMTPRenameSuccess | Select-Object ID,Mail,NewMail,Name,ObjectType) -Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
+            if ($global:HTMLPrimarySMTPRenameErrors.count -gt 0)
+            {
+                new-htmlSection -headerText ("Primary SMTP Rename Failures") {
+                    new-htmlTable -DataTable ($global:HTMLPrimarySMTPRenameErrors | Select-Object ID,Mail,NewMail,Name,ObjectType,ErrorMessage) -Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
+             if ($global:HTMLSecondarySMTPRemoveSuccess.count -gt 0)
+            {
+                new-htmlSection -headerText ("Secondary Address Removal Success") {
+                    new-htmlTable -DataTable ($global:HTMLSecondarySMTPRemoveSuccess | Select-Object Id,AddressRemoved,Name,ObjectType) -Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
+            if ($global:HTMLSecondarySMTPRemoveErrors.count -gt 0)
+            {
+                new-htmlSection -headerText ("Secondary Address Removal Failures") {
+                    new-htmlTable -DataTable ($global:HTMLSecondarySMTPRemoveErrors | Select-Object Id,AddressRemoved,Name,ObjectType,ErrorMessage) -Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
+            if ($global:HTMLEnabledDirSyncSuccess.count -gt 0)
+            {
+                new-htmlSection -headerText ("Enabled Dir Sync Success") {
+                    new-htmlTable -DataTable ($global:HTMLEnabledDirSyncSuccess | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
             if ($global:HTMLEnabledDirSyncErrors.count -gt 0)
             {
-                new-htmlSection -headerText ("Enable Dir Sync Failures") {
-                    new-htmlTable -DataTable ($global:HTMLDisableDirSyncErrors | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus,ErrorMessage) -Filtering {
+                new-htmlSection -headerText ("Enabled Dir Sync ERRORS") {
+                    new-htmlTable -DataTable ($global:HTMLEnabledDirSyncErrors | Select-Object ID,UPN,Name,ObjectType,PreStatus,PostStatus,ErrorMessage) -Filtering {
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }

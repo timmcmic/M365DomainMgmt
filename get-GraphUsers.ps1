@@ -7,13 +7,10 @@ function get-graphUsers
         [Parameter(Mandatory = $false)]
         $getUPN=$FALSE,
         [Parameter(Mandatory = $false)]
-        $getPrimarySMTP=$FALSE,
-        [Parameter(Mandatory = $false)]
-        $getSecondaySMTP=$FALSE
+        $getSecondarySMTP=$FALSE
     )
 
     $functionDomainName = "@"+$domainName
-
 
     out-logfile -string "Entering Get-GraphUsers"
 
@@ -22,7 +19,7 @@ function get-graphUsers
         out-logfile -string "Obtain users via UPN..."
 
         try {
-            $returnUsers = @(get-mgUser -all -filter "endsWith(userprincipalName,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
+            $returnUsers = @(get-mgUser -all -filter "endsWith(userprincipalName,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled,ProxyAddresses,Mail -errorAction Stop)
         }
         catch {
             out-logfile -string "Error obtaining graph users."
@@ -30,25 +27,12 @@ function get-graphUsers
         }
     }
 
-    if ($getPrimarySMTP -eq $TRUE)
+    if ($getSecondarySMTP -eq $TRUE)
     {
         out-logfile -string "Obtain users via primary SMTP Address..."
 
         try {
-            $returnUsers = @(get-mgUser -all -filter "endsWith(mail,'$functionDomainName')" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
-        }
-        catch {
-            out-logfile -string "Error obtaining graph users."
-            out-logfile -string $_ -isError:$true
-        }
-    }
-
-    if ($getSecondaySMTP -eq $TRUE)
-    {
-        out-logfile -string "Obtain users via primary SMTP Address..."
-
-        try {
-            $returnUsers = @(get-mgUser -all -filter "proxyaddresses/any(p:endswith(p,$functionDomainName))" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled -errorAction Stop)
+            $returnUsers = @(get-mgUser -all -filter "proxyaddresses/any(p:endswith(p,'$functionDomainName'))" -ConsistencyLevel eventual -property ID,UserPrincipalName,DisplayName,OnPremisesSyncEnabled,ProxyAddresses,Mail -errorAction Stop)
         }
         catch {
             out-logfile -string "Error obtaining graph users."
