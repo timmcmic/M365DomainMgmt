@@ -89,7 +89,7 @@
 
             Disconnect-MgGraph
 
-            Disconnect-ExchangeOnline
+            Disconnect-ExchangeOnline -confirm:$false
 
             exit
         }
