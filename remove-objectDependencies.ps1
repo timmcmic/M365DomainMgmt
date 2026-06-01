@@ -22,6 +22,8 @@ function remove-objectDependencies
     $usersUPN = @(get-GraphUsers -domainName $domainName -getUPN:$TRUE)
 
     out-logfile -string ("Count of users with UPN: "+$usersUPN.Count)
+    
+    read-host "Press enter to continue..."
 
     out-logfile -string "Obtaining all users that have a proxy address with the domain."
 
@@ -29,15 +31,23 @@ function remove-objectDependencies
 
     out-logfile -string ("Count of users with proxy address: "+$usersProxy.Count)
 
+    read-host "Press enter to continue..."
+
     out-logfile -string "Combine the two types of users to determine disable dir sync steps."
 
     $usersCombined = $usersUPN + $usersProxy
 
     out-logfile -string ("Count of users combined: "+$usersCombined.Count)
 
+    read-host "Press enter to continue..."
+
     out-logfile -string "Filter the users to unique IDs..."
 
     $usersCombined = $usersCombined | Sort-Object -Unique -Property Id
+
+    out-logfile -string ("Users combined filtered by id count: "+$usersCombined.Count)
+
+    read-host "Press enter to continue..."
 
     out-logfile -string "Determine all objects that require directory sync disabled."
 
@@ -46,6 +56,10 @@ function remove-objectDependencies
         out-logfile -string "Users were returned - split into dir sync and non dir synced users."
 
         $dirSyncUsers = @(split-GraphObjects -objectArray $usersCombined -isDirSync:$true)
+
+        out-logfile -string ("Directory synced users: "+$dirSyncUsers.count)
+
+        read-host "Press enter to continue..."
 
         if ($dirSyncUsers.count -gt 0)
         {
@@ -97,6 +111,10 @@ function remove-objectDependencies
 
     $groupsProxy = @(get-GraphGroups -domainName $domainName)
 
+    out-logfile -string ("Count of groups with proxy address: "+$groupsProxy.count)
+
+    read-host "Press enter to continue..."
+
     if ($groupsProxy.count -gt 0)
     {
         out-xmlFile -itemToExport $groupsProxy -itemNameToExport $exportFiles.GroupsProxy
@@ -104,6 +122,10 @@ function remove-objectDependencies
         out-logfile -string "Groups were found that require processing - handle dir sync groups."
 
         $dirSyncGroups = @(split-GraphObjects -objectArray $groupsProxy -isDirSync:$true)
+
+        out-logfile -string ("Count of groups directory synced: "+$dirSyncGroups.count)
+
+        read-host "Press enter to continue..."
         
         if ($dirSyncGroups.count -gt 0)
         {
