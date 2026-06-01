@@ -89,6 +89,8 @@
 
             Disconnect-MgGraph
 
+            Disconnect-ExchangeOnline
+
             exit
         }
     }

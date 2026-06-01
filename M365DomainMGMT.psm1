@@ -490,5 +490,7 @@ Function Start-M365DomainManagement
 
     Disconnect-MgGraph
 
+    Disconnect-ExchangeOnline
+
     out-logfile -string "Completed domain operations using M365DomainMGMT"
 }
