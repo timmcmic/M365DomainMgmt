@@ -105,6 +105,8 @@ function remove-objectDependencies
         out-xmlFile -itemToExport $usersProxy -itemNameToExport $exportFiles.UsersSMTP
 
         update-usersPrimarySMTP -userObjects $usersProxy -domainName $domainName
+
+        start-sleepProgress -sleepString "Sleeping to allow user proxy address changes to propogate..." -sleepSeconds 300
     }
 
     out-logfile -string "Start group processing..."
@@ -145,6 +147,8 @@ function remove-objectDependencies
         out-logfile -string "Update proxy addresses on groups."
 
         update-groupsPrimarySMTP -userObjects $groupsProxy -domainName $domainName
+
+        start-sleepProgress -sleepString "Sleeping to allow group SMTP proxy address changes to propogate..." -sleepSeconds 300
     }
 
     start-removeDomain -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName
@@ -154,8 +158,6 @@ function remove-objectDependencies
         out-logfile -string "Directory sync users present - change SOA back."
 
         update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User" -enableOrDisable "Enable"
-
-        start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
     }
     else 
     {
@@ -167,8 +169,6 @@ function remove-objectDependencies
         out-logfile -string "Directory sync users present - change SOA back."
 
         update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group" -enableOrDisable "Enable"
-
-        start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
     }
     else 
     {
