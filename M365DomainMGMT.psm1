@@ -170,6 +170,14 @@ Function Start-M365DomainManagement
     $global:HTMLPrimarySMTPRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDisableDirSyncGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDisableDirSyncGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLEnabledDirSyncGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLEnabledDirSyncGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLPrimarySMTPRenameGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLPrimarySMTPRenameGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLSecondarySMTPRemoveGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLSecondarySMTPRemoveGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
 
 
     #Create telemetry values.
@@ -234,6 +242,9 @@ Function Start-M365DomainManagement
     $exportNames['UsersUPN']="UsersUPN"
     $exportNames['UsersSMTP']="UsersSMTP"
     $exportNames['UsersDirectorySync']="UsersDirectorySync"
+    $exportNames['GroupsProxy']="GroupsProxy"
+    $exportNames['GroupsDirectorySync']="GroupsDirectorySync"
+
 
 
 

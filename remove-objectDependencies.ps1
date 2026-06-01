@@ -93,6 +93,38 @@ function remove-objectDependencies
         update-usersPrimarySMTP -userObjects $usersProxy -domainName $domainName
     }
 
+    out-logfile -string "Start group processing..."
+
+    $groupsProxy = @(get-GraphGroups -domainName $domainName)
+
+    if ($groupsProxy.count -gt 0)
+    {
+        out-xmlFile -itemToExport $groupsProxy -itemNameToExport $exportFiles.GroupsProxy
+
+        out-logfile -string "Groups were found that require processing - handle dir sync groups."
+
+        $dirSyncGroups = @(split-GraphObjects -objectArray $groupsProxy -isDirSync:$true)
+        
+        if ($dirSyncGroups.count -gt 0)
+        {
+            out-xmlFile -itemToExport $dirSyncGroups -itemNameToExport $exportFiles.GroupsDirectorySync
+
+            out-logfile -string "Directory sync groups present - change SOA."
+
+            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group"
+
+            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
+        }
+        else 
+        {
+            out-logfile -string "All users were cloud only - proceed."
+        }
+
+        out-logfile -string "Update proxy addresses on groups."
+
+        update-groupsPrimarySMTP -userObjects $groupsProxy -domainName $domainName
+    }
+
     if ($dirSyncUsers.count -gt 0)
     {
         out-logfile -string "Directory sync users present - change SOA back."
@@ -105,6 +137,19 @@ function remove-objectDependencies
     {
         out-logfile -string "All users were cloud only - proceed."
     }
-    
+
+    if ($dirSyncGroups.count -gt 0)
+    {
+        out-logfile -string "Directory sync users present - change SOA back."
+
+        update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group" -enableOrDisable "Enable"
+
+        start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
+    }
+    else 
+    {
+        out-logfile -string "All groups were cloud only - proceed."
+    }
+
     out-logfile -string "Exiting Remove-ObjectDependencies"
 }

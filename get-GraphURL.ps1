@@ -54,6 +54,10 @@ function get-GraphURL
     {
         $returnURL = "https://"+$baseURL+"/beta/users/"+$id+"/onPremisesSyncBehavior"
     }
+    elseif ($userOrGroup -eq "Group") 
+    {
+        $returnURL = "https://"+$baseURL+"/beta/groups/"+$id+"/onPremisesSyncBehavior"
+    }
 
     out-logfile -string $returnURL
 
