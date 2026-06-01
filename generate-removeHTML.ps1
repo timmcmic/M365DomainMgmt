@@ -17,7 +17,7 @@ function generate-removeHTML
 
             if ($global:HTMLDomainRemoved.count -gt 0)
             {
-                if ($global:HTMLDomainRemoved[0].errorMessages -ne "None")
+                if ($global:HTMLDomainRemoved[0].errorMessage -ne "None")
                 {
                     new-htmlSection -headerText ("Domain Remove ERROR") {
                         new-htmlTable -DataTable ($global:HTMLDomainRemoved | Select-Object Domain,RemovedStatus,ErrorMessage) -Filtering {
