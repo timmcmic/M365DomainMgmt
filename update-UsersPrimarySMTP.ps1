@@ -56,7 +56,7 @@ function update-UsersPrimarySMTP
 
                 if ($recipientType -eq "UserMailbox")
                 {
-                    set-mailbox -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                    set-mailbox -identity $user.id -windowsEmailAddress $tempSMTPAddress -errorAction STOP
                 }
                 else 
                 {
@@ -75,6 +75,7 @@ function update-UsersPrimarySMTP
                 $global:HTMLPrimarySMTPRenameSuccess.add($functionObject)
             }
             catch {
+                out-logfile -string $_
                 out-logfile -string "Assume that the SMTP set action failed becuase it matches another object."
 
                 $tempSMTPAddress = $tempSMTPAddress.split("@")
@@ -83,10 +84,12 @@ function update-UsersPrimarySMTP
 
                 $tempSMTPAddress = $tempSMTPAddress[0]+"@"+$tempSMTPAddress[1]
 
+                out-logfile -string $tempSMTPAddress
+
                 try {
                     if ($recipientType -eq "UserMailbox")
                     {
-                        set-mailbox -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
+                        set-mailbox -identity $user.id -windowsEmailAddress $tempSMTPAddress -errorAction STOP
                     }
                     else 
                     {
@@ -95,6 +98,8 @@ function update-UsersPrimarySMTP
                 }
                 catch {
                     out-logfile -string "Second error attempting to update primary SMTP address - fail user."
+
+                    out-logfile -string $_
 
                     $functionObject = New-Object PSObject -Property @{
                         ID = $user.id
