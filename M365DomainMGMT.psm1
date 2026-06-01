@@ -345,6 +345,18 @@ Function Start-M365DomainManagement
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
+            foreach ($record in $m365DNSRecords)
+            {
+                write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+            }
+
+            Read-Host "Press any key to continue:"
+
+            foreach ($record in $m365DNSRecords)
+            {
+                out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+            }
+
             $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
 
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
@@ -362,6 +374,22 @@ Function Start-M365DomainManagement
             out-logfile -string "Add the domain if required."
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
+
+            out-logfile -string "Gather DNS records required for domain verification."
+
+            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+            foreach ($record in $m365DNSRecords)
+            {
+                write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+            }
+
+            Read-Host "Press any key to continue:"
+
+            foreach ($record in $m365DNSRecords)
+            {
+                out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+            }
         }
         $domainOperations.Remove 
         {
