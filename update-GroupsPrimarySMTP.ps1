@@ -66,7 +66,7 @@ function update-groupsPrimarySMTP
                 $functionObject = New-Object PSObject -Property @{
                     ID = $user.id
                     Mail = $user.mail
-                    NewMail = $tempSMTPAddres
+                    NewMail = $tempSMTPAddress
                     Name = $user.displayName    
                     ObjectType = "Group"
                     ErrorMessage = "None"
@@ -99,7 +99,7 @@ function update-groupsPrimarySMTP
                     $functionObject = New-Object PSObject -Property @{
                         ID = $user.id
                         Mail = $user.mail
-                        NewMail = $tempSMTPAddres
+                        NewMail = $tempSMTPAddress
                         Name = $user.displayName    
                         ObjectType = "User"
                         ErrorMessage = $_
