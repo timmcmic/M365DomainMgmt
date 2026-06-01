@@ -125,6 +125,8 @@ function remove-objectDependencies
         update-groupsPrimarySMTP -userObjects $groupsProxy -domainName $domainName
     }
 
+    start-removeDomain -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName
+
     if ($dirSyncUsers.count -gt 0)
     {
         out-logfile -string "Directory sync users present - change SOA back."

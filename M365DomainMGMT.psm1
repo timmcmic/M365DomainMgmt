@@ -160,24 +160,15 @@ Function Start-M365DomainManagement
 
     #Create globals for reporting.
 
-    $global:HTMLDisableDirSyncSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLDisableDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLEnabledDirSyncSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLEnabledDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDirSyncSuccess=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDirSyncErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLUPNRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLUPNRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLPrimarySMTPRenameSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLPrimarySMTPRenameErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveErrors=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLDisableDirSyncGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLDisableDirSyncGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLEnabledDirSyncGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLEnabledDirSyncGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLPrimarySMTPRenameGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLPrimarySMTPRenameGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLSecondarySMTPRemoveGroupSuccess=[System.Collections.Generic.List[PSObject]]::new()
-    $global:HTMLSecondarySMTPRemoveGroupErrors=[System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDomainRemoved = [System.Collections.Generic.List[PSObject]]::new()
 
 
     #Create telemetry values.
@@ -244,11 +235,15 @@ Function Start-M365DomainManagement
     $exportNames['UsersDirectorySync']="UsersDirectorySync"
     $exportNames['GroupsProxy']="GroupsProxy"
     $exportNames['GroupsDirectorySync']="GroupsDirectorySync"
-
-
-
-
-
+    $exportNames['DirSyncSuccess']="DirSyncSuccess"
+    $exportNames['DirSyncErrors']="DirSyncErrors"
+    $exportNames['UPNRenameSuccess']="UPNRenameSuccess"
+    $exportNames['UPNRenameErrors']="UPNRenameErrors"
+    $exportNames['PrimarySMTPRenameSuccess']="PrimarySMTPRenameSuccess"
+    $exportNames['PrimarySMTPRenameErrors']="PrimarySMTPRenameErrors"
+    $exportNames['SecondarySMTPRenameSuccess']="SecondarySMTPRenameSuccess"
+    $exportNames['SecondarySMTPRenameErrors']="SecondarySMTPRenameErrors"
+    $exportNames['DomainRemoved']="DomainRemoved"
 
     $moduleNames = @{}
     $moduleNames['M365DomainManagement']="M365DomainMGMT"
@@ -383,6 +378,8 @@ Function Start-M365DomainManagement
             remove-objectDependencies -exportFiles $exportNames -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -domainName $domainName
 
             generate-removeHTML
+
+            output-globalObjects -exportFiles $exportNames
         }
         $domainOperations.GetVerificationRecords
         {

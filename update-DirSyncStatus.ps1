@@ -72,11 +72,11 @@ function update-DirSyncStatus
 
                 if ($enableOrDisable -eq "Disable")
                 {
-                    $global:HTMLDisableDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncSuccess.add($functionObject)
                 }
                 else 
                 {
-                    $global:HTMLEnabledDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncSuccess.add($functionObject)
                 }
             }
             catch {
@@ -86,12 +86,12 @@ function update-DirSyncStatus
 
                 if ($enableOrDisable -eq "Disable")
                 {
-                    $global:HTMLDisableDirSyncErrors.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
 
                 }
                 else 
                 {
-                    $global:HTMLEnabledDirSyncErrors.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
                 }
             }
         }
@@ -153,11 +153,11 @@ function update-DirSyncStatus
 
                 if ($enableOrDisable -eq "Disable")
                 {
-                    $global:HTMLDisableDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncSuccess.add($functionObject)
                 }
                 else 
                 {
-                    $global:HTMLEnabledDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncSuccess.add($functionObject)
                 }
             }
             catch {
@@ -167,11 +167,11 @@ function update-DirSyncStatus
 
                 if ($enableOrDisable -eq "Disable")
                 {
-                    $global:HTMLDisableDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
                 }
                 else 
                 {
-                    $global:HTMLEnabledDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
                 }
             }
         }

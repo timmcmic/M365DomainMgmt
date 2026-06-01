@@ -5,7 +5,9 @@ function get-MSGraphCall
         [Parameter(Mandatory = $true)]
         $domainName,
         [Parameter(Mandatory = $true)]
-        $msGraphEnvironmentName
+        $msGraphEnvironmentName,
+        [Parameter(Mandatory = $false)]
+        $verifyOrRemove = "Verify"
     )
 
     $functionmsGraphBetaVersion = "Beta"
@@ -18,7 +20,15 @@ function get-MSGraphCall
     $msGraphURLUSDoD = "https://dod-graph.microsoft.us"
     $msGraphURLChina = "https://microsoftgraph.chinacloudapi.cn"
 
-    $functionDomainStringBeta = "/$functionmsGraphBetaVersion/domains/$domainName/verify"
+    if ($verifyOrRemove -eq "Verify")
+    {
+        $functionDomainStringBeta = "/$functionmsGraphBetaVersion/domains/$domainName/verify"
+    }
+    else 
+    {
+        $functionDomainStringBeta = "/$functionmsGraphBetaVersion/domains/$domainName/forceDelete"
+    }
+
 
     out-logfile -string "Entering get-MSGraphCall"
 

@@ -72,7 +72,7 @@ function update-groupsPrimarySMTP
                     ErrorMessage = "None"
                 }
 
-                $global:HTMLPrimarySMTPRenameGroupSuccess.add($functionObject)
+                $global:HTMLPrimarySMTPRenameSuccess.add($functionObject)
             }
             catch {
                 out-logfile -string "Assume that the SMTP set action failed becuase it matches another object."
@@ -105,7 +105,7 @@ function update-groupsPrimarySMTP
                         ErrorMessage = $_
                     }
 
-                    $global:HTMLPrimarySMTPRenameGroupErrors.add($functionObject)
+                    $global:HTMLPrimarySMTPRenameErrors.add($functionObject)
                 }
             }
         }
@@ -148,7 +148,7 @@ function update-groupsPrimarySMTP
                         ErrorMessage = "None"
                     }
 
-                    $global:HTMLSecondarySMTPRemoveGroupSuccess.add($functionObject)
+                    $global:HTMLSecondarySMTPRemoveSuccess.add($functionObject)
                 }
                 catch {
                     out-logfile -string "Unable to remove the secondary proxy address."
@@ -161,7 +161,7 @@ function update-groupsPrimarySMTP
                         ErrorMessage = $_
                     }
 
-                    $global:HTMLSecondarySMTPRemoveGroupErrors.add($functionObject)
+                    $global:HTMLSecondarySMTPRemoveErrors.add($functionObject)
                 }
             }
             else 
