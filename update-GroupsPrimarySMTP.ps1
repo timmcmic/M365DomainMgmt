@@ -134,6 +134,7 @@ function update-groupsPrimarySMTP
                     if ($recipientType -eq "GroupMailbox")
                     {
                         Set-UnifiedGroup -identity $user.id -emailAddresses @{remove=$address} -errorAction STOP
+                        start-sleepProgress -sleepString "Sleeping after address removal.." -sleepSeconds 2
                     }
                     else 
                     {
