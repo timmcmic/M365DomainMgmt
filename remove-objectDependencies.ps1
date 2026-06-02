@@ -23,7 +23,7 @@ function remove-objectDependencies
 
     out-logfile -string ("Count of users with UPN: "+$usersUPN.Count)
     
-    read-host "Press enter to continue..."
+    #read-host "Press enter to continue..."
 
     out-logfile -string "Obtaining all users that have a proxy address with the domain."
 
@@ -31,7 +31,7 @@ function remove-objectDependencies
 
     out-logfile -string ("Count of users with proxy address: "+$usersProxy.Count)
 
-    read-host "Press enter to continue..."
+   #read-host "Press enter to continue..."
 
     out-logfile -string "Combine the two types of users to determine disable dir sync steps."
 
@@ -39,7 +39,7 @@ function remove-objectDependencies
 
     out-logfile -string ("Count of users combined: "+$usersCombined.Count)
 
-    read-host "Press enter to continue..."
+    #read-host "Press enter to continue..."
 
     out-logfile -string "Filter the users to unique IDs..."
 
@@ -47,7 +47,7 @@ function remove-objectDependencies
 
     out-logfile -string ("Users combined filtered by id count: "+$usersCombined.Count)
 
-    read-host "Press enter to continue..."
+    #read-host "Press enter to continue..."
 
     out-logfile -string "Determine all objects that require directory sync disabled."
 
@@ -59,7 +59,7 @@ function remove-objectDependencies
 
         out-logfile -string ("Directory synced users: "+$dirSyncUsers.count)
 
-        read-host "Press enter to continue..."
+        #read-host "Press enter to continue..."
 
         if ($dirSyncUsers.count -gt 0)
         {
@@ -115,7 +115,7 @@ function remove-objectDependencies
 
     out-logfile -string ("Count of groups with proxy address: "+$groupsProxy.count)
 
-    read-host "Press enter to continue..."
+    #read-host "Press enter to continue..."
 
     if ($groupsProxy.count -gt 0)
     {
@@ -127,7 +127,7 @@ function remove-objectDependencies
 
         out-logfile -string ("Count of groups directory synced: "+$dirSyncGroups.count)
 
-        read-host "Press enter to continue..."
+        #read-host "Press enter to continue..."
         
         if ($dirSyncGroups.count -gt 0)
         {
