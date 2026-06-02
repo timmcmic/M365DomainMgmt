@@ -23,6 +23,19 @@ function generate-removeHTML
                         new-htmlTable -DataTable ($global:HTMLDomainRemoved | Select-Object Domain,RemovedStatus,ErrorMessage) -Filtering {
                         } -AutoSize
                     }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+
+                    if ($global:HTMLDirSyncSuccess.count -gt 0)
+                    {
+                        New-HTMLSection -HeaderText "NOTES:  PLEASE REVIEW" {
+                            New-HTMLList{
+                                new-htmlListItem -text "The domain was not removed successfully." -FontSize 14
+                                New-HTMLListItem -text "Users or groups had their SOA changed to cloud only - this was not reverted." -FontSize 14
+                                New-HTMLListItem -text "If you will be retrying the remove operation after correcting failures no actions are required." -FontSize 14
+                                New-HTMLListItem -text "If the domain will not be removed now the SOA may need to be adjusted to Active Directory to restore these users." -FontSize 14
+                            }
+
+                        }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Red" -BorderRadius 10px -collapsed
+                    }
                 }
                 else 
                 {
