@@ -36,6 +36,7 @@ function get-DomainOperation
                 6 { $domainOperation = $domainOperations.GetVerificationRecords }
                 7 { $domainOperation = $domainOperations.TestDNS}
                 8 { $domainOperation = $domainOperations.DisplayDNSRecords}
+                default {out-logfile -string "Please select a valid option from the list on next run." -isError:$TRUE}
             }
         }
         $domainOperations.New 
