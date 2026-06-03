@@ -141,6 +141,11 @@ Function Start-M365DomainManagement
         [boolean]$allowTelemetryCollection=$TRUE
     )
 
+    #Create timeline hash table.
+
+    $global:htmlTime = @{}
+    $global:htmlTime['StartTime']=Get-Date
+
     $telemetryStartTime = get-universalDateTime
 
     #Set the window title.
@@ -277,6 +282,8 @@ Function Start-M365DomainManagement
 
     out-logfile -string "Versions"
 
+    $global:htmlTime['PowerShellVersionTest']=Get-Date
+
     $telemetryValues['telemetryM365DomainMgmtVersion']=test-PowerShellModule -powershellModuleName $moduleNames.M365DomainManagement -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphAuthenticationVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MsGraphAuthentication -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphDirectoryVersion']=test-PowerShellModule -powershellModuleName $moduleNames.MSGraphDirectory -powershellVersionTest:$TRUE
@@ -284,7 +291,9 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphUsersVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphUsers -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphGroupsVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphGroups -powershellVersionTest:$TRUE
     $telemetryValues['telemetryExchangeOnlineVersion']=test-PowerShellModule -powershellModuleName $moduleNames.ExchangeOnline -powershellVersionTest:$TRUE
-    
+
+    $global:htmlTime['GetDomainOperation']=Get-Date
+
     out-logfile -string "Operation"
 
     out-logfile -string ("The domain operation starting: "+$domainOperation)
@@ -314,7 +323,11 @@ Function Start-M365DomainManagement
         $msGraphValues.msGraphScopes += "Domain.ReadWrite.All"
     }
 
+    $global:htmlTime['CreateGraphConnection']=Get-Date
+
     new-msGraphConnection -msGraphHashTable $msGraphValues -exportFile $exportNames.msGraphContext
+
+    $global:htmlTime['GetDomainName']=Get-Date
 
     out-logfile -string "DomainName"
 
@@ -324,6 +337,9 @@ Function Start-M365DomainManagement
 
     out-logfile -string ("The domain name ending: "+$domainName)
 
+    $global:htmlTime['StartDomainOperation']=Get-Date
+
+
     switch ($domainOperation) {
         {($_ -eq $domainOperations.New) -or ($_ -eq $domainOperations.Confirm) -or ($_ -eq $domainOperations.ForceTakeOver)}  
         {  
@@ -331,17 +347,25 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Add the domain if required."
 
+            $global:htmlTime['ObtainDomainInfo']=Get-Date
+
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
 
             out-logfile -string "Ensure that the domain is not currently registered in the tenant."
+
+            $global:htmlTime['TestDomainInfo']=Get-Date
 
             test-domainInfo -domainInfo $domainInfo
 
             out-logfile -string "Test the domain for viral or other tenant registrations."
 
+            $global:htmlTime['TetDomainViral']=Get-Date
+
             $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
 
             out-logfile -string "Gather DNS records required for domain verification."
+
+            $global:htmlTime['GatherM365DNSRecords']=Get-Date
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
@@ -357,13 +381,21 @@ Function Start-M365DomainManagement
                 out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
             }
 
+            $global:htmlTime['GatherPublicDNSRecords']=Get-Date
+
             $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+
+            $global:htmlTime['TestPublicDNSRecords']=Get-Date
 
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
 
+            $global:htmlTime['ValidateDomain']=Get-Date
+
             $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
 
-            out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
+            out-logfile -string "Claculating the public NS records necessary for your tenant to function."
+
+            $global:htmlTime['CalculatePublicDNSRecords']=Get-Date
 
             calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
         }
@@ -373,9 +405,13 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Add the domain if required."
 
+            $global:htmlTime['AddDomain']=Get-Date
+
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
 
             out-logfile -string "Gather DNS records required for domain verification."
+
+            $global:htmlTime['ObtainDNSVerificationRecords']=Get-Date
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
@@ -394,16 +430,28 @@ Function Start-M365DomainManagement
         $domainOperations.Remove 
         {
             out-logfile -string "Remove"
+
+            $global:htmlTime['GetRemovalApproval']=Get-Date
             
             get-removalApproval
 
+            $global:htmlTime['GetDomainInfo']=Get-Date
+
             $domainInfo = test-DomainName -domainName $domainName
+
+            $global:htmlTime['ExportDomainInfo']=Get-Date
 
             out-xmlFile -itemToExport $domainInfo -itemNameToExport $exportNames.domainInfo
 
+            $global:htmlTime['ConvertAuthenticationMethod']=Get-Date
+
             $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
 
+            $global:htmlTime['BeginDomainRemoval']=Get-Date
+
             remove-objectDependencies -exportFiles $exportNames -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -domainName $domainName
+
+            $global:htmlTime['EndTime']=Get-Date
 
             generate-removeHTML
 
