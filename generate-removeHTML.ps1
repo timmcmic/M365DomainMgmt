@@ -109,6 +109,17 @@ function generate-removeHTML
                     } -AutoSize
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
+
+            $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
+
+            new-htmlSection -HeaderText ("Domain Removal Timeline"){
+                    new-HTMLTimeLIne {
+                        foreach ($item in $htmlTime.GetEnumerator())
+                        {
+                            new-HTMLTimeLineItem -HeadingText $item.key -Date $item.value
+                        }
+                    }
+                } -HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
         }
     } -online -ShowHTML
 
