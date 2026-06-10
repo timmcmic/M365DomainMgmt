@@ -341,7 +341,7 @@ Function Start-M365DomainManagement
         $msGraphValues.msGraphScopes += $msGraphUserPermissions
         $msGraphValues.msGraphScopes += $msGraphGroupPermissions
 
-        new-ExchangeOnlineConnection -msGraphEnvironmentName $exchangeOnlineEnvironment -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName
+        new-ExchangeOnlineConnection -msGraphEnvironmentName $exchangeOnlineEnvironment -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironments $exchangeOnlineEnvironments
     }
     else 
     {
