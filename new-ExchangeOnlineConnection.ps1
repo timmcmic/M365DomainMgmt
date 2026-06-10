@@ -44,7 +44,7 @@ function new-ExchangeOnlineConnection
     {
         out-logfile -string "Starting Exchange Online Interactive Authentication"
         try {
-            Connect-ExchangeOnline -ErrorAction Stop
+            Connect-ExchangeOnline -ExchangeEnvironmentName $msGraphEnvironmentName -ErrorAction Stop
         }
         catch {
             out-logfile -string "Unable to make Exchange Online Connection"

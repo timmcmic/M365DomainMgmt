@@ -211,6 +211,15 @@ Function Start-M365DomainManagement
     $msGraphEnvironments['msGraphUSGovDOD']="USGovDOD"
     $msGraphEnvironments['msGraphChina']="China"
 
+    #Define the Exchange Online Environments.
+
+    $exchangeOnlineEnvironments = @{}
+    $exchangeOnlineEnvironments['Global']="O365Default"
+    $exchangeOnlineEnvironments['USGov']="O365USGovGCCHigh"
+    $exchangeOnlineEnvironments['USGovDOD']="O365USGovDoD"
+    $exchangeOnlineEnvironments['Germany']="O365GermanyCloud"
+    $exchangeOnlineEnvironments['China']="O365China"
+
     #Domain operations
 
     $domainOperations=@{}
@@ -280,6 +289,41 @@ Function Start-M365DomainManagement
     out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
+    #Define the msGraphEnvironments.
+
+    $msGraphEnvironments = @{}
+    $msGraphEnvironments['msGraphGlobal']="Global"
+    $msGraphEnvironments['msGraphUSGov']="USGov"
+    $msGraphEnvironments['msGraphUSGovDOD']="USGovDOD"
+    $msGraphEnvironments['msGraphChina']="China"
+
+    #Define the Exchange Online Environments.
+
+    $exchangeOnlineEnvironments = @{}
+    $exchangeOnlineEnvironments['Global']="O365Default"
+    $exchangeOnlineEnvironments['USGov']="O365USGovGCCHigh"
+    $exchangeOnlineEnvironments['USGovDOD']="O365USGovDoD"
+    $exchangeOnlineEnvironments['Germany']="O365GermanyCloud"
+    $exchangeOnlineEnvironments['China']="O365China"
+
+    switch ($msGraphEnvironmentName) {
+        $msGraphEnvironmentName.msGraphGlobal { 
+            $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.global
+         }
+         $msGraphEnvironmentName.msGraphUSGov { 
+            $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.USGov
+         }
+          $msGraphEnvironmentName.msGraphUSGovDOD { 
+            $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.USGovDOD
+         }
+         $msGraphEnvironmentName.msGraphChina { 
+            $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.China
+         }
+        Default {
+            $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.Germany
+        }
+    }
+
     out-logfile -string "Versions"
 
     $global:htmlTime['PowerShellVersionTest']=Get-Date
@@ -314,7 +358,7 @@ Function Start-M365DomainManagement
         $msGraphValues.msGraphScopes += $msGraphUserPermissions
         $msGraphValues.msGraphScopes += $msGraphGroupPermissions
 
-        new-ExchangeOnlineConnection -msGraphEnvironmentName $msGraphEnvironmentName -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName
+        new-ExchangeOnlineConnection -msGraphEnvironmentName $exchangeOnlineEnvironment -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName
     }
     else 
     {
