@@ -289,23 +289,6 @@ Function Start-M365DomainManagement
     out-logfile -string "Entering Start-M365DomainManagement"
     out-logfile -string "*****************************************************"
 
-    #Define the msGraphEnvironments.
-
-    $msGraphEnvironments = @{}
-    $msGraphEnvironments['msGraphGlobal']="Global"
-    $msGraphEnvironments['msGraphUSGov']="USGov"
-    $msGraphEnvironments['msGraphUSGovDOD']="USGovDOD"
-    $msGraphEnvironments['msGraphChina']="China"
-
-    #Define the Exchange Online Environments.
-
-    $exchangeOnlineEnvironments = @{}
-    $exchangeOnlineEnvironments['Global']="O365Default"
-    $exchangeOnlineEnvironments['USGov']="O365USGovGCCHigh"
-    $exchangeOnlineEnvironments['USGovDOD']="O365USGovDoD"
-    $exchangeOnlineEnvironments['Germany']="O365GermanyCloud"
-    $exchangeOnlineEnvironments['China']="O365China"
-
     switch ($msGraphEnvironmentName) {
         $msGraphEnvironmentName.msGraphGlobal { 
             $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.global
