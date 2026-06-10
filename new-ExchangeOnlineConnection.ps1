@@ -9,7 +9,9 @@ function new-ExchangeOnlineConnection
         [Parameter(Mandatory = $false)]
         [string]$exchangeOnlineAppID="",
         [Parameter(Mandatory = $false)]
-        [string]$msGraphEnvironmentName
+        [string]$msGraphEnvironmentName,
+        [Parameter(Mandatory = $false)]
+        [string]$exchangeOnlineEnvironments
     )
 
     out-logfile -string "Entering new-ExchangeOnlineConnection"
