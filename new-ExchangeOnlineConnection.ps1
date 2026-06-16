@@ -44,14 +44,32 @@ function new-ExchangeOnlineConnection
     }
     else 
     {
-        out-logfile -string "Starting Exchange Online Interactive Authentication"
-        try {
-            Connect-ExchangeOnline -ExchangeEnvironmentName $msGraphEnvironmentName -ErrorAction Stop
+        if ($msGraphEnvironment -ne $exchangeOnlineEnvironments.global)
+        {
+            out-logfile -string "Starting Exchange Online Interactive Authentication using UPN"
+            
+            $upn = read-host "Enter UPN of Exchange Organization Administrator"
+
+            try {
+                Connect-ExchangeOnline -ExchangeEnvironmentName $msGraphEnvironmentName -userPrincipalName $upn -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to make Exchange Online Connection"
+                out-logfile -string $_ -isError:$TRUE
+            }
         }
-        catch {
-            out-logfile -string "Unable to make Exchange Online Connection"
-            out-logfile -string $_ -isError:$TRUE
+        else 
+        {
+            out-logfile -string "Starting Exchange Online Interactive Authentication"
+
+            try {
+                Connect-ExchangeOnline -ExchangeEnvironmentName $msGraphEnvironmentName -ErrorAction Stop
+            }
+            catch {
+                out-logfile -string "Unable to make Exchange Online Connection"
+                out-logfile -string $_ -isError:$TRUE
+            }
         }
     }
-
 }
+           
