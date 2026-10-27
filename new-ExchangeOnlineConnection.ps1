@@ -44,10 +44,10 @@ function new-ExchangeOnlineConnection
     }
     else 
     {
-        if ($msGraphEnvironment -ne $exchangeOnlineEnvironments.global)
+        if ($msGraphEnvironmentName -ne $exchangeOnlineEnvironments.global)
         {
             out-logfile -string "Starting Exchange Online Interactive Authentication using UPN"
-            
+
             $upn = read-host "Enter UPN of Exchange Organization Administrator"
 
             try {

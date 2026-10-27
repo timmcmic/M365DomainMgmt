@@ -307,6 +307,8 @@ Function Start-M365DomainManagement
         }
     }
 
+    out-logfile -string $exchangeOnlineEnvironment
+
     out-logfile -string "Versions"
 
     $global:htmlTime['PowerShellVersionTest']=Get-Date
