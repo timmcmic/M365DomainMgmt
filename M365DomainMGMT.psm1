@@ -32,38 +32,6 @@ Function Start-M365DomainManagement
     *REQUIRED*
     This provides the logging directory for the application.
 
-    .PARAMETER msGraphTenantID
-
-    This is the entra tenant ID where domain management should occur.
-
-    .PARAMETER msGraphEnvironmentName
-
-    This is the graph endpoint that will be utilized to manage the domain.
-
-    .PARAMETER msGraphCertificateThumbprint
-
-    This is the certificate thumbprint installed locally and associated with graph certificate authentication.
-
-    .PARAMETER mmsGraphAppicationID
-
-    This is the application GUID of the graph application created in entra.
-
-    .PARAMETER msGraphClientSecret
-
-    This is the client secret associated with the graph application.
-
-    .PARAMETER domainName
-
-    The domain name to perform the operation on.
-
-    .PARAMETER domainOperation
-
-    The operation to perform on the domain.
-
-    .PARAMETER allowTelemetryCollection
-
-    Specifies if telemetry collection is allowed.
-
     .OUTPUTS
 
     Logs all activities and backs up all original data to the log folder directory.
@@ -80,15 +48,7 @@ Function Start-M365DomainManagement
     
     .EXAMPLE
 
-    Start-DistributionListMigration -groupSMTPAddress $groupSMTPAddress -globalCatalogServer server.domain.com -activeDirectoryCredential $cred -logfolderpath c:\temp -dnNoSyncOU "OU" -exchangeOnlineCredential $cred -azureADCredential $cred
-
-    .EXAMPLE
-
-    Start-DistributionListMigration -groupSMTPAddress $groupSMTPAddress -globalCatalogServer server.domain.com -activeDirectoryCredential $cred -logfolderpath c:\temp -dnNoSyncOU "OU" -exchangeOnlineCredential $cred -azureADCredential $cred -enableHybridMailFlow:$TRUE -triggerUpgradeToOffice365Group:$TRUE
-
-    .EXAMPLE
-
-    Start-DistributionListMigration -groupSMTPAddress $groupSMTPAddress -globalCatalogServer server.domain.com -activeDirectoryCredential $cred -logfolderpath c:\temp -dnNoSyncOU "OU" -exchangeOnlineCredential $cred -azureADCredential $cred -enableHybridMailFlow:$TRUE -triggerUpgradeToOffice365Group:$TRUE -useCollectedOnPremMailboxFolderPermissions:$TRUE -useCollectedOffice365MailboxFolderPermissions:$TRUE -useCollectedOnPremSendAs:$TRUE -useCollectedOnPremFullMailboxAccess:$TRUE -useCollectedOffice365FullMailboxAccess:$TRUE
+    
 
     #>
 
