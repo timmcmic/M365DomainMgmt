@@ -99,7 +99,7 @@ function validate-m365Domain
 
     out-logfile -string "Exiting validate-m365Domain"
 
-    $global:htmlData['Updated Domain Information'] = $domainInfo
+    $global:htmlData['Verified Domain Information'] = $domainInfo
 
     return $functionDomainInfo
 }

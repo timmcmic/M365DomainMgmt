@@ -25,7 +25,7 @@ function generate-HTMLReport
 
             $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
 
-            new-htmlSection -HeaderText ("Domain Removal Timeline"){
+            new-htmlSection -HeaderText ("Timline of Events"){
                     new-HTMLTimeLIne {
                         foreach ($item in $htmlTime.GetEnumerator())
                         {

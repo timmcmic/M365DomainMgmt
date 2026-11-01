@@ -33,7 +33,7 @@ function convert-authenticationMethod
 
     out-logfile -string "Exiting Convert-AuthenticationMethod"
 
-    $global:htmlData['DNS Records'] = $output
+    $global:htmlData['Converted Domain Information'] = $output
 
     return $domainInfo
 }
