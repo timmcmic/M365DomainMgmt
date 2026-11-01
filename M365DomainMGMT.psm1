@@ -388,7 +388,7 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Test the domain for viral or other tenant registrations."
 
-            $global:htmlTime['TetDomainViral']=Get-Date
+            $global:htmlTime['TestDomainViral']=Get-Date
 
             $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
 
