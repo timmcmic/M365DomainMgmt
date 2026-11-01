@@ -4,7 +4,9 @@ function calculate-publicDNSRecordsGlobal
     (
         #Define other mandatory parameters
         [Parameter(Mandatory = $true)]
-        $domainName
+        $domainName,
+        [Parameter(Mandatory = $true)]
+        $domainInfo
     )
 
     $output = @()
@@ -255,7 +257,7 @@ function calculate-publicDNSRecordsGlobal
     #>
 
     try {
-        generate-DNSHtml -output $output -domainName $domainName -errorAction STOP
+        generate-DNSHtml -output $output -domainName $domainName -domainInfo $domainInfo -errorAction STOP
     }
     catch {
         out-logfile -string $_

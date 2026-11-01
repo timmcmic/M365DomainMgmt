@@ -127,7 +127,7 @@ Function Start-M365DomainManagement
         [string]$exchangeOnlineCertificateThumbPrint="",
         [Parameter(Mandatory = $false)]
         [string]$exchangeOnlineOrganizationName="",
-         [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false)]
         [string]$exchangeOnlineAppID="",
         #Define operation parameters
         [Parameter(Mandatory=$false)]

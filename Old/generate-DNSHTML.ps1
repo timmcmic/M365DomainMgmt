@@ -6,7 +6,9 @@ function generate-DNSHtml
         [Parameter(Mandatory = $true)]
         $output,
         [Parameter(Mandatory = $true)]
-        $domainName
+        $domainName,
+        [Parameter(Mandatory = $true)]
+        $domainInfo
     )
 
     $functionHTMLSuffix = "html"
@@ -23,6 +25,16 @@ function generate-DNSHtml
         }
         New-HTMLMain {
             New-HTMLTableOption -DataStore JavaScript
+
+             New-HTMLSection -HeaderText "Domain Information" {
+                New-HTMLList{
+                        new-htmlListItem -text ("Domain Name: $domainName") -FontSize 14
+                        new-htmlListItem -text ("Domain Authentication Type: $domainInfo.AuthenticationType") -FontSize 14
+                        new-htmlListItem -text ("Domain Verified: $domainInfo.isVerified") -FontSize 14
+                        new-htmlListItem -text ("Domain Default: $domainInfo.IsDefault") -FontSize 14
+                        new-htmlListItem -text ("Domain IsRoot: $domainInfo.IsRoot") -FontSize 14
+                    }
+            }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Red" -BorderRadius 10px -collapsed
 
             new-htmlSection -headerText ("CNAME Records") {
                 new-htmlTable -DataTable ($output | where {$_.recordType -eq "CNAME"} | Select-Object RecordType,RecordName,TTL,Value) -Filtering {

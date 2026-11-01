@@ -8,7 +8,9 @@ function calculate-publicDNSRecordsUSGov
         [Parameter(Mandatory = $true)]
         $msGraphEnvironmentName,
         [Parameter(Mandatory = $true)]
-        $msGraphEnvironments
+        $msGraphEnvironments,
+        [Parameter(Mandatory = $true)]
+        $domainInfo
     )
 
     switch ($msGraphEnvironmentName) {
@@ -150,7 +152,7 @@ function calculate-publicDNSRecordsUSGov
     $output += $functionObject
 
     try {
-        generate-DNSHtml -output $output -domainName $domainName -errorAction STOP
+        generate-DNSHtml -output $output -domainName $domainName -domainInfo $domainInfo -errorAction STOP
     }
     catch {
         out-logfile -string $_
