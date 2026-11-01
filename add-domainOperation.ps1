@@ -43,5 +43,7 @@ function add-domainOperation
 
     out-logfile -string "Exiting add-domainOperation"
 
+    $global:htmlData['Domain Information'] = $domainInfo
+
     return $domainInfo
 }

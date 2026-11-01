@@ -149,6 +149,8 @@ function calculate-publicDNSRecordsUSGov
 
     $output += $functionObject
 
+    <#
+
     try {
         generate-DNSHtml -output $output -domainName $domainName -errorAction STOP
     }
@@ -156,6 +158,10 @@ function calculate-publicDNSRecordsUSGov
         out-logfile -string $_
         out-logfile -string "Unable to generate the DNS HTML record." -isError:$true
     }
+
+    #>
+
+    $global:htmlData['DNS Records'] = $output
 
     out-logfile -string "Exiting calculate-publicDNSRecordsUSGov"
 }

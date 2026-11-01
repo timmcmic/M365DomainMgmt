@@ -146,6 +146,10 @@ Function Start-M365DomainManagement
     $global:htmlTime = @{}
     $global:htmlTime['StartTime']=Get-Date
 
+    #Create HTML items.
+
+    $global:htmlData = @{}
+
     $telemetryStartTime = get-universalDateTime
 
     #Set the window title.
@@ -595,4 +599,6 @@ Function Start-M365DomainManagement
     Disconnect-ExchangeOnline -confirm:$FALSE
 
     out-logfile -string "Completed domain operations using M365DomainMGMT"
+
+    generate-HTMLReport
 }

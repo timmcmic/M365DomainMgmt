@@ -60,5 +60,7 @@ function get-DNSVerificationRecords
     
     out-logfile -string "Exiting get-DNSVerificationRecords"
 
+    $global:htmlData['DNS Verfiication Records'] = $dnsRecordsObject
+
     return $dnsRecordsObject
 }

@@ -125,5 +125,7 @@ function get-publicDNSRecords
 
     out-logfile -string "Exiting get-publicDNSRecords"
 
+    $global:htmlData['Public DNS Records'] = $dnsRecordsReturn
+
     return $dnsRecordsReturn
 }

@@ -87,5 +87,7 @@ function test-viralDomain
 
     out-logfile -string "Exiting test-virualInfo"
 
+    $global:htmlData['Viral Domain Information'] = $jsonInfo
+
     return $domainIsViral
 }
