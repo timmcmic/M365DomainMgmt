@@ -19,7 +19,7 @@ function generate-HTMLReport
             {
                 switch ($item.key)
                 {
-                    {$_ -eq "Domain Information" -or $_ -eq "Converted Domain Information" -or $_ -eq "Verified Domain Information"} {
+                    {$_ -eq "Promoted Domain Information" -or $_ -eq "Domain Information" -or $_ -eq "Converted Domain Information" -or $_ -eq "Verified Domain Information"} {
                         New-HTMLSection -HeaderText $item.key  {
                             New-HTMLList{
                                 new-htmlListItem -text ("Domain ID: "+$item.value.id) -FontSize 14
@@ -39,7 +39,7 @@ function generate-HTMLReport
                                 }
                                 New-HTMLListItem -text ("Verified Domain: "+$item.value.IsVerified) -FontSize 14
                             }-color Black -BackGroundColor White -fontSize 14
-                        }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+                  d      }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                         Break
                     }
                     "Viral Domain Information" {

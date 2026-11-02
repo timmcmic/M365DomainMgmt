@@ -116,7 +116,7 @@ function test-DNSVerificationRecords
         write-host "If the DNS records have already been added please verify with public lookup that they can be discovered." -ForegroundColor Red
         write-host ""
 
-        read-host -Prompt "Press any key to continue..."
+        #read-host -Prompt "Press any key to continue..."
 
         out-logfile -string "ERROR:  Microsoft 365 domain validation records not found in public DNS."
         out-logfile -string "If the domain was just added during this operation please create one of the following records in public DNS:"
@@ -125,9 +125,6 @@ function test-DNSVerificationRecords
         {
             out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
         }
-        out-logfile -string "If the DNS records have already been added please verify with public lookup that they can be discovered."
-
-        out-logfile -string "ERROR: Microsoft 365 domain validation records not found in public DNS" -isError:$true
     }
     elseif (($functionMXPresent -eq $FALSE) -and ($functionTXTPresent -eq $true))
     {
@@ -143,4 +140,13 @@ function test-DNSVerificationRecords
     }
 
     out-logfile -string "Exiting test-DNSVerificationRecords"
+
+    if ($functionMXPresent -eq $true -or $functionTXTPresent -eq $true)
+    {
+        return $true
+    }
+    else 
+    {
+        return $false
+    }
 }

@@ -24,6 +24,7 @@ function get-DomainOperation
             write-host "6:  Get Domain DNS Verification Records"
             write-host "7:  Test Domain Verification Records in Public DNS"
             write-host "8:  Display M365 DNS Records for Public DNS"
+            write-host "9:  Promote Sub Domain"
 
             $selection = Read-Host
 
@@ -36,6 +37,7 @@ function get-DomainOperation
                 6 { $domainOperation = $domainOperations.GetVerificationRecords }
                 7 { $domainOperation = $domainOperations.TestDNS}
                 8 { $domainOperation = $domainOperations.DisplayDNSRecords}
+                9 { $domainOperation = $domainOperations.PromoteSubDomain}
                 default {out-logfile -string "Please select a valid option from the list on next run." -isError:$TRUE}
             }
         }
@@ -78,6 +80,11 @@ function get-DomainOperation
         {
             out-logfile -string "Display DNS Records operations specified"
             $domainOperation = $domainOperations.DisplayDNSRecords
+        }
+        $domainOperations.PromoteSubDomain
+        {
+            out-logfile -string "Promote Sub Domain operation specified"
+            $domainOperation = $domainOperations.PromoteSubDomain
         }
     }
 

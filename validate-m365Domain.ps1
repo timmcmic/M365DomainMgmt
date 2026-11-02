@@ -93,13 +93,13 @@ function validate-m365Domain
         }
     }
 
-    $functionDomainInfo = Get-DomainName -domainName $domainName
+    $functionDomainInfo = Test-DomainName -domainName $domainName
 
     out-xmlFile -itemToExport $functionDomainInfo -itemNameToExport $exportFile
 
     out-logfile -string "Exiting validate-m365Domain"
 
-    $global:htmlData['Verified Domain Information'] = $domainInfo
+    $global:htmlData['Verified Domain Information'] = $functionDomainInfo
 
     return $functionDomainInfo
 }

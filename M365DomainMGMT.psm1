@@ -133,7 +133,7 @@ Function Start-M365DomainManagement
         [Parameter(Mandatory=$false)]
         [string]$domainName="None",
         [Parameter(Mandatory = $false)]
-        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords","TestDNS","DisplayDNSRecords")]
+        [ValidateSet("None","New","NewWOConfirm","Remove","Confirm","ForceTakeOver","GetVerificationRecords","TestDNS","DisplayDNSRecords","PromoteSubDomain","PasswordExpiration")]
         [string]$domainOperation="None",
         [Parameter(Mandatory = $false)]
         [string]$customDNSServer="None",
@@ -236,6 +236,7 @@ Function Start-M365DomainManagement
     $domainOperations['GetVerificationRecords'] = "GetVerificationRecords"
     $domainOperations['TestDNS'] = "TestDNS"
     $domainOperations['DisplayDNSRecords'] = "DisplayDNSRecords"
+    $domainOperations['PromoteSubDomain'] = "PromoteSubDomain"
 
     #Create export table
 
@@ -262,6 +263,7 @@ Function Start-M365DomainManagement
     $exportNames['SecondarySMTPRenameSuccess']="SecondarySMTPRenameSuccess"
     $exportNames['SecondarySMTPRenameErrors']="SecondarySMTPRenameErrors"
     $exportNames['DomainRemoved']="DomainRemoved"
+    $exportNames['PromotedSubDomain']="PromotedSubDomain"
 
     $moduleNames = @{}
     $moduleNames['M365DomainManagement']="M365DomainMGMT"
@@ -407,6 +409,8 @@ Function Start-M365DomainManagement
 
                 $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
+                write-host "Please place one of the following records in public DNS - it is not necessary to place both records in public DNS for domain verification." -ForegroundColor Green
+
                 foreach ($record in $m365DNSRecords)
                 {
                     write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
@@ -421,12 +425,49 @@ Function Start-M365DomainManagement
 
                 $global:htmlTime['GatherPublicDNSRecords']=Get-Date
 
-                $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+                $dnsResults = $FALSE
+                $retryCounter = 0
 
-                $global:htmlTime['TestPublicDNSRecords']=Get-Date
+                do
+                {
+                    $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
 
-                test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
+                    $global:htmlTime['TestPublicDNSRecords']=Get-Date
 
+                    $dnsResults = test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
+
+                    if ($retyCounter -lt 5 -and $dnsResults -eq $FALSE)
+                    {
+                        out-logfile -string ("DNS records are not yet present in public DNS.  Waiting 5 minutes before retrying.  Retry attempt: "+$retryCounter)
+                        $retryCounter++
+
+                        if ($retryCounter -lt 5)
+                        {
+                            start-sleepProgress -sleepseconds 300 -sleepString ("Waiting for DNS records to propagate in public DNS. Retry attempt: "+$retryCounter)
+                        }
+                    }
+                    else
+                    {
+                        out-logfile -string ("DNS Records were found in public DNS or retry attempts exceeded.")
+                    }
+                }
+                until ($retryCounter -eq 5 -or $dnsResults -eq $TRUE)
+
+                if ($dnsResults -eq $FALSE)
+                {
+                    out-logfile -string "DNS records are not present in public DNS after 6 attempts.  Please verify that the DNS records have been added to public DNS and that they have propagated before continuing." -isError:$true
+
+                    out-logfile -string "If the DNS records have already been added please verify with public lookup that they can be discovered."
+
+                    out-logfile -string "ERROR: Microsoft 365 domain validation records not found in public DNS" -isError:$true
+
+                    Read-Host "Press any key to continue:"
+                }
+                else
+                {
+                    out-logfile -string "DNS records are present in public DNS.  Proceeding with domain validation."
+                }
+                
                 $global:htmlTime['ValidateDomain']=Get-Date
 
                 $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
@@ -506,6 +547,8 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Test to ensure that the domain is present."
 
+            $global:htmlTime['ObtainDomain']=Get-Date
+
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
             }
@@ -516,9 +559,13 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Ensure that the domain is not currently registered in the tenant."
 
+            $global:htmlTime['TestDomainValidation']=Get-Date
+
             test-domainInfo -domainInfo $domainInfo
 
             out-logfile -string "Get the domain verification records."
+
+            $global:htmlTime['GetVerificationRecords']=Get-Date
 
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
@@ -540,6 +587,8 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Test to ensure that the domain is present."
 
+            $global:htmlTime['ObtainDomain']=Get-Date
+
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
             }
@@ -550,13 +599,21 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Ensure that the domain is not currently registered in the tenant."
 
+            $global:htmlTime['TestDomainValidation']=Get-Date
+
             test-domainInfo -domainInfo $domainInfo
 
             out-logfile -string "Test Verification and PublicDNS Records"
 
+            $global:htmlTime['GetVerificationRecords']=Get-Date
+
             $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
 
+            $global:htmlTime['GetPublicDNSRecords']=Get-Date
+
             $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+
+            $global:htmlTime['TestPublicDNSRecords']=Get-Date
 
             test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
 
@@ -568,6 +625,8 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Test to ensure that the domain is present."
 
+            $global:htmlTime['ObtainDomain']=Get-Date
+
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
             }
@@ -578,7 +637,48 @@ Function Start-M365DomainManagement
 
             out-logfile -string "Claculating the public DNS records necessary for your tenant to function."
 
+            $global:htmlTime['CalculateDNSRecords']=Get-Date
+
             calculate-publicDNSRecords -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
+        }
+        $domainOperations.PromoteSubDomain
+        {
+            out-logfile -string "PromoteSubDomain"
+
+            out-logfile -string "Test to ensure that the domain is present."
+
+            $global:htmlTime['ObtainDomain']=Get-Date
+
+            try {
+                $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+            }
+            catch {
+                out-logfile -string $_ 
+                out-logfile -string "Domain is not present in tenant - unable to promote sub domain." -isError:$true
+            }
+
+            if ($domainInfo.isRoot -eq $TRUE)
+            {
+                out-logfile -string "The domain is already a root domain and cannot be promoted." -isError:$true
+            }
+            else
+            {   
+                out-logfile -string "The domain is a sub domain and can be promoted to a root domain."
+            }
+
+            $global:htmlTime['StartDomainPromotion']=Get-Date
+
+            promote-subDomain -domainInfo $domainInfo -exportFile $exportNames
+        }
+        $domainOperations.PasswordExpiration
+        {
+            out-logfile -string "PasswordExpiration"
+
+            out-logfile -string "Test to ensure that the domain is present."
+
+            $global:htmlTime['StartPasswordExpiration']=Get-Date
+
+            start-ManagePasswordExpiration -exportFile $exportNames
         }
     }
 
