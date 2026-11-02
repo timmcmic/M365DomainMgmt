@@ -87,6 +87,10 @@
 
             Read-Host -Prompt "Press any key to exit."
 
+            generate-HTMLReport
+
+            start-sleep -s 5
+
             Disconnect-MgGraph
 
             Disconnect-ExchangeOnline -confirm:$false
