@@ -8,7 +8,7 @@ function test-domainInfo
 
     out-logfile -string "Entering test-DomainInfo"
     
-    if ($domainInfo.isVerified -eq $TRUE)
+    if ($domainInfo.isVerified -eq $TRUE -and $domainInfo.isRoot -eq $TRUE)
     {
         out-logfile -string "The domain is already added and verified in the existing tenant."
         out-logfile -string $domainInfo.isVerified

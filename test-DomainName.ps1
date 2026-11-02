@@ -13,7 +13,7 @@ function test-DomainName
     out-logfile -string "Test to see if domain is present."
 
     try {
-        $domain = get-MGDomain -domainid $domainName -errorAction STOP
+        $domain = get-MGDomain -domainid $domainName -expandProperty RootDomain -errorAction STOP
 
         out-logfile -string "Successfully captured domain information."
     }
