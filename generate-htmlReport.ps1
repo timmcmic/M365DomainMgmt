@@ -26,7 +26,7 @@ function generate-HTMLReport
                                 New-HTMLListItem -text ("Authentication Type: "+$item.value.AuthenticationType) -FontSize 14
                                 New-HTMLListItem -text ("Default Domain: "+$item.value.IsDefault) -FontSize 14
                                 New-HTMLListItem -text ("Root Domain: "+$item.value.IsRoot) -FontSize 14 -nestedListItems {
-                                    if ($item.value.isRoot -eq $false)
+                                    if ($item.value.isRoot -eq $false -and $item.value.isVerified -eq $true)
                                     {
                                         new-htmlList {
                                             New-HTMLListItem -text ("Root Domain ID: "+$item.value.RootDomain.id) -FontSize 14
