@@ -390,41 +390,51 @@ Function Start-M365DomainManagement
 
             test-domainInfo -domainInfo $domainInfo
 
-            out-logfile -string "Test the domain for viral or other tenant registrations."
+            out-logfile -string $domainInfo.isVerified
+            out-logfile -string $domainInfo.isRoot
 
-            $global:htmlTime['TestDomainViral']=Get-Date
-
-            $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
-
-            out-logfile -string "Gather DNS records required for domain verification."
-
-            $global:htmlTime['GatherM365DNSRecords']=Get-Date
-
-            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
-
-            foreach ($record in $m365DNSRecords)
+            if ($domainInfo.isVerified -eq $false)
             {
-                write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+                out-logfile -string "Test the domain for viral or other tenant registrations."
+
+                $global:htmlTime['TestDomainViral']=Get-Date
+
+                $domainIsViral = test-viralDomain -domainName $domainName -exportFile $exportNames
+
+                out-logfile -string "Gather DNS records required for domain verification."
+
+                $global:htmlTime['GatherM365DNSRecords']=Get-Date
+
+                $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+                foreach ($record in $m365DNSRecords)
+                {
+                    write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+                }
+
+                Read-Host "Press any key to continue:"
+
+                foreach ($record in $m365DNSRecords)
+                {
+                    out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+                }
+
+                $global:htmlTime['GatherPublicDNSRecords']=Get-Date
+
+                $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
+
+                $global:htmlTime['TestPublicDNSRecords']=Get-Date
+
+                test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
+
+                $global:htmlTime['ValidateDomain']=Get-Date
+
+                $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
             }
-
-            Read-Host "Press any key to continue:"
-
-            foreach ($record in $m365DNSRecords)
+            else
             {
-                out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+                out-logfile -string "The domain is either not verified or is a root domain in the tenant - skipping viral and DNS tests."
             }
-
-            $global:htmlTime['GatherPublicDNSRecords']=Get-Date
-
-            $publicDNSRecords = get-publicDNSRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType -customDNSServer $customDNSServer
-
-            $global:htmlTime['TestPublicDNSRecords']=Get-Date
-
-            test-DNSVerificationRecords -m365DNSRecords $m365DNSRecords -publicDNSRecords $publicDNSRecords -mxRecordType $mxRecordType -txtRecordType $txtRecordType -soaRecordType $soaRecordType
-
-            $global:htmlTime['ValidateDomain']=Get-Date
-
-            $domainInfo = validate-m365Domain -domainName $domainName -domainIsViral $domainIsViral -domainOperation $domainOperation -msGraphEnvironmentName $msGraphEnvironmentName -exportFile $exportNames.DomainInfoPostValidation
 
             out-logfile -string "Claculating the public NS records necessary for your tenant to function."
 

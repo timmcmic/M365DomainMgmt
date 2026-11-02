@@ -16,14 +16,14 @@ function get-DomainOperation
             out-logfile -string "No operation specified."
             
             write-host "Select a domain operation from the list below:"
-            write-host "1:  New / Add a Domain (Triggers Domain Confirmation)"
-            write-host "2:  New / Add a Domain (Without Domain Confirmation)"
-            write-host "3:  Confirm a Domain"
-            write-host "4:  Remove a Domain"
+            write-host "1:  New / Add a Domain (Triggers Domain Verfification)"
+            write-host "2:  New / Add a Domain (No Domain Verification)"
+            write-host "3:  Verify Domain a Domain"
+            write-host "4:  Remove Domain"
             write-host "5:  Force Domain Takeover (External Takeover Method)"
-            write-host "6:  Get Verification Records"
-            write-host "7:  Test M365 Verification Records to Public DNS"
-            write-host "8:  Display the public DNS records necessary for Microsoft 365 Usage"
+            write-host "6:  Get Domain DNS Verification Records"
+            write-host "7:  Test Domain Verification Records in Public DNS"
+            write-host "8:  Display M365 DNS Records for Public DNS"
 
             $selection = Read-Host
 

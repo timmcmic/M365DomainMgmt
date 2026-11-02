@@ -40,6 +40,8 @@ function test-viralDomain
         out-logfile -string 'ERROR:  Unable to convert content payload from JSON for evaluation.' -isError:$true
     }
 
+    $global:htmlData['Viral Domain Information'] = $jsonInfo
+
     out-logfile -string $jsonInfo
 
     Out-logfile -string "Test to see if domain is already registered, tied to GoDaddy, or viral."
@@ -86,8 +88,6 @@ function test-viralDomain
     }
 
     out-logfile -string "Exiting test-virualInfo"
-
-    $global:htmlData['Viral Domain Information'] = $jsonInfo
 
     return $domainIsViral
 }

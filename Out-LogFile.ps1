@@ -95,6 +95,6 @@
 
             Disconnect-ExchangeOnline -confirm:$false
 
-            exit
+            break Brooken
         }
     }

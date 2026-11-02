@@ -37,13 +37,21 @@ function add-domainOperation
         catch {
             out-logfile -string "Domain addition was not required."
         }
+
+        try {
+            $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+            out-logfile -string "The domain was located in the tenant post addition."
+        }
+        catch {
+            out-logfile -string $_
+            out-logfile -string "The domain has not been added to the tenant - proceeding with testing."
+            $addDomain = $true
+        }
     }
 
     out-xmlfile -itemToExport $domainInfo -itemNameToExport $exportFile.domainInfo
 
     out-logfile -string "Exiting add-domainOperation"
-
-    $global:htmlData['Domain Information'] = $domainInfo
 
     return $domainInfo
 }
