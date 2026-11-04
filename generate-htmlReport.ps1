@@ -105,6 +105,14 @@ function generate-HTMLReport
                 }
             }
 
+            if ($global:expirationDomains.Count -gt 0)
+            {
+                New-HTMLSection -HeaderText "Password Expiration Management" {
+                    new-htmlTable -DataTable ($global:expirationDomains)-Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
             $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
 
             new-htmlSection -HeaderText ("Timline of Events"){

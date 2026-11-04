@@ -95,6 +95,8 @@
 
             Disconnect-ExchangeOnline -confirm:$false
 
+            compress-archive -path $global:xmlPath -destinationpath ($global:xmlPath+"\SupportInfo.zip") -force
+
             break Brooken
         }
     }
