@@ -39,7 +39,7 @@ function generate-HTMLReport
                                 }
                                 New-HTMLListItem -text ("Verified Domain: "+$item.value.IsVerified) -FontSize 14
                             }-color Black -BackGroundColor White -fontSize 14
-                  d      }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+                        }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
                         Break
                     }
                     "Viral Domain Information" {

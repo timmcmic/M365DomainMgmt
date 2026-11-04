@@ -232,6 +232,7 @@ Function Start-M365DomainManagement
     $domainOperations['NewWOConfirm'] = "NewWOConfirm"
     $domainOperations['Confirm'] = "Confirm"
     $domainOperations['Remove'] = "Remove"
+    $domainOperations['RemoveDelete'] = "RemoveDelete"
     $domainOperations['ForceTakeOver'] = "ForceTakeOver"
     $domainOperations['GetVerificationRecords'] = "GetVerificationRecords"
     $domainOperations['TestDNS'] = "TestDNS"
@@ -670,15 +671,9 @@ Function Start-M365DomainManagement
 
             promote-subDomain -domainInfo $domainInfo -exportFile $exportNames
         }
-        $domainOperations.PasswordExpiration
+        $domainOperation.removeDelete
         {
-            out-logfile -string "PasswordExpiration"
-
-            out-logfile -string "Test to ensure that the domain is present."
-
-            $global:htmlTime['StartPasswordExpiration']=Get-Date
-
-            start-ManagePasswordExpiration -exportFile $exportNames
+            out-logfile -string "Not yet implemented" -isError:$TRUE
         }
     }
 
