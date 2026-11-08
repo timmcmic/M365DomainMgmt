@@ -189,6 +189,7 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphBetaDirectoryVersion']="None"
     $telemetryValues['telemetryMSGraphUsersVersion']="None"
     $telemetryValues['telemetryMSGraphGroupsVersion']="None"
+    $telemetryValues['telemetryMSGraphApplicationsVersion']="None"
     $telemetryValues['telemetryExchangeOnlineVersion']="None"
     $telemetryValues['telemetryEventName']="Start-M365DomainManagement"
 
@@ -274,6 +275,8 @@ Function Start-M365DomainManagement
     $moduleNames['MSGraphUsers']="Microsoft.Graph.Users"
     $moduleNames['MSGraphGroups']="Microsoft.Graph.Groups"
     $moduleNames['ExchangeOnline']="ExchangeOnlineManagement"
+    $moduleNames['MSGraphApplications']="Microsoft.Graph.Applications"
+
 
     #Variables for logging and start log file.
 
@@ -327,6 +330,7 @@ Function Start-M365DomainManagement
     $telemetryValues['telemetryMSGraphUsersVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphUsers -powershellVersionTest:$TRUE
     $telemetryValues['telemetryMSGraphGroupsVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphGroups -powershellVersionTest:$TRUE
     $telemetryValues['telemetryExchangeOnlineVersion']=test-PowerShellModule -powershellModuleName $moduleNames.ExchangeOnline -powershellVersionTest:$TRUE
+    $telemetryValues['telemetryMSGraphApplicationsVersion']=test-PowerShellModule -powershellModuleName $moduleNames.msGraphApplications -powershellVersionTest:$TRUE
 
     $global:htmlTime['GetDomainOperation']=Get-Date
 
@@ -700,6 +704,7 @@ Function Start-M365DomainManagement
         MSGraphUsers = $telemetryValues.telemetryMSGraphUsersVersion
         MSGraphGroups = $telemetryValues.telemetryMSGraphGroupsVersion
         ExchangeOnline = $telemetryValues.telemetryExchangeOnlineVersion
+        MSGraphApplications = $telemetryValues.telemetryMSGraphApplicationsVersions
         OperationSelected = $domainOperation
     }
 
