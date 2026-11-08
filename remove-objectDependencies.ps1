@@ -21,9 +21,7 @@ function remove-objectDependencies
 
     out-logfile -string "Get all applications that have the issurer uri containing this domain name."
 
-    $applications = get-GraphApplications -domainName $domainName
-
-    read-host
+    $applications = @(get-GraphApplications -domainName $domainName)
 
     out-logfile -string "Obtaining all users that have this domain as a UPN."
 
@@ -64,6 +62,22 @@ function remove-objectDependencies
     out-logfile -string ("Users combined filtered by id count: "+$usersCombined.Count)
 
     #read-host "Press enter to continue..."
+
+    out-logfile -string "Begin updating applications."
+
+    $global:htmlTime['UpdateApplicationURI']=Get-Date
+
+    if ($applications.count -gt 0)
+    {
+        out-logfile -string "Applications exist to process..."
+
+        update-applicationURI -applications $applications -domainName $domainName
+
+    }
+    else
+    {
+        out-logfile -string "No application URIs required updating..."
+    }
 
     out-logfile -string "Determine all objects that require directory sync disabled."
 

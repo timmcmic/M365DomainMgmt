@@ -207,6 +207,14 @@ function generate-HTMLReport
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
+            if ($global:HTMLApplications.count -gt 0)
+            {
+                new-htmlSection -headerText ("Application URI Updates") {
+                    new-htmlTable -DataTable ($global:HTMLApplications | Select-Object ID,AppID,OriginalURI,NewURI,Name,ObjectType,ErrorMessage) -Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
             $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
 
             new-htmlSection -HeaderText ("Timline of Events"){

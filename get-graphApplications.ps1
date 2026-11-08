@@ -10,7 +10,15 @@ function get-graphApplications
 
     out-logfile -string "Entering Get-GraphApplications"
 
-    $returnApplications = get-mgApplication -all -property AppID,IdentifierUris | where {$_.identifierURis -like "*$domainName*"}
+    try
+    {
+        $returnApplications = get-mgApplication -all -property DisplayName,ID,AppID,IdentifierUris -errorAction STOP | where {$_.identifierURis -like "*$domainName*"}
+    }
+    catch
+    {
+        out-logfile -string $_
+        out-logfile -string "ERROR:  Unable to obtain applications via graph." -isError:$TRUE
+    }
 
     out-logfile -string ("Count of objects found: "+$returnApplications.count)
 
