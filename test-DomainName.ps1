@@ -34,7 +34,5 @@ function test-DomainName
 
     out-logfile -string "Exiting test-DomainName"
 
-    $global:htmlData['Domain Information'] = $domain
-
     return $domain
 }

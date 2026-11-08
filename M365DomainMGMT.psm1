@@ -386,6 +386,7 @@ Function Start-M365DomainManagement
             $global:htmlTime['ObtainDomainInfo']=Get-Date
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
+            $global:htmlData['Domain Information'] = $domainInfo
 
             out-logfile -string "Ensure that the domain is not currently registered in the tenant."
 
@@ -493,23 +494,27 @@ Function Start-M365DomainManagement
             $global:htmlTime['AddDomain']=Get-Date
 
             $domainInfo = add-domainOperation -domainName $domainName -exportFile $exportNames
+            $global:htmlData['Domain Information'] = $domainInfo
 
-            out-logfile -string "Gather DNS records required for domain verification."
-
-            $global:htmlTime['ObtainDNSVerificationRecords']=Get-Date
-
-            $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
-
-            foreach ($record in $m365DNSRecords)
+            if ($domainInfo.isVerified -eq $false)
             {
-                write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
-            }
+                out-logfile -string "Gather DNS records required for domain verification."
 
-            Read-Host "Press any key to continue:"
+                $global:htmlTime['ObtainDNSVerificationRecords']=Get-Date
 
-            foreach ($record in $m365DNSRecords)
-            {
-                out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+                $m365DNSRecords = get-DNSVerificationRecords -domainName $domainName -exportFile $exportNames -mxRecordType $mxRecordType -txtRecordType $txtRecordType
+
+                foreach ($record in $m365DNSRecords)
+                {
+                    write-host ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value) -ForegroundColor Green
+                }
+
+                Read-Host "Press any key to continue:"
+
+                foreach ($record in $m365DNSRecords)
+                {
+                    out-logfile -string ("Record Type: "+$record.RecordType+"  Record Name: @  Record Value: "+$record.value)
+                }
             }
         }
         $domainOperations.Remove 
@@ -523,6 +528,7 @@ Function Start-M365DomainManagement
             $global:htmlTime['GetDomainInfo']=Get-Date
 
             $domainInfo = test-DomainName -domainName $domainName
+            $global:htmlData['Domain Information'] = $domainInfo
 
             $global:htmlTime['ExportDomainInfo']=Get-Date
 
@@ -531,14 +537,14 @@ Function Start-M365DomainManagement
             $global:htmlTime['ConvertAuthenticationMethod']=Get-Date
 
             $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
+            $global:htmlData['Converted Domain Information'] = $domainInfo
+
 
             $global:htmlTime['BeginDomainRemoval']=Get-Date
 
             remove-objectDependencies -exportFiles $exportNames -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -domainName $domainName
 
             $global:htmlTime['EndTime']=Get-Date
-
-            generate-removeHTML
 
             output-globalObjects -exportFiles $exportNames
         }
@@ -552,6 +558,7 @@ Function Start-M365DomainManagement
 
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+                $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
                 out-logfile -string $_ 
@@ -592,6 +599,7 @@ Function Start-M365DomainManagement
 
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+                $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
                 out-logfile -string $_ 
@@ -630,6 +638,7 @@ Function Start-M365DomainManagement
 
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+                $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
                 out-logfile -string $_ 
@@ -652,6 +661,7 @@ Function Start-M365DomainManagement
 
             try {
                 $domainInfo = test-domainName -domainName $domainName -errorAction STOP
+                $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
                 out-logfile -string $_ 

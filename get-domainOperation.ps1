@@ -35,10 +35,10 @@ function get-DomainOperation
                 3 { $domainOperation = $domainOperations.Confirm }
                 4 { $domainOperation = $domainOperations.remove }
                 5 { $domainOperation = $domainOperations.removeDelete }
-                6 { $domainOperation = $domainOperations.GetVerificationRecords }
-                7 { $domainOperation = $domainOperations.TestDNS}
-                8 { $domainOperation = $domainOperations.DisplayDNSRecords}
-                9 { $domainOperation = $domainOperations.PromoteSubDomain}
+                6 { $domainOperation = $domainOperations.ForceTakeover }
+                7 { $domainOperation = $domainOperations.GetVerificationRecords}
+                8 { $domainOperation = $domainOperations.TestDNS}
+                9 { $domainOperation = $domainOperations.DisplayDNSRecords}
                 10 { $domainOperation = $domainOperations.PromoteSubDomain}
                 default {out-logfile -string "Please select a valid option from the list on next run." -isError:$TRUE}
             }
