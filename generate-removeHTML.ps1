@@ -197,7 +197,7 @@ function generate-removeHTML
                 new-htmlSection -headerText ("Secondary Address Removal Failures") {
                     new-htmlTable -DataTable ($global:HTMLSecondarySMTPRemoveErrors | Select-Object Id,AddressRemoved,Name,ObjectType,ErrorMessage) -Filtering {
                     } -AutoSize
-                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
             $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
