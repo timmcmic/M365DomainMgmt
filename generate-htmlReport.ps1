@@ -19,7 +19,7 @@ function generate-HTMLReport
             {
                 switch ($item.key)
                 {
-                    {$_ -eq 'Converted Domain Information' -or $_ -eq "Promoted Domain Information" -or $_ -eq "Domain Information" -or $_ -eq "Converted Domain Information" -or $_ -eq "Verified Domain Information"} {
+                    {$_ -eq "Promoted Domain Information" -or $_ -eq "Domain Information" -or $_ -eq "Converted Domain Information" -or $_ -eq "Verified Domain Information"} {
                         New-HTMLSection -HeaderText $item.key  {
                             New-HTMLList{
                                 new-htmlListItem -text ("Domain ID: "+$item.value.id) -FontSize 14
