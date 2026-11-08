@@ -16,13 +16,22 @@ function convert-authenticationMethod
     out-logfile -string "Entering Convert-AuthenticationMethod"
 
     out-logfile -string ("Current domain authentication method: "+$domainInfo.AuthenticationType)
+    out-logfile -string ("Current root domain setting: " +$domainInfo.isRoot)
 
-    try {
-        Update-MgDomain -DomainId $domainName -AuthenticationType $functionAuthMethod -errorAction STOP
+    if ($domainInfo.isRoot -eq $TRUE)
+    {
+        
+        try {
+            Update-MgDomain -DomainId $domainName -AuthenticationType $functionAuthMethod -errorAction STOP
+        }
+        catch {
+            out-logfile -string "Unable to change domain authentication method to managed authentication."
+            out-logfile -string $_ -isError:$TRUE
+        }
     }
-    catch {
-        out-logfile -string "Unable to change domain authentication method to managed authentication."
-        out-logfile -string $_ -isError:$TRUE
+    else
+    {
+        out-logfile -string "Skipping authentiction conversion - domain is a subdomain and inherits settings from the parent domain."
     }
 
     $domainInfo = test-DomainName -domainName $domainName

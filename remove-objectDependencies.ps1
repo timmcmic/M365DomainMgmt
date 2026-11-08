@@ -17,6 +17,14 @@ function remove-objectDependencies
 
     out-logfile -string "Entering Remove-ObjectDependencies"
 
+    $global:htmlTime['GetAllApplications']=Get-Date
+
+    out-logfile -string "Get all applications that have the issurer uri containing this domain name."
+
+    $applications = get-GraphApplications -domainName $domainName
+
+    read-host
+
     out-logfile -string "Obtaining all users that have this domain as a UPN."
 
     $global:htmlTime['GetAllUsersUPN']=Get-Date

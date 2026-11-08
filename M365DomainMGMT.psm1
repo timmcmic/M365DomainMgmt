@@ -178,6 +178,7 @@ Function Start-M365DomainManagement
     $global:HTMLSecondarySMTPRemoveSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLDomainRemoved = [System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLApplications = [System.Collections.Generic.List[PSObject]]::new()
 
 
     #Create telemetry values.
@@ -300,16 +301,16 @@ Function Start-M365DomainManagement
     out-logfile -string "*****************************************************"
 
     switch ($msGraphEnvironmentName) {
-        $msGraphEnvironmentName.msGraphGlobal { 
+        $msGraphEnvironments.msGraphGlobal { 
             $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.global
          }
-         $msGraphEnvironmentName.msGraphUSGov { 
+         $msGraphEnvironments.msGraphUSGov { 
             $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.USGov
          }
-          $msGraphEnvironmentName.msGraphUSGovDOD { 
+          $msGraphEnvironments.msGraphUSGovDOD { 
             $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.USGovDOD
          }
-         $msGraphEnvironmentName.msGraphChina { 
+         $msGraphEnvironments.msGraphChina { 
             $exchangeOnlineEnvironment = $exchangeOnlineEnvironments.China
          }
         Default {
@@ -542,7 +543,6 @@ Function Start-M365DomainManagement
 
             $domainInfo = convert-AuthenticationMethod -domainName $domainName -exportFile $exportNames.PostManagedChange -domainInfo $domainInfo
             $global:htmlData['Converted Domain Information'] = $domainInfo
-
 
             $global:htmlTime['BeginDomainRemoval']=Get-Date
 
