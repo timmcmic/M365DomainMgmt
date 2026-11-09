@@ -120,6 +120,9 @@ Function Start-M365DomainManagement
         [ValidateSet("Directory.ReadWrite.All","User.ReadWrite.All","User.EnableDisableAccount.All","User.ManageIdentities.All","User.ReadWrite","Group.Read.All","Group.ReadWrite.All","GroupMember.Read.All","Group-NestingSupport.ReadWrite.All")]
         [string]$msGraphUserPermissions="Directory.ReadWrite.All",
         [Parameter(Mandatory=$false)]
+        [ValidateSet("Application.ReadWrite.All","Application.ReadWrite.OwnedBy")]
+        [string]$msGraphApplicationPermissions="Application.ReadWrite.All",
+        [Parameter(Mandatory=$false)]
         [ValidateSet("Directory.ReadWrite.All","Directory.Read.All","Group-XTenantIdentitySync.Read.All","Group.ManageProtection.All")]
         [string]$msGraphGroupPermissions="Directory.ReadWrite.All",
         #Define Exchange Online connection information
@@ -200,6 +203,7 @@ Function Start-M365DomainManagement
     $msGraphScopeDomain = "Domain.ReadWrite.All"
     $msGraphGroupSync = "Group-OnPremisesSyncBehavior.ReadWrite.All"
     $msGraphUserSync = "User-OnPremisesSyncBehavior.ReadWrite.All"
+    $msGraphApplication = "Application.ReadWrite.All"
     $msGraphValues = @{}
     $msGraphValues['msGraphEnvironmentName']=$msGraphEnvironmentName
     $msGraphValues['msGraphTenantID']=$msGraphTenantID
@@ -354,6 +358,7 @@ Function Start-M365DomainManagement
         $msGraphValues.msGraphScopes += $msGraphUserSync
         $msGraphValues.msGraphScopes += $msGraphUserPermissions
         $msGraphValues.msGraphScopes += $msGraphGroupPermissions
+        $msGraphValues.msGraphScopes += $msGraphApplication
 
         new-ExchangeOnlineConnection -msGraphEnvironmentName $exchangeOnlineEnvironment -exchangeOnlineCertificateThumbprint $exchangeOnlineCertificateThumbPrint -exchangeonlineAppID $exchangeOnlineAppID -exchangeOnlineOrganizationName $exchangeOnlineOrganizationName -exchangeOnlineEnvironments $exchangeOnlineEnvironments
     }
