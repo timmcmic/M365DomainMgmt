@@ -212,7 +212,7 @@ function generate-HTMLReport
                 new-htmlSection -headerText ("Application URI Updates") {
                     new-htmlTable -DataTable ($global:HTMLApplications | Select-Object ID,AppID,OriginalURI,NewURI,Name,ObjectType,ErrorMessage) -Filtering {
                     } -AutoSize
-                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
             $global:htmlTime = $global:HTMLTime.GetEnumerator() | Sort-Object -property Value
