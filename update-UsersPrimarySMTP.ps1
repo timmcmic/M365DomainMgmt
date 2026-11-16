@@ -29,7 +29,7 @@ function update-UsersPrimarySMTP
         $timer.AutoReset = $true
 
         $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action {
-            Get-MgUser -UserId ((Get-MgContext).Account ; out-logfile -string "Graph timer engaged...")
+            Get-MgUser -UserId ((Get-MgContext).Account) ; out-logfile -string "Graph timer engaged..."
         }
 
         $timer.Start()
