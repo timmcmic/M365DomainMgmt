@@ -73,6 +73,8 @@ function remove-objectDependencies
 
         update-applicationURI -applications $applications -domainName $domainName
 
+        out-xmlFile -itemToExport $applications -itemNameToExport $exportFiles.applications
+
     }
     else
     {

@@ -271,6 +271,7 @@ Function Start-M365DomainManagement
     $exportNames['SecondarySMTPRenameErrors']="SecondarySMTPRenameErrors"
     $exportNames['DomainRemoved']="DomainRemoved"
     $exportNames['PromotedSubDomain']="PromotedSubDomain"
+    $exportNames['Applications']="Applications"
 
     $moduleNames = @{}
     $moduleNames['M365DomainManagement']="M365DomainMGMT"
