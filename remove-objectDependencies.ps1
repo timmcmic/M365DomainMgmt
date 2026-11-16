@@ -136,7 +136,7 @@ function remove-objectDependencies
 
         $global:htmlTime['UpdateUserUPN']=Get-Date
 
-        update-userUPN -userObjects $usersUPN -domainNam $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
+        update-userUPN -userObjects $usersUPN -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
 
         start-sleepProgress -sleepString "Sleeping to allow UPN changes to propogate" -sleepSeconds 300
 
