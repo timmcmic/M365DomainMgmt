@@ -48,6 +48,7 @@ function update-DirSyncStatus
             }
 
             $functionObject.PreStatus = $status
+            out-logfile -string (($user.id) + ($user.prestatus))
 
             try 
             {
@@ -69,6 +70,8 @@ function update-DirSyncStatus
                 }
 
                 $functionObject.PostStatus = $status
+
+                out-logfile -string (($user.id)+ " " +($user.prestatus)+ " " +($user.postStatus))
 
                 if ($enableOrDisable -eq "Disable")
                 {
@@ -129,6 +132,9 @@ function update-DirSyncStatus
             }
 
             $functionObject.PreStatus = $status
+            
+            $functionObject.PreStatus = $status
+            out-logfile -string (($user.id) + ($user.prestatus))
 
             try 
             {
@@ -150,6 +156,8 @@ function update-DirSyncStatus
                 }
 
                 $functionObject.PostStatus = $status
+
+                out-logfile -string (($user.id)+ " " +($user.prestatus)+ " " +($user.postStatus))
 
                 if ($enableOrDisable -eq "Disable")
                 {
