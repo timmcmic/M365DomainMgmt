@@ -20,6 +20,23 @@ function update-groupsPrimarySMTP
 
     $errorArray=@()
 
+    if ((Get-MGContext).authType -eq "Delegated")
+    {
+        out-logfile -string "Delegated authentication type utilized - create powershell timer and execute a synthetic graph comamnd to keep session alive."
+
+        $timer = [System.Timers.Timer]::new(900000)
+
+        $timer.AutoReset = $true
+
+        $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action {
+            Get-MgUser -UserId ((Get-MgContext).Account)
+        }
+    }
+    else
+    {
+        out-logfile -string "Application authentication in effect - proceed without timer."
+    }
+
     $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
 
     foreach ($user in $userObjects)
@@ -175,6 +192,19 @@ function update-groupsPrimarySMTP
     }
     
     write-progress -activity "Processing Recipient" -completed -id 1
+
+    if ((Get-MGContext).authType -eq "Delegated")
+    {
+        out-logfile -string "Delegated authentication type utilized - destroy the previously created timer and event."
+
+        $timer.Stop()
+        Unregister-Event -SourceIdentifier $event.Name
+        $timer.Dispose()
+    }
+    else
+    {
+        out-logfile -string "Application authentication utilized - no timer actions required."
+    }
 
     out-logfile -string "Existing Update-GroupsPrimarySMTP"
 }
