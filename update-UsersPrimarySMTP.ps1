@@ -31,6 +31,8 @@ function update-UsersPrimarySMTP
         $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action {
             Get-MgUser -UserId ((Get-MgContext).Account)
         }
+
+        $timer.Start()
     }
     else
     {
