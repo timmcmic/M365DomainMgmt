@@ -50,8 +50,8 @@ Function start-m365DomainPasswordExpirationManagement
         [ValidateRange(1, 2147483647)]        
         [int]$expirationDays=$NULL,
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1, 2147483647)]        
-        [int]$expirationNotificationDays=$NULL,
+        [ValidateRange(14, 730)]        
+        [int]$expirationNotificationDays=14,
         [Parameter(Mandatory = $false)]        
         [boolean]$includeOnMicrosoftDomains=$false,
         [Parameter(Mandatory = $false)]        
