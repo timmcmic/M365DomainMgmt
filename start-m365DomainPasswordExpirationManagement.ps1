@@ -47,7 +47,7 @@ Function start-m365DomainPasswordExpirationManagement
         [ValidateSet("Enable","Disable")]
         [string]$enableOrDisable="",
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1, 2147483647)]        
+        [ValidateRange(13, 730)]=13        
         [int]$expirationDays=$NULL,
         [Parameter(Mandatory = $false)]
         [ValidateRange(14, 730)]        
@@ -151,19 +151,14 @@ Function start-m365DomainPasswordExpirationManagement
         out-logfile -string "Enable Password Expiration operation specified"
         out-logfile -string $expirationDays
 
-        if ($expirationDays -eq 0)
+        if ($expirationDays -eq 13)
         {
-            out-logfile -string "ERROR:  Expiration days must be specified when enabling password expiration." -isError:$TRUE
-        }
-
-        if ($expirationNotificationDays -eq 0)
-        {
-            out-logfile -string "ERROR:  Expiration notification days must be specified when enabling password expiration." -isError:$TRUE
+            out-logfile -string "ERROR:  Expiration days must be specified when enabling password expiration.  Acceptable values are 14 - 730" -isError:$TRUE
         }
     }
     elseif ($enableOrDisable -eq "Disable")
     {
-        if ($expirationDays -gt 0)
+        if ($expirationDays -gt 13)
         {
             out-logfile -string "ERROR:  Expiration days may not be specified when disabling password expiration." -isError:$TRUE
         }
