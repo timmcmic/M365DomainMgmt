@@ -54,7 +54,35 @@ function update-applicationURI
             out-logfile -string "Error"
             out-logfile -string $_
 
-           $functionObject = New-Object PSObject -Property @{
+            out-logfile -string "Assume that the first passs had an name collision - add random to end of URL."
+
+            $newURI = $newURI + "-" + ((get-random).tostring())
+
+            out-logfile -string $newURI
+
+            try {
+                update-mgApplication -applicationID $application.id -IdentifierURIs $newURI -errorAction STOP
+
+                out-logfile -string "Updated URI successfully."
+
+                $functionObject = New-Object PSObject -Property @{
+                    ID = $application.ID
+                    AppID = $application.appID
+                    OriginalURI = $application.identifierURIs
+                    NewURI = $newURI
+                    Name = $application.displayName    
+                    ObjectType = "Application"
+                    ErrorMessage = "None"
+                }
+
+                $global:HTMLApplications.add($functionObject)
+            }
+            catch
+            {
+                out-logfile -string "Error"
+                out-logfile -string $_
+
+                $functionObject = New-Object PSObject -Property @{
                 ID = $application.ID
                 AppID = $application.appID
                 OriginalURI = $application.identifierURIs
@@ -62,9 +90,10 @@ function update-applicationURI
                 Name = $application.displayName    
                 ObjectType = "Application"
                 ErrorMessage = $_
-            }
+                }
 
-            $global:HTMLApplications.add($functionObject)
+                $global:HTMLApplications.add($functionObject)
+            }
         }
     }
 
