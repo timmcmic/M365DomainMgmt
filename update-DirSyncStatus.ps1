@@ -44,11 +44,12 @@ function update-DirSyncStatus
             }
             catch {
                 out-logfile -string "Unable to get the pre-disablement status."
-                out-logfile -string $_ -isError:$TRUE
+                out-logfile -string $_
+                $status = "Unknown"
             }
 
             $functionObject.PreStatus = $status
-            out-logfile -string (($user.id) + ($user.prestatus))
+            out-logfile -string (($user.id) + ($functionObject.prestatus))
 
             try 
             {
@@ -66,12 +67,13 @@ function update-DirSyncStatus
                 }
                 catch {
                     out-logfile -string "Unable to get the pre-disablement status."
-                    out-logfile -string $_ -isError:$TRUE
+                    out-logfile -string $_
+                    $status = "Unknown"
                 }
 
                 $functionObject.PostStatus = $status
 
-                out-logfile -string (($user.id)+ " " +($user.prestatus)+ " " +($user.postStatus))
+                out-logfile -string (($user.id)+ " " +($functionObject.prestatus)+ " " +($functionObject.postStatus))
 
                 if ($enableOrDisable -eq "Disable")
                 {
@@ -128,13 +130,12 @@ function update-DirSyncStatus
             }
             catch {
                 out-logfile -string "Unable to get the pre-disablement status."
-                out-logfile -string $_ -isError:$TRUE
+                out-logfile -string $_
+                $status = "Unknown"
             }
-
-            $functionObject.PreStatus = $status
             
             $functionObject.PreStatus = $status
-            out-logfile -string (($user.id) + ($user.prestatus))
+            out-logfile -string (($user.id) + ($functionObject.prestatus))
 
             try 
             {
@@ -151,13 +152,14 @@ function update-DirSyncStatus
                     $status = run-graphCommand -url $url -disable:$false -get:$TRUE -patch:$false -errorAction STOP
                 }
                 catch {
-                    out-logfile -string "Unable to get the pre-disablement status."
-                    out-logfile -string $_ -isError:$TRUE
+                    out-logfile -string "Unable to get the post-disablement status."
+                    out-logfile -string $_
+                    $status = "Unknown"
                 }
 
                 $functionObject.PostStatus = $status
 
-                out-logfile -string (($user.id)+ " " +($user.prestatus)+ " " +($user.postStatus))
+                out-logfile -string (($user.id)+ " " +($functionObject.prestatus)+ " " +($functionObject.postStatus))
 
                 if ($enableOrDisable -eq "Disable")
                 {
