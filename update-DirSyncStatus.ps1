@@ -49,7 +49,7 @@ function update-DirSyncStatus
             }
 
             $functionObject.PreStatus = $status
-            out-logfile -string (($user.id) + ($functionObject.prestatus))
+            out-logfile -string (($user.id) + " " + ($functionObject.prestatus))
 
             try 
             {
@@ -68,6 +68,7 @@ function update-DirSyncStatus
                 catch {
                     out-logfile -string "Unable to get the pre-disablement status."
                     out-logfile -string $_
+                    $functionObject.errorMessage = $_
                     $status = "Unknown"
                 }
 
@@ -75,13 +76,13 @@ function update-DirSyncStatus
 
                 out-logfile -string (($user.id)+ " " +($functionObject.prestatus)+ " " +($functionObject.postStatus))
 
-                if ($enableOrDisable -eq "Disable")
+                if ($functionObject.postStatus -eq $true)
                 {
                     $global:HTMLDirSyncSuccess.add($functionObject)
                 }
-                else 
+                else
                 {
-                    $global:HTMLDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
                 }
             }
             catch {
@@ -89,15 +90,7 @@ function update-DirSyncStatus
 
                 $functionObject.errorMessage = $_
 
-                if ($enableOrDisable -eq "Disable")
-                {
-                    $global:HTMLDirSyncErrors.add($functionObject)
-
-                }
-                else 
-                {
-                    $global:HTMLDirSyncErrors.add($functionObject)
-                }
+                $global:HTMLDirSyncErrors.add($functionObject)
             }
         }
     }
@@ -131,11 +124,12 @@ function update-DirSyncStatus
             catch {
                 out-logfile -string "Unable to get the pre-disablement status."
                 out-logfile -string $_
+                $functionObject.errorMessage = $_
                 $status = "Unknown"
             }
             
             $functionObject.PreStatus = $status
-            out-logfile -string (($user.id) + ($functionObject.prestatus))
+            out-logfile -string (($user.id) + " " + ($functionObject.prestatus))
 
             try 
             {
@@ -161,13 +155,13 @@ function update-DirSyncStatus
 
                 out-logfile -string (($user.id)+ " " +($functionObject.prestatus)+ " " +($functionObject.postStatus))
 
-                if ($enableOrDisable -eq "Disable")
+                if ($functionObject.postStatus -eq $true)
                 {
                     $global:HTMLDirSyncSuccess.add($functionObject)
                 }
-                else 
+                else
                 {
-                    $global:HTMLDirSyncSuccess.add($functionObject)
+                    $global:HTMLDirSyncErrors.add($functionObject)
                 }
             }
             catch {
@@ -175,14 +169,7 @@ function update-DirSyncStatus
 
                 $functionObject.errorMessage = $_
 
-                if ($enableOrDisable -eq "Disable")
-                {
-                    $global:HTMLDirSyncErrors.add($functionObject)
-                }
-                else 
-                {
-                    $global:HTMLDirSyncErrors.add($functionObject)
-                }
+                $global:HTMLDirSyncErrors.add($functionObject)
             }
         }
     }
