@@ -37,6 +37,11 @@
             [Parameter(Mandatory = $false)]
             [boolean]$isAudit=$FALSE
         )
+
+        #Define a mutex so that we can do bulk operations.
+
+        $mutexName = "Global\LogMutex"
+        $mtx = New-Object System.Threading.Mutex($false, $mutexName)
     
         # Get the current date
 
@@ -57,8 +62,10 @@
         
         # Write everything to our log file and the screen
 
+        $mtx.WaitOne(1000)
         $logstring | Out-File -FilePath $global:LogFile -Append
-    
+        $mtx.ReleaseMutex()
+        
         #Write to the screen the information passed to the log.
 
         if ($string.gettype().name -eq "String")
