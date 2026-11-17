@@ -42,6 +42,7 @@
 
         $mutexName = "Global\LogMutex"
         $mtx = New-Object System.Threading.Mutex($false, $mutexName)
+        $hasHandle = $false
     
         # Get the current date
 
@@ -62,9 +63,28 @@
         
         # Write everything to our log file and the screen
 
-        $mtx.WaitOne(1000)
-        $logstring | Out-File -FilePath $global:LogFile -Append
-        $mtx.ReleaseMutex()
+        try
+        {
+            $hasHandle = $mtx.WaitOne(1000)
+        }
+        catch [System.Threading.AbandonedMutexException]
+        {
+            $hasHandle = $true
+        }
+
+        if ($hasHandle)
+        {
+            $logstring | Out-File -FilePath $global:LogFile -Append
+        }
+        else
+        {
+            write-warning "Log operation skipped - no access to log file."
+        }
+
+        if ($hasHandle)
+        {
+            $mtx.ReleaseMutex()
+        }
         
         #Write to the screen the information passed to the log.
 
@@ -106,4 +126,6 @@
 
             break Brooken
         }
+
+        $mtx.Dispose()
     }
