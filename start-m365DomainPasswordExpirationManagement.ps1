@@ -168,7 +168,7 @@ Function start-m365DomainPasswordExpirationManagement
             out-logfile -string "ERROR:  Expiration days may not be specified when disabling password expiration." -isError:$TRUE
         }
 
-        if ($expirationNotificationDays -gt 0)
+        if ($expirationNotificationDays -ne 14)
         {
             out-logfile -string "ERROR:  Expiration notification days may not be specified when disabling password expiration." -isError:$TRUE
         }
@@ -207,6 +207,15 @@ Function start-m365DomainPasswordExpirationManagement
     else 
     {
         out-logfile -string "The following domains will be modified:  $($domainsToModify -join ', ')"
+    }
+
+    if ($allDomains -eq $FALSE -and $domainsToModify.count -eq 0)
+    {
+        out-logfile -string "ERROR:  The -allDomains is not specified and no administrator specified domains in -domainsToModify - at least one domain must be specified." -isError:$TRUE
+    }
+    else
+    {
+        out-logfile -string "At least one domain is specified."
     }
 
     $global:htmlTime['MSGraphConnection']=Get-Date
