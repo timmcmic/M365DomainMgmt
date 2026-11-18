@@ -24,15 +24,7 @@ function update-UsersPrimarySMTP
     {
         out-logfile -string "Delegated authentication type utilized - create powershell timer and execute a synthetic graph comamnd to keep session alive."
 
-        $timer = [System.Timers.Timer]::new(900000)
-
-        $timer.AutoReset = $true
-
-        $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action {
-            Get-MgUser -UserId ((Get-MgContext).Account) ; out-logfile -string "Graph timer engaged..."
-        }
-
-        $timer.Start()
+        manage-graphTimer -start:$TRUE
     }
     else
     {
@@ -203,9 +195,7 @@ function update-UsersPrimarySMTP
     {
         out-logfile -string "Delegated authentication type utilized - destroy the previously created timer and event."
 
-        $timer.Stop()
-        Unregister-Event -SourceIdentifier $event.Name
-        $timer.Dispose()
+        manage-graphTimer -start:$false
     }
     else
     {
