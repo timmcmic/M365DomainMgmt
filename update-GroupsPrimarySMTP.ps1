@@ -28,9 +28,34 @@ function update-groupsPrimarySMTP
 
         $timer.AutoReset = $true
 
-        $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action {
-            Get-MgUser -UserId ((Get-MgContext).Account) ; out-logfile -string "Graph timer engaged..."
+        $action = {
+            # Retrieve the log path passed via -MessageData
+            $logPath = $Event.MessageData
+
+            try
+            {
+                Get-MgUser -UserId (Get-MgContext).Account -errorAction STOP
+                $success = "Successful"
+            }
+            catch
+            {
+                $success = $_
+            }
+            
+            # Extract event details
+            $timeStamp  = $Event.TimeGenerated.ToString("yyyy-MM-dd HH:mm:ss")
+            $eventString = "Processed timer action..."
+            
+            # Format and write to the log file
+            $logEntry = "[$timeStamp] [$eventstring] [$success]"
+            Add-Content -Path $logPath -Value $logEntry
+
+            write-host $logEntry -foregroundColor Blue
         }
+
+        $eventLog = $global:logFile.replace(".log",".txt")
+
+        $event = Register-ObjectEvent -InputObject $timer -EventName Elapsed -Action $action -messageData $eventLog 
 
         $timer.Start()
     }
