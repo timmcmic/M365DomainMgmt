@@ -47,8 +47,8 @@ Function start-m365DomainPasswordExpirationManagement
         [ValidateSet("Enable","Disable")]
         [string]$enableOrDisable="",
         [Parameter(Mandatory = $false)]
-        [ValidateRange(13, 730)]=13        
-        [int]$expirationDays=$NULL,
+        [ValidateRange(13, 730)]        
+        [int]$expirationDays=13,
         [Parameter(Mandatory = $false)]
         [ValidateRange(14, 730)]        
         [int]$expirationNotificationDays=14,
