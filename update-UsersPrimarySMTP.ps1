@@ -91,6 +91,8 @@ function update-UsersPrimarySMTP
         {
             out-logfile -string "Users primary SMTP address must be changed."
 
+            out-logfile -string $user.mail
+            
             $tempSMTPAddress = $user.mail.replace($functionDomainName,$onMicrosoft)
 
             out-logfile -string ("Calculated Primary SMTP Address: "+$tempSMTPAddress)
