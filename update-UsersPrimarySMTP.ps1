@@ -235,5 +235,5 @@ function update-UsersPrimarySMTP
         out-logfile -string "Application authentication utilized - no timer actions required."
     }
 
-    out-logfile -string "Existing Update-UsersPrimarySMTP"
+    out-logfile -string "Exiting Update-UsersPrimarySMTP"
 }
