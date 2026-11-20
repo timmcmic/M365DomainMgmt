@@ -28,6 +28,15 @@ function update-userUPN
 
     foreach ($user in $userObjects)
     {
+        $functionObject = New-Object PSObject -Property @{
+            ID = $user.id
+            UPN = $user.userPrincipalName
+            NewUPN = "None"
+            Name = $user.displayName    
+            ObjectType = "User"
+            ErrorMessage = "None"
+        }
+
         $MbxNumber++
 
         write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete
@@ -45,14 +54,7 @@ function update-userUPN
 
             out-logfile -string "UPN updated successfully."
 
-            $functionObject = New-Object PSObject -Property @{
-                ID = $user.id
-                UPN = $user.userPrincipalName
-                NewUPN = $tempUPN
-                Name = $user.displayName    
-                ObjectType = "User"
-                ErrorMessage = "None"
-            }
+            $functionObject.newUPN = $tempUPN
 
             $global:HTMLUPNRenameSuccess.add($functionObject)
         }
@@ -67,18 +69,14 @@ function update-userUPN
 
             try {
                 update-mgUser -userID $user.id -UserPrincipalName $tempUPN -errorAction Stop
+
+                $functionObject.newUPN = $tempUPN
             }
             catch {
                 out-logfile -string "Error must be something other than duplicate upn"
 
-                $functionObject = New-Object PSObject -Property @{
-                    ID = $user.id
-                    UPN = $user.userPrincipalName
-                    NewUPN = $tempUPN
-                    Name = $user.displayName    
-                    ObjectType = "User"
-                    ErrorMessage = $_
-                }
+                $functionObject.newUPN = $tempUPN
+                $functionObject.errorMessage = $_
 
                 $global:HTMLUPNRenameErrors.add($functionObject)
             }

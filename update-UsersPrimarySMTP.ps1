@@ -207,6 +207,7 @@ function update-UsersPrimarySMTP
                 catch {
                     out-logfile -string "Unable to remove the secondary proxy address."
 
+                    $functionObject.AddressRemoved = $address
                     $functionObject.ErrorMessage = $_
 
                     $global:HTMLSecondarySMTPRemoveErrors.add($functionObject)
