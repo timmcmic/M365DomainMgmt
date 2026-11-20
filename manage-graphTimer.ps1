@@ -1,4 +1,4 @@
-function manage-graphTimer.ps1
+function manage-graphTimer
 {
     Param
     (
