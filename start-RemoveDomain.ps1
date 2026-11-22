@@ -87,7 +87,7 @@ function start-removeDomain
             out-logfile -string "Domain was not found on query - domain should be successfully removed."
         }
     }
-    until{(!(Get-MgDomain -domainID)) -or ($isFailure -eq $TRUE)}
+    until((!(Get-MgDomain -domainID)) -or ($isFailure -eq $TRUE))
 
     if ($isFailure -eq $FALSE)
     {
