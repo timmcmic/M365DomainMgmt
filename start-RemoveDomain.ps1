@@ -13,6 +13,12 @@ function start-removeDomain
         RemovedStatus = ""
         ErrorMessage = "None"
     }
+
+    $functionObject2 = New-Object PSObject -Property @{
+        LastActionDateTime = ""
+        Operation = ""
+        Status = ""
+    }
     
     out-logfile -string "Entering Start-RemoveDomain"
 
@@ -36,10 +42,6 @@ function start-removeDomain
 
     try {
         Invoke-MgGraphRequest -Method POST -Uri $url -Body $body -errorAction STOP
-
-        $functionObject.removedStatus = "SUCCESS"
-
-        $global:HTMLDomainRemoved.add($functionObject) 
     }
     catch {
         out-logfile -string "Unable to remove the domain."
@@ -49,6 +51,49 @@ function start-removeDomain
         $functionObject.errorMessage = $_
 
         $global:HTMLDomainRemoved.add($functionObject) 
+    }
+
+    out-logfile -string "Forcefully removing a domain is an async operation - test for success of failure."
+
+    $isFailure = $false
+
+    do
+    {
+        try
+        {
+            out-logfile -string "Testing for status of domain."
+
+            $test = get-mgDomain -domainID $domainName -errorAction STOP
+
+            $functionObject2.lastActionDateTime = $test.lastActionDateTime
+            $functionObject2.operation = $test.operation
+            $functionObject2.status = $test.status
+
+            if ($functionObject2.status.contains("Failed"))
+            {
+                out-logfile -string "Domain operation failed."
+
+                $global:htmlDomainRemovedFailedState.add($functionObject)
+
+                $isFailure=$TRUE
+            }
+            else
+            {
+                start-sleepProgress -sleepString "Sleeping and retesting domain removal status..." -sleepSeconds 15
+            }
+        }
+        catch
+        {
+            out-logfile -string "Domain was not found on query - domain should be successfully removed."
+        }
+    }
+    until{(!(Get-MgDomain -domainID)) -or ($isFailure -eq $TRUE)}
+
+    if ($isFailure -eq $FALSE)
+    {
+        $functionObject.removedStatus = "SUCCESS"
+
+        $global:htmlDomainRemoved.add($functionObject)
     }
 }
 

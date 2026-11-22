@@ -113,6 +113,14 @@ function generate-HTMLReport
                 }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "White" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
             }
 
+            if ($global:htmlDomainRemovedFailure.Count -gt 0)
+            {
+                New-HTMLSection -HeaderText "Domain Removal Failure" {
+                    new-htmlTable -DataTable ($global:htmlDomainRemovedFailure)-Filtering {
+                    } -AutoSize
+                }-HeaderTextAlignment "Left" -HeaderTextSize "16" -HeaderTextColor "Red" -HeaderBackGroundColor "Black"  -CanCollapse -BorderRadius 10px -collapsed
+            }
+
             if ($global:HTMLDomainRemoved.count -gt 0)
             {
                 if ($global:HTMLDomainRemoved[0].errorMessage -ne "None")

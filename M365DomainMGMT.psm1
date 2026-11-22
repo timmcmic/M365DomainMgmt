@@ -181,6 +181,7 @@ Function Start-M365DomainManagement
     $global:HTMLSecondarySMTPRemoveSuccess=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLSecondarySMTPRemoveErrors=[System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLDomainRemoved = [System.Collections.Generic.List[PSObject]]::new()
+    $global:HTMLDomainRemovedFailedState = [System.Collections.Generic.List[PSObject]]::new()
     $global:HTMLApplications = [System.Collections.Generic.List[PSObject]]::new()
 
 
