@@ -52,12 +52,12 @@ function update-UsersPrimarySMTP
         try {
             $recipientType = (Get-Recipient -identity $user.id).recipientType
             out-logfile -string ("Recipient Type: "+$recipientType)
+
+            $recipientTypes.add($user.id,$recipientType)
         }
         catch {
             out-logfile -string "Unable to obtain the recipient type - unable to proceed." -isError:$TRUE
         }
-
-        $recipientTypes.add($user.id,$recipientType)
     }
 
     write-progress -activity "Processing Recipient" -completed -id 1

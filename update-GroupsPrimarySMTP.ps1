@@ -31,6 +31,10 @@ function update-groupsPrimarySMTP
         out-logfile -string "Application authentication in effect - proceed without timer."
     }
 
+    $recipientTypes = [System.Collections.Generic.Dictionary[string, string]]::new()
+
+    Out-logfile -string "Build list of recipient types."
+
     $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
 
     foreach ($user in $userObjects)
@@ -46,10 +50,25 @@ function update-groupsPrimarySMTP
         try {
             $recipientType = (Get-Recipient -identity $user.id).recipientTypeDetails
             out-logfile -string ("Recipient Type: "+$recipientType)
+
+            $recipientTypes.add($user.id,$recipientType)
         }
         catch {
             out-logfile -string "Unable to obtain the recipient type - unable to proceed." -isError:$TRUE
         }
+    }
+
+    write-progress -activity "Processing Recipient" -completed -id 1
+
+    out-logfile -string "Process primary proxy address removal."
+
+    $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
+
+    foreach ($user in $userObjects)
+    {
+        $MbxNumber++
+
+        write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete -id 1
 
         out-logfile -string "Test to determine if users primary proxy requires adjustment."
 
@@ -64,8 +83,7 @@ function update-groupsPrimarySMTP
             out-logfile -string ("Calculated Primary SMTP Address: "+$tempSMTPAddress)
 
             try {
-
-                if ($recipientType -eq "GroupMailbox")
+                if ($recipientTypes[$user.id] -eq "GroupMailbox")
                 {
                     set-UnifiedGroup -identity $user.id -primarySMTPAddress $tempSMTPAddress -errorAction STOP
                 }
@@ -124,6 +142,19 @@ function update-groupsPrimarySMTP
         {
             out-logfile -string "Users primary SMTP address does not require changing."
         }
+    }
+
+    write-progress -activity "Processing Recipient" -completed -id 1
+
+    out-logfile -string "Process secondary address removal."
+
+    $ProgressDelta = 100/($userObjects.count); $PercentComplete = 0; $MbxNumber = 0
+
+    foreach($user in $userObjects)
+    {
+        $MbxNumber++
+
+        write-progress -activity "Processing Recipient" -status $user.Id -PercentComplete $PercentComplete -id 1
 
         $ProgressDeltaAddresses = 100/($user.proxyaddresses.count); $PercentAddressesComplete = 0; $AddressNumber = 0
 
@@ -142,7 +173,7 @@ function update-groupsPrimarySMTP
                 out-logfile -string "Remove secondary proxy address"
 
                 try {
-                    if ($recipientType -eq "GroupMailbox")
+                    if ($recipientTypes[$user.id] -eq "GroupMailbox")
                     {
                         Set-UnifiedGroup -identity $user.id -emailAddresses @{remove=$address} -errorAction STOP
                         start-sleepProgress -sleepString "Sleeping after address removal.." -sleepSeconds 2
