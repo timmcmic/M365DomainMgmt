@@ -109,7 +109,7 @@ function remove-objectDependencies
 
             update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User"
 
-            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 900
+            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
 
             $global:htmlTime['EndProcessDirSyncUsers']=Get-Date
 
@@ -140,7 +140,7 @@ function remove-objectDependencies
 
         update-userUPN -userObjects $usersUPN -domainName $domainName -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments
 
-        start-sleepProgress -sleepString "Sleeping to allow UPN changes to propogate" -sleepSeconds 900
+        start-sleepProgress -sleepString "Sleeping to allow UPN changes to propogate" -sleepSeconds 300
 
         $global:htmlTime['EndProcessUserUPN']=Get-Date
     }
@@ -163,7 +163,7 @@ function remove-objectDependencies
 
         update-usersPrimarySMTP -userObjects $usersProxy -domainName $domainName
 
-        start-sleepProgress -sleepString "Sleeping to allow user proxy address changes to propogate..." -sleepSeconds 900
+        start-sleepProgress -sleepString "Sleeping to allow user proxy address changes to propogate..." -sleepSeconds 300
                     
         $global:htmlTime['EndProcessProxyAddresses']=Get-Date
     }
@@ -210,7 +210,7 @@ function remove-objectDependencies
 
             update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group"
 
-            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 900
+            start-sleepProgress -sleepString "Sleeping to allow dirsync status to propogate" -sleepSeconds 300
 
             $global:htmlTime['EndProcessDirSyncGroups']=Get-Date
         }
@@ -225,7 +225,7 @@ function remove-objectDependencies
 
         update-groupsPrimarySMTP -userObjects $groupsProxy -domainName $domainName
 
-        start-sleepProgress -sleepString "Sleeping to allow group SMTP proxy address changes to propogate..." -sleepSeconds 900
+        start-sleepProgress -sleepString "Sleeping to allow group SMTP proxy address changes to propogate..." -sleepSeconds 300
 
         $global:htmlTime['EndProcessGroupsProxy']=Get-Date
 
