@@ -76,13 +76,27 @@ function update-DirSyncStatus
 
                 out-logfile -string (($user.id)+ " " +($functionObject.prestatus)+ " " +($functionObject.postStatus))
 
-                if ($functionObject.postStatus -eq $true)
+                if ($enableOrDisable -eq "Disable")
                 {
-                    $global:HTMLDirSyncSuccess.add($functionObject)
+                    if ($functionObject.postStatus -eq $true)
+                    {
+                        $global:HTMLDirSyncSuccess.add($functionObject)
+                    }
+                    else
+                    {
+                        $global:HTMLDirSyncErrors.add($functionObject)
+                    }
                 }
                 else
                 {
-                    $global:HTMLDirSyncErrors.add($functionObject)
+                    if ($functionObject.postStatus -eq $false)
+                    {
+                        $global:HTMLDirSyncSuccess.add($functionObject)
+                    }
+                    else
+                    {
+                        $global:HTMLDirSyncErrors.add($functionObject)
+                    }
                 }
             }
             catch {
@@ -169,13 +183,13 @@ function update-DirSyncStatus
                 }
                 else
                 {
-                    if ($functionObject.postStatus -eq $true)
+                    if ($functionObject.postStatus -eq $false)
                     {
-                        $global:HTMLDirSyncErrors.add($functionObject)
+                        $global:HTMLDirSyncSuccess.add($functionObject)
                     }
                     else
                     {
-                        $global:HTMLDirSyncSuccess.add($functionObject)
+                        $global:HTMLDirSyncErrors.add($functionObject)
                     }
                 }
             }
