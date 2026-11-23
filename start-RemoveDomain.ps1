@@ -68,14 +68,15 @@ function start-removeDomain
         }
         catch
         {
-            #out-logfile -string "Domain was not found on query - domain should be successfully removed."
-            #out-logfile -string $_.exception.message
-            write-host "Here"
+            out-logfile -string "Domain was not found on query - domain should be successfully removed."
+            out-logfile -string $_.exception.message
         }
 
         $functionObject2.lastActionDateTime = $test.lastActionDateTime
         $functionObject2.operation = $test.operation
         $functionObject2.status = $test.status
+
+        out-logfile -string $test.status
 
         if ($functionObject2.status.contains("Failed"))
         {
