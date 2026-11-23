@@ -572,7 +572,7 @@ Function Start-M365DomainManagement
                 $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
-                out-logfile -string $_ 
+                out-logfile -string $_.Exception.Message 
                 out-logfile -string "Domain is not present in tenant - unable to get verification records." -isError:$true
             }
 
@@ -613,7 +613,7 @@ Function Start-M365DomainManagement
                 $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
-                out-logfile -string $_ 
+                out-logfile -string $_.Exception.Message 
                 out-logfile -string "Domain is not present in tenant - unable to test verification records." -isError:$true
             }
 
@@ -652,7 +652,7 @@ Function Start-M365DomainManagement
                 $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
-                out-logfile -string $_ 
+                out-logfile -string $_.Exception.Message 
                 out-logfile -string "Domain is not present in tenant - unable to provide DNS records for this domain." -isError:$true
             }
 
@@ -675,7 +675,7 @@ Function Start-M365DomainManagement
                 $global:htmlData['Domain Information'] = $domainInfo
             }
             catch {
-                out-logfile -string $_ 
+                out-logfile -string $_.Exception.Message
                 out-logfile -string "Domain is not present in tenant - unable to promote sub domain." -isError:$true
             }
 

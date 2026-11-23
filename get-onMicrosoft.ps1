@@ -41,7 +41,7 @@ function get-onMicrosoft
         $domains = @(get-mgDomain -all -errorAction STOP | where {$_.id.EndsWith($onMicrosoft)})
     }
     catch {
-        out-logfile $_
+        out-logfile $_.Exception.Message
         out-logfile -string "Unable to obtain onmicrosoft domains." -isError:$true
     }
 

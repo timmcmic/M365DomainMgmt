@@ -23,7 +23,7 @@ function manage-graphTimer
             }
             catch
             {
-                $success = $_
+                $success = $_.Exception.Message
             }
             
             # Extract event details

@@ -26,7 +26,7 @@ function convert-authenticationMethod
         }
         catch {
             out-logfile -string "Unable to change domain authentication method to managed authentication."
-            out-logfile -string $_ -isError:$TRUE
+            out-logfile -string $_.Exception.Message -isError:$TRUE
         }
     }
     else

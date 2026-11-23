@@ -21,7 +21,7 @@ function add-domainOperation
         out-logfile -string "The domain has already been added to the tenant - add operation skipped proceeding."
     }
     catch {
-        out-logfile -string $_
+        out-logfile -string $_.Exception.Message
         out-logfile -string "The domain has not been added to the tenant - proceeding with testing."
         $addDomain = $true
     }
@@ -43,7 +43,7 @@ function add-domainOperation
             out-logfile -string "The domain was located in the tenant post addition."
         }
         catch {
-            out-logfile -string $_
+            out-logfile -string $_.Exception.Message
             out-logfile -string "The domain has not been added to the tenant - proceeding with testing."
             $addDomain = $true
         }

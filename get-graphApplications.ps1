@@ -16,7 +16,7 @@ function get-graphApplications
     }
     catch
     {
-        out-logfile -string $_
+        out-logfile -string $_.Exception.Message
         out-logfile -string "ERROR:  Unable to obtain applications via graph." -isError:$TRUE
     }
 

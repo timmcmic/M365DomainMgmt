@@ -46,7 +46,7 @@ function start-removeDomain
     }
     catch {
         out-logfile -string "Unable to remove the domain."
-        out-logfile -string $_
+        out-logfile -string $_.Exception.Message
 
         $functionObject.removedStatus = "FAILED"
         $functionObject.errorMessage = $_.exception.message

@@ -74,9 +74,10 @@ function update-userUPN
             }
             catch {
                 out-logfile -string "Error must be something other than duplicate upn"
+                out-logfile -string $_.Exception.Message
 
                 $functionObject.newUPN = $tempUPN
-                $functionObject.errorMessage = $_
+                $functionObject.errorMessage = $_.Exception.Message
 
                 $global:HTMLUPNRenameErrors.add($functionObject)
             }

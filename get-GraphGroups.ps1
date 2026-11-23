@@ -17,7 +17,7 @@ function get-graphGroups
     }
     catch {
         out-logfile -string "Error obtaining graph users."
-        out-logfile -string $_ -isError:$true
+        out-logfile -string $_.Exception.Message -isError:$true
     }
 
     out-logfile -string ("Count of objects found: "+$returnGroups.count)

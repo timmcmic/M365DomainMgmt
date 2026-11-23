@@ -30,7 +30,7 @@ function calculate-publicDNSRecordsGlobal
         $records = Get-MgDomainServiceConfigurationRecord -DomainId $domainName -errorAction STOP
     }
     catch {
-        out-logfile -string $_
+        out-logfile -string $_.Exception.Message
         out-logfile -string "Unable to obtain the DNS records for the domain." -isError:$true
     }
 

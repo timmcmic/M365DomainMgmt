@@ -24,7 +24,7 @@ function get-DNSVerificationRecords
         out-logfile -string "M365 DNS verification records obtained successfully."
     }
     catch {
-        out-logfile -string $_
+        out-logfile -string $_.Exception.Message
         out-logfile -string "ERROR:  Unable to obtain the M365 DNS verification records." -isError:$true
     }
 
