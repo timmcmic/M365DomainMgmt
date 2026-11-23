@@ -161,7 +161,7 @@ function update-DirSyncStatus
                 }
                 catch {
                     out-logfile -string "Unable to get the post-disablement status."
-                    out-logfile -string $_
+                    out-logfile -string $_.Exception.Message
                     $status = "Unknown"
                 }
 
@@ -196,7 +196,7 @@ function update-DirSyncStatus
             catch {
                 out-logfile -string "Error updating dir sync status."
 
-                $functionObject.errorMessage = $_
+                $functionObject.errorMessage = $_.Exception.Message
 
                 $global:HTMLDirSyncErrors.add($functionObject)
             }
