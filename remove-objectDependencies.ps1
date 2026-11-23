@@ -237,47 +237,35 @@ function remove-objectDependencies
 
     $global:htmlTime['EndDomainRemovalActivity']=Get-Date
 
-    if ($global:HTMLDomainRemoved[0].errorMessage -eq "None" -and ($dirSyncUsers.count -gt 0) -or ($dirSyncGroups.count -gt 0))
+    $global:htmlTime['StartRestDirSyncUsers']=Get-Date
+
+    if ($dirSyncUsers.count -gt 0)
     {
-        if ($dirSyncUsers.count -gt 0)
-        {
-            out-logfile -string "Directory sync users present - change SOA back."
+        out-logfile -string "Directory sync users present - change SOA back."
 
-            $global:htmlTime['BeginRevertSOAUsers']=Get-Date
+        $global:htmlTime['BeginRevertSOAUsers']=Get-Date
 
-            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User" -enableOrDisable "Enable"
-        }
-        else 
-        {
-            out-logfile -string "All users were cloud only - proceed."
-        }
-
-        if ($dirSyncGroups.count -gt 0)
-        {
-            out-logfile -string "Directory sync users present - change SOA back."
-
-            $global:htmlTime['BeginRevertSOACloud']=Get-Date
-
-            update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group" -enableOrDisable "Enable"
-        }
-        else 
-        {
-            out-logfile -string "All groups were cloud only - proceed."
-        }
-    }
-    elseif ($global:HTMLDomainRemoved[0].errorMessage -ne "None" -and ($dirSyncUsers.count -gt 0) -or ($dirSyncGroups.count -gt 0))
-    {
-        out-logfile -string '++++++++++++++++++++++++++++++++++'
-        out-logfile -string "Multiple users or groups dir sync status changed to cloud only."
-        out-logfile -string "Domain was not removed successfully."
-        out-logfile -string "Rerun script and select restore dir sync status if you will not be fixing errors and removing domain."
-        out-logfile -string '++++++++++++++++++++++++++++++++++'
+        update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncUsers -userOrGroup "User" -enableOrDisable "Enable"
     }
     else 
     {
-        out-logfile -string "No dir sync users or groups were modified."
+        out-logfile -string "All users were cloud only - proceed."
     }
 
-    
+    $global:htmlTime['StartRestDirSyncGroups']=Get-Date
+
+    if ($dirSyncGroups.count -gt 0)
+    {
+        out-logfile -string "Directory sync users present - change SOA back."
+
+        $global:htmlTime['BeginRevertSOACloud']=Get-Date
+
+        update-DirSyncStatus -msGraphEnvironmentName $msGraphEnvironmentName -msGraphEnvironments $msGraphEnvironments -Objects $dirSyncGroups -userOrGroup "Group" -enableOrDisable "Enable"
+    }
+    else 
+    {
+        out-logfile -string "All groups were cloud only - proceed."
+    }
+
     out-logfile -string "Exiting Remove-ObjectDependencies"
 }
